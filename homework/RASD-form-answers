@@ -1,0 +1,14 @@
+SECTION 1-2
+1- Statecharts are very descriptive and well formed, in particular the energy acquisition chart is very specific and covers all the ways the system should behave.
+2- Goals are too generic: G2 is too general and doesn't specify that users have to pick a timeframe to charge the car, nothing in the goals section describes the possibility for the users to be notified when a charge is complete and CPOs can dynamically change prices.
+3- D11 and D10 are competence of the application, therefor they should not be domain assumption but requirements: the application should correctly calculate a user's distance from a socket given the user's gps location, it's also the application's job to keep the data shown on to the user consistent with what the CPO actually decided, D14 requires the user to have a device with an available bluetooth connection, the specific does not refer to bluetooth connections at any point. Also W3 should be a domain assumption
+
+SECTION 3
+1- Requirements are very well formulated and cover every functional requirement the system should have, this exhaustive description leads to a clear undestarding of what the system will need to properly work in a real world scenario.
+2- Use cases are very well detailed and correctly related to the system's goals and domain assumptions, this allows for an easy understanding of which actions the system will needs to perform whenever the user is using it. The only negative point is that UC13 does not include CPOs in the graph
+3- Sequence diagrams provide a consistent and detailed definition of how different parts of the system interact with each other while being utilized by the users.
+
+
+SECTION 4
+1- It is not explained why alloys is being used, in particular the document is missing an explanation for which requirements are being tested.
+2- Sockets are contained in both the booking and the timeslots sets this could mean that someone could have a booking for different sockets in consequent timeslots, which is not possible. Also a booking and it's timeslots could be associated to different sockets since there is no fact preventing this occurence.
