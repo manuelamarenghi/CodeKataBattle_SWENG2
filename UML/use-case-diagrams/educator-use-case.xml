@@ -1,6 +1,6 @@
-<mxfile host="app.diagrams.net" modified="2023-11-03T13:51:40.420Z" agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36" etag="uYjowJNFcCt9-5-PjusT" version="22.0.8" type="device">
+<mxfile host="app.diagrams.net" modified="2023-11-03T17:17:50.355Z" agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36" etag="tkPsyz95d3eZvgrvhDfC" version="22.0.8" type="device">
   <diagram id="Wk6kaADx64C-FAjZ-ZGa" name="Pagina-1">
-    <mxGraphModel dx="1364" dy="779" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+    <mxGraphModel dx="1604" dy="779" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -20,12 +20,12 @@
           <mxGeometry x="280.0000000000001" y="310" width="90" height="50" as="geometry" />
         </mxCell>
         <mxCell id="ABr4gbFiakU_Uh50vdwn-8" value="define gamification badges" style="ellipse;whiteSpace=wrap;html=1;" parent="1" vertex="1">
-          <mxGeometry x="440.0000000000001" y="110" width="90" height="50" as="geometry" />
+          <mxGeometry x="440.0000000000001" y="140" width="90" height="50" as="geometry" />
         </mxCell>
-        <mxCell id="ABr4gbFiakU_Uh50vdwn-13" value="" style="endArrow=classic;html=1;rounded=0;exitX=0;exitY=1;exitDx=0;exitDy=0;entryX=0.956;entryY=0.34;entryDx=0;entryDy=0;dashed=1;entryPerimeter=0;" parent="1" source="ABr4gbFiakU_Uh50vdwn-8" target="ABr4gbFiakU_Uh50vdwn-4" edge="1">
+        <mxCell id="ABr4gbFiakU_Uh50vdwn-13" value="" style="endArrow=classic;html=1;rounded=0;exitX=0;exitY=0.74;exitDx=0;exitDy=0;dashed=1;exitPerimeter=0;" parent="1" source="ABr4gbFiakU_Uh50vdwn-8" edge="1">
           <mxGeometry width="50" height="50" relative="1" as="geometry">
             <mxPoint x="680" y="305" as="sourcePoint" />
-            <mxPoint x="560" y="315" as="targetPoint" />
+            <mxPoint x="380" y="190" as="targetPoint" />
           </mxGeometry>
         </mxCell>
         <mxCell id="ABr4gbFiakU_Uh50vdwn-14" value="extends" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="ABr4gbFiakU_Uh50vdwn-13" vertex="1" connectable="0">
@@ -181,10 +181,24 @@
         <mxCell id="ABr4gbFiakU_Uh50vdwn-76" value="submit a personal evaluation" style="ellipse;whiteSpace=wrap;html=1;" parent="1" vertex="1">
           <mxGeometry x="170.0000000000001" y="140" width="90" height="50" as="geometry" />
         </mxCell>
-        <mxCell id="84l4HCK87d7_8bSTAjbc-1" value="" style="endArrow=classic;html=1;rounded=0;entryX=0.267;entryY=0.96;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="ABr4gbFiakU_Uh50vdwn-1" target="ABr4gbFiakU_Uh50vdwn-76">
+        <mxCell id="84l4HCK87d7_8bSTAjbc-1" value="" style="endArrow=classic;html=1;rounded=0;entryX=0.267;entryY=0.96;entryDx=0;entryDy=0;entryPerimeter=0;" parent="1" source="ABr4gbFiakU_Uh50vdwn-1" target="ABr4gbFiakU_Uh50vdwn-76" edge="1">
           <mxGeometry width="50" height="50" relative="1" as="geometry">
             <mxPoint x="140" y="337" as="sourcePoint" />
             <mxPoint x="300" y="195" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="VefxS-AJKWPUYpQSgC1Z-2" value="set up the tournament" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="370.0000000000001" y="100" width="90" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="VefxS-AJKWPUYpQSgC1Z-3" value="" style="endArrow=classic;html=1;rounded=0;exitX=0.244;exitY=0.9;exitDx=0;exitDy=0;dashed=1;exitPerimeter=0;entryX=0.622;entryY=0.04;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="VefxS-AJKWPUYpQSgC1Z-2" target="ABr4gbFiakU_Uh50vdwn-4">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="610" y="265" as="sourcePoint" />
+            <mxPoint x="310" y="150" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="VefxS-AJKWPUYpQSgC1Z-4" value="extends" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="VefxS-AJKWPUYpQSgC1Z-3">
+          <mxGeometry x="-0.2611" y="3" relative="1" as="geometry">
+            <mxPoint x="-16" y="-4" as="offset" />
           </mxGeometry>
         </mxCell>
       </root>
