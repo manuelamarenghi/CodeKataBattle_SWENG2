@@ -1,0 +1,26 @@
+title Submit a personal evalutation
+
+actor Educator
+
+activate Educator
+Educator->System: requestBattlePage()
+activate System
+System-->Educator: returnBattlePage()
+deactivate System
+
+Educator->System: requestTeamsPage()
+activate System
+System-->Educator: returnTeamsPage()
+deactivate System
+
+Educator->System: assignEvaluation()
+activate System
+System-->Educator: returnEvaluationForm()
+deactivate System
+
+Educator->Educator:compileEvaluationForm()
+activate System
+Educator->System: sendEvaluationForm()
+System-->Educator: ack
+deactivate System
+deactivate Educator

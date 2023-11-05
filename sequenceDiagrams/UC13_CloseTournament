@@ -1,0 +1,15 @@
+frame Close a Tournament
+
+actor Educator
+
+activate Educator
+Educator->System: requestTournamentPage()
+activate System
+System-->Educator: returnTournamentPage()
+deactivate System
+
+Educator->System: closeTournament()
+activate System
+System-->Educator: ack
+deactivate System
+deactivate Educator

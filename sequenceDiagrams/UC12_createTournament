@@ -1,0 +1,22 @@
+title Create a tournament
+
+actor Educator
+
+activate Educator
+Educator->System: requestTournamentCreationPage()
+activate System
+System-->Educator: returnTournamentCreationPage()
+deactivate System
+
+Educator->System: createTournament()
+activate System
+System-->Educator: returnTournamentForm()
+deactivate System
+
+Educator->Educator: compileTournamentForm()
+Educator->Educator: defineBadges()
+activate System
+Educator->System: ???()
+System-->Educator: ack
+deactivate System
+deactivate Educator

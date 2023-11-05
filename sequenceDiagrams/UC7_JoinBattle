@@ -1,0 +1,12 @@
+title Join a battle
+
+actor Student
+activate Student
+activate System
+Student->System: requestBattlePage()
+System-->Student: returnBattlePage()
+Student->System: joinBattle()
+System->System: createNewTeam()
+Student<--System: ack
+deactivate Student
+

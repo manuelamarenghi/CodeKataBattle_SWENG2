@@ -1,0 +1,21 @@
+title Create a battle
+
+actor Educator
+
+activate Educator
+Educator->System: requestTournamentPage()
+activate System
+System-->Educator: returnTournamentPage()
+deactivate System
+
+Educator->System: createNewBattle()
+activate System
+System-->Educator:returnBattleForm
+deactivate System
+
+Educator->Educator:compileBattleForm()
+activate System
+Educator->System: sendBattleForm()
+System-->Educator: ack
+deactivate System
+deactivate Educator

@@ -1,0 +1,12 @@
+title Leave a battle
+
+actor Student
+activate Student
+activate System
+Student->System: requestBattlePage()
+System-->Student: returnBattlePage()
+Student->System: leaveBattle()
+System->System: removeStudent()
+Student<--System: ack
+deactivate Student
+
