@@ -1,12 +1,25 @@
-title Leave a battle
+frame Leave a battle
 
 actor Student
 activate Student
+
+Student->System: 1: requestBattlePage()
+
 activate System
-Student->System: requestBattlePage()
-System-->Student: returnBattlePage()
-Student->System: leaveBattle()
-System->System: removeStudent()
-Student<--System: ack
+System-->Student: 2: show(battle-page)
+deactivate System
+
+Student->System: 3: leaveBattle(battle)
+alt signedIn == false
+System-->Student: 4: show(not-signed-in Message)
+else hasJoinedBattle == false
+System-->Student: show(not-joined-battle Message)
+else 
+System->System: 5: removeStudent(student)
+Student<--System: 6: ack
+end
+activate System
+
+deactivate System
 deactivate Student
 

@@ -1,12 +1,24 @@
-title Join a battle
+frame Join a battle
 
 actor Student
 activate Student
+
+Student->System: 1: requestBattlePage()
 activate System
-Student->System: requestBattlePage()
-System-->Student: returnBattlePage()
-Student->System: joinBattle()
-System->System: createNewTeam()
-Student<--System: ack
+System-->Student: 2: show(battle-page)
+deactivate System
+
+Student->System: 3: joinBattle(battle)
+activate System
+alt signIn == false
+System-->Student: 4: show(not-signed-in Message)
+else alreadyJoined == true
+System-->Student: 5: show(already-joined Message)
+else
+System->System: 6: createNewTeam(student)
+Student<--System: 7: ack
+end
+
+deactivate System
 deactivate Student
 

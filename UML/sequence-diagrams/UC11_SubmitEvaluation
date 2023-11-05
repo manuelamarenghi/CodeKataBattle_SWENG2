@@ -1,26 +1,31 @@
-title Submit a personal evalutation
+frame Submit a personal evalutation
 
 actor Educator
 
 activate Educator
 Educator->System: requestBattlePage()
 activate System
-System-->Educator: returnBattlePage()
+System-->Educator: show(battle-page)
 deactivate System
 
 Educator->System: requestTeamsPage()
 activate System
-System-->Educator: returnTeamsPage()
+System-->Educator: show(teams-page)
 deactivate System
 
+alt 
+
+else 
 Educator->System: assignEvaluation()
 activate System
-System-->Educator: returnEvaluationForm()
+System-->Educator: returnEvaluationForm(form)
 deactivate System
 
-Educator->Educator:compileEvaluationForm()
+Educator->Educator:compileEvaluationForm(form)
 activate System
-Educator->System: sendEvaluationForm()
+Educator->System: sendEvaluationForm(form)
 System-->Educator: ack
+
 deactivate System
 deactivate Educator
+end

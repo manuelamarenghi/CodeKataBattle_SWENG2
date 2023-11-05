@@ -1,21 +1,33 @@
-title Create a battle
+frame Create a battle
 
 actor Educator
 
 activate Educator
-Educator->System: requestTournamentPage()
+Educator->System: 1: requestTournamentPage()
 activate System
-System-->Educator: returnTournamentPage()
+System-->Educator: 2: show(tournament-page)
 deactivate System
 
-Educator->System: createNewBattle()
+Educator->System: 3: createNewBattle()
 activate System
-System-->Educator:returnBattleForm
+alt notAnEducator == true
+System-->Educator: 4: show(not-educator Message)
+else creatorPermission == false
+System-->Educator: 5: show(no-permission Message)
+else 
+System-->Educator:7: returnBattleForm(form)
 deactivate System
 
-Educator->Educator:compileBattleForm()
+Educator->Educator:8: compileBattleForm(form)
 activate System
-Educator->System: sendBattleForm()
-System-->Educator: ack
+Educator->System: 9: sendBattleForm(form)
+System->System: 10 checkForm(form)
+alt wrongContent == true
+System-->Educator: 11: show(wrong-content Message)
+else
+System-->Educator: 12: ack
+end
+end
+
 deactivate System
 deactivate Educator

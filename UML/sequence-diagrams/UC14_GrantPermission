@@ -1,0 +1,18 @@
+frame Grant permission to colleagues
+
+actor Educator1
+
+activate Educator1
+Educator1->System: requestTournamentPage()
+activate System
+System-->Educator1: returnTournamentPage()
+deactivate System
+
+actor Educator2
+
+Educator1->System: inviteCollaborator()
+activate System
+System->Educator2: notifyCollaborator()
+System-->Educator1: ack
+deactivate System
+deactivate Educator1

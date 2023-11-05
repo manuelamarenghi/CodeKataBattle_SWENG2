@@ -2,14 +2,20 @@ frame Close a Tournament
 
 actor Educator
 
+
 activate Educator
 Educator->System: requestTournamentPage()
 activate System
 System-->Educator: returnTournamentPage()
 deactivate System
 
+actor Student
+
 Educator->System: closeTournament()
 activate System
+System->System: compute rank\nand awards
+System->Student: awardStudent()
+System->Student: notifyStudentEndTournament()
 System-->Educator: ack
 deactivate System
 deactivate Educator
