@@ -1,4 +1,5 @@
 frame Create a battle
+participantspacing 15
 
 actor Educator
 
@@ -12,24 +13,21 @@ deactivate System
 Educator->System: 3: createNewBattle()
 
 activate System
-alt notAnEducator == true
-System-->Educator: 4: show(not-educator Message)
-else creatorPermission == false
-System-->Educator: 5: show(no-permission Message)
+alt creatorPermission == false
+System-->Educator: show(no-permission Message)
 else 
-System-->Educator:7: show(battle-form)
+System-->Educator: 4: show(battle-form)
 deactivate System
 
-Educator->Educator:8: compileBattleForm()
-Educator->System: 9: sendBattleForm()
+Educator->Educator: 5: compileBattleForm()
+Educator->System: 6: sendBattleForm()
 
 activate System
-System->System: 10 checkForm()
+System->System: 7: checkForm()
 alt wrongContent == true
-System-->Educator: 11: show(wrong-content Message)
-System-->Educator: 12: show(battle-form)
+System-->Educator: show(wrong-content Message)
 else
-System-->Educator: 12: ack
+System-->Educator: 8: show(success Message)
 end
 end
 

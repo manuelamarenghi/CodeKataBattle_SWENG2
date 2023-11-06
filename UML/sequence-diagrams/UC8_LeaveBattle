@@ -1,4 +1,5 @@
 frame Leave a battle
+participantspacing 15
 
 actor Student
 activate Student
@@ -12,15 +13,11 @@ deactivate System
 Student->System: 3: leaveBattle(battle)
 
 activate System
-alt signedIn == false
-System-->Student: 4: show(not-signed-in Message)
-System-->Student: 5: show(battle-page)
-else hasJoinedBattle == false
-System-->Student: 6: show(not-joined-battle Message)
-System-->Student: 7: show(battle-page)
+alt hasJoinedBattle == false
+System-->Student: show(not-joined-battle Message)
 else 
-System->System: 8: removeStudent(student)
-Student<--System: 9: ack
+System->System: 4: removeStudent(student)
+Student<--System: 5: show(success Message)
 end
 
 deactivate System
