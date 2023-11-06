@@ -3,28 +3,35 @@ frame Submit a personal evalutation
 actor Educator
 
 activate Educator
-Educator->System: requestBattlePage()
+Educator->System: 1: requestBattlePage()
 activate System
-System-->Educator: show(battle-page)
+System-->Educator: 2: show(battle-page)
 deactivate System
 
-Educator->System: requestTeamsPage()
+Educator->System: 3: requestTeamsPage()
 activate System
-System-->Educator: show(teams-page)
+System-->Educator: 4: show(teams-page)
 deactivate System
 
-alt 
+
+Educator->System: 5: assignEvaluation(score, team)
+activate System
+
+alt notAnEducator == true
+System-->Educator: 6: show(not-educator Message)
+
+else battleInConsolidationPhase == false
+System-->Educator: 7: show(not-consolidation-phase Message)
+
+else personalEvaluationIncluded == false
+System-->Educator: 8: show(invalid-option Message)
+
+else score < 0 or score > 100
+System-->Educator: 9: show(invalid-score Message)
 
 else 
-Educator->System: assignEvaluation()
-activate System
-System-->Educator: returnEvaluationForm(form)
-deactivate System
 
-Educator->Educator:compileEvaluationForm(form)
-activate System
-Educator->System: sendEvaluationForm(form)
-System-->Educator: ack
+System-->Educator: 10: ack
 
 deactivate System
 deactivate Educator

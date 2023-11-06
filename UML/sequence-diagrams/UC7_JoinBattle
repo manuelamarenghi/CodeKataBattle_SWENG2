@@ -4,13 +4,15 @@ actor Student
 activate Student
 
 Student->System: 1: requestBattlePage()
+
 activate System
 System-->Student: 2: show(battle-page)
 deactivate System
 
 Student->System: 3: joinBattle(battle)
+
 activate System
-alt signIn == false
+alt signedIn == false
 System-->Student: 4: show(not-signed-in Message)
 else alreadyJoined == true
 System-->Student: 5: show(already-joined Message)

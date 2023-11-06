@@ -4,26 +4,30 @@ actor Educator
 
 activate Educator
 Educator->System: 1: requestTournamentPage()
+
 activate System
 System-->Educator: 2: show(tournament-page)
 deactivate System
 
 Educator->System: 3: createNewBattle()
+
 activate System
 alt notAnEducator == true
 System-->Educator: 4: show(not-educator Message)
 else creatorPermission == false
 System-->Educator: 5: show(no-permission Message)
 else 
-System-->Educator:7: returnBattleForm(form)
+System-->Educator:7: show(battle-form)
 deactivate System
 
-Educator->Educator:8: compileBattleForm(form)
+Educator->Educator:8: compileBattleForm()
+Educator->System: 9: sendBattleForm()
+
 activate System
-Educator->System: 9: sendBattleForm(form)
-System->System: 10 checkForm(form)
+System->System: 10 checkForm()
 alt wrongContent == true
 System-->Educator: 11: show(wrong-content Message)
+System-->Educator: 12: show(battle-form)
 else
 System-->Educator: 12: ack
 end

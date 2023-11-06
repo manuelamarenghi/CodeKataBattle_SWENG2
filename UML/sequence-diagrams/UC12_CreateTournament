@@ -1,22 +1,31 @@
-title Create a tournament
+frame Create a tournament
 
 actor Educator
 
 activate Educator
-Educator->System: requestTournamentCreationPage()
+Educator->System: 1: requestTournamentCreationPage()
+
 activate System
-System-->Educator: returnTournamentCreationPage()
+System-->Educator: 2: show(tournament-creation-page)
 deactivate System
 
-Educator->System: createTournament()
+Educator->System: 3: createTournament()
+
 activate System
-System-->Educator: returnTournamentForm()
+System-->Educator: 4: show(create-tournament-form)
 deactivate System
 
-Educator->Educator: compileTournamentForm()
-Educator->Educator: defineBadges()
+Educator->Educator: 5: compileTournamentForm()
+Educator->System: 6: sendTournamentForm()
+
 activate System
-Educator->System: ???()
-System-->Educator: ack
+System->System: 7: checkForm()
+alt wrongContent == true
+System-->Educator: 8: show(wrong-content Message)
+System-->Educator: 9: show(create-tournament-form)
+else 
+System-->Educator: 10: ack
+end
+
 deactivate System
 deactivate Educator

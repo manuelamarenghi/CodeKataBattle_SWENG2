@@ -10,15 +10,18 @@ System-->Student: 2: show(battle-page)
 deactivate System
 
 Student->System: 3: leaveBattle(battle)
+
+activate System
 alt signedIn == false
 System-->Student: 4: show(not-signed-in Message)
+System-->Student: 5: show(battle-page)
 else hasJoinedBattle == false
-System-->Student: show(not-joined-battle Message)
+System-->Student: 6: show(not-joined-battle Message)
+System-->Student: 7: show(battle-page)
 else 
-System->System: 5: removeStudent(student)
-Student<--System: 6: ack
+System->System: 8: removeStudent(student)
+Student<--System: 9: ack
 end
-activate System
 
 deactivate System
 deactivate Student
