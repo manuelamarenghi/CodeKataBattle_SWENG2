@@ -1,21 +1,29 @@
 frame Close a Tournament
+participantspacing 10
 
 actor Educator
 
-
 activate Educator
-Educator->System: requestTournamentPage()
+Educator->System: 1: requestTournamentPage()
+
 activate System
-System-->Educator: returnTournamentPage()
+System-->Educator: 2: show(tournament-page)
 deactivate System
 
 actor Student
 
-Educator->System: closeTournament()
+Educator->System: 3: closeTournament()
 activate System
-System->System: compute rank\nand awards
-System->Student: awardStudent()
-System->Student: notifyStudentEndTournament()
-System-->Educator: ack
+alt creator == false
+System-->Educator: show(not-creator Message)
+else allBattlesTerminated == false
+System-->Educator: show(battles-not-finished Message)
+else 
+System->System: 4: calculateRankAwards(rank, awards)
+System->Student: 5: awardStudent(student)
+System->Student: 6: notifyStudentEndTournament(student)
+System-->Educator: 7: show(success Message)
+end
+
 deactivate System
 deactivate Educator

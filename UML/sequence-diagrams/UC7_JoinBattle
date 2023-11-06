@@ -1,4 +1,5 @@
 frame Join a battle
+participantspacing 15
 
 actor Student
 activate Student
@@ -12,13 +13,11 @@ deactivate System
 Student->System: 3: joinBattle(battle)
 
 activate System
-alt signedIn == false
-System-->Student: 4: show(not-signed-in Message)
-else alreadyJoined == true
-System-->Student: 5: show(already-joined Message)
+alt alreadyJoined == true
+System-->Student: show(already-joined Message)
 else
-System->System: 6: createNewTeam(student)
-Student<--System: 7: ack
+System->System: 4: createNewTeam(student)
+Student<--System: 5: show(success Message)
 end
 
 deactivate System

@@ -1,4 +1,5 @@
 frame Submit a personal evalutation
+participantspacing 15
 
 actor Educator
 
@@ -17,22 +18,20 @@ deactivate System
 Educator->System: 5: assignEvaluation(score, team)
 activate System
 
-alt notAnEducator == true
-System-->Educator: 6: show(not-educator Message)
-
-else battleInConsolidationPhase == false
-System-->Educator: 7: show(not-consolidation-phase Message)
+alt battleInConsolidationPhase == false
+System-->Educator: show(not-consolidation-phase Message)
 
 else personalEvaluationIncluded == false
-System-->Educator: 8: show(invalid-option Message)
+System-->Educator: show(invalid-option Message)
 
 else score < 0 or score > 100
-System-->Educator: 9: show(invalid-score Message)
+System-->Educator: show(invalid-score Message)
 
 else 
 
-System-->Educator: 10: ack
+System-->Educator: 6: show(success Message)
+
+end
 
 deactivate System
 deactivate Educator
-end
