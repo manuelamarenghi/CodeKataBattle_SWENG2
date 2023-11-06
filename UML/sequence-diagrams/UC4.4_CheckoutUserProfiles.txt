@@ -1,0 +1,12 @@
+frame Browse the platform (checkout user profiles)
+participantspacing 15
+actor User/Non-Reg User
+activate User/Non-Reg User
+User/Non-Reg User->System: 1 : requestUserPage(username)
+activate System
+System->System : 2 : checkExistence(username)
+alt existence == true
+System-->User/Non-Reg User: 3 : show(User page)
+else 
+System-->User/Non-Reg User: show(Inesistent-User Message)
+end

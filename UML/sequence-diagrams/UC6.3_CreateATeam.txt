@@ -1,0 +1,25 @@
+frame Manage battle teams (create a team)
+participantspacing 15
+actor Student
+activate Student
+Student->System: 1 : requestBattlePage(battle name)
+activate System
+System-->Student: 2 : show(battle page)
+deactivate System
+Student->System: 3 : select("create new team")
+activate System
+System->System: 4 : checkCondition(battle name)
+alt deadline == expired
+System-->Student: show(InvalidAction Message)
+else alreadyinteam == true
+System-->Student: show(AlreadyMemb Message)
+System-->Student: show(RequestToLeave Message)
+Student->System: select(leave)
+alt leave == true
+System->System: createNewTeam(username)
+System-->Student: show(NewTeamCreated Message)
+end
+else 
+System->System: 5 : createNewTeam(username)
+System-->Student: 6 : show(NewTeamCreated Message)
+end
