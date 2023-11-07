@@ -1,5 +1,5 @@
 frame Create a tournament
-participantspacing 15
+participantspacing 10
 
 actor Educator
 
@@ -24,7 +24,9 @@ System->System: 7: checkForm()
 alt wrongContent == true
 System-->Educator: show(wrong-content Message)
 else 
-System-->Educator: 8: show(success Message)
+actor Student
+System->Student: 8: notifyStudents(student)
+System-->Educator: 9: show(success Message)
 end
 
 deactivate System

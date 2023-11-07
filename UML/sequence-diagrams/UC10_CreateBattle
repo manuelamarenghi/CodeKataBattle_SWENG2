@@ -1,5 +1,5 @@
 frame Create a battle
-participantspacing 15
+participantspacing 10
 
 actor Educator
 
@@ -27,6 +27,8 @@ System->System: 7: checkForm()
 alt wrongContent == true
 System-->Educator: show(wrong-content Message)
 else
+actor Student
+System->Student: notifySubscribedStudents(student)
 System-->Educator: 8: show(success Message)
 end
 end
