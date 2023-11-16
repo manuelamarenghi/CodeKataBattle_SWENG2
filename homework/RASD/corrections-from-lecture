@@ -1,0 +1,24 @@
+SECTION 1
+1- G6 kinda vague: what does smartly recharge mean?
+2- Kinda wrong to talk about the system being an "App", use more general terms
+3- QR code stuff is too detailed (scope)
+4- downloading the app is not a world phenomena
+5- world phenomena not well done, too few and not really correct
+
+SECTION 2
+1- Avoid using phrases like "everything is ok" or "eevrything will work as espected", it's a bit ambiguous
+2- We should also explore exceptional behaviours in the scenarios part (it's actually better to go into detail in the use case part)
+3- When introducing a statechart, a chart should be associated to a class to explain its behaviour (make the referred class clear)
+4- D9 should be a requirement
+
+SECTION 3
+1- Do not put prerequisites in use case diagrams! They belong in the prerequisites of the use case tables
+2- Might be a good idea to separate the requirements based on the "macro-functions"
+3- Sequence diagrams should not talk about mobile app or stuff like that, just call it a system, mobile/web app decisions belong in the design document
+
+SECTION 4
+1- some facts are not really precise
+2- Good to provide comments on all declarations
+3- No exaplanation about the rationalle of the alloy verification (what are we testing for?)
+4- small show for ..
+
