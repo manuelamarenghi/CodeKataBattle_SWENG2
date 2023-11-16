@@ -1,0 +1,23 @@
+SECTION 1
+- The purpose section is supposed to talk about what the application is for, not what the document is for
+- Document structure section could be improved... there are some useless comments
+
+SECTION 2
+(2.1) - A precise description of the deployment view is out of place here, it's premature to put components like load balancers, firewalls, etc. here, this part should stay at a higher level
+(2.1) - Talking about "clustering" is premature in this section
+(2.2) - The model is overloaded, it could have probably been better to create some microservices to prevent that single point of failures and add some more decoupoling between components. The structure as it is represented here is manolith-like structure, it's a design decision which may be controvertial, it might have been more benefital to break down the structure a bit (not going full-out microservices but, having a finer grained architecture would favour decoupling)
+(2.2) - It's a controvertial choice to have a shared database for all entities, may present issues due to too many different components interacting with it
+(2.2) - The two diagrams share some components that interact in a different way, this makes the document ambiguous because the components are not very precisely descripted and the whole explanation about the architecture (the desccription more then the diagrams) is just kinda confused
+(2.3) - Not all components present in the component diagram are represented here, only the main components are. All views must be consistent!
+(2.4) - All use cases and sequence diagrams in the RASD should also be represented here (ok in this document)
+(2.5) - The components in the component interfaces are missing any kind of information, also variable types and return elements should be identified here
+(2.5) - MAKE SURE THAT INFORMATIONS IN THIS SECTION MATCH WHAT HAS BEEN WRITTEN PREVIOUSLY !! Specially in the diagrams (ok in this document)
+
+SECTION 3
+- Not much explanation or many details reguarding the UI
+
+SECTION 4
+- Would be nice to build a matrix-like structure with requirements and components, tracking which components compete to satisfying each requirement
+
+SECTION 5
+- Overview part is dumb, useless to exaplain what testing is about...
