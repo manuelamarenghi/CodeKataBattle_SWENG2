@@ -13,11 +13,11 @@ GitHub->>System: 2: apiCall()
 deactivate GitHub
 
 alt teamRegistered == false
-System-->Student:show(not-registered-team Message)
+System-->Student:show(not registered team Message)
 else submissionDeadlineExpired == true
-System-->Student:show(deadline-expired Message)
+System-->Student:show(deadline expired Message)
 else submissionPhaseStarted == false
-System-->Student:show(submission-phase-not-started Message)
+System-->Student:show(submission phase not started Message)
 else 
 activate System
 System->GitHub: 3: fetchSourceCode()

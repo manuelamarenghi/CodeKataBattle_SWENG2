@@ -4,10 +4,10 @@ participantspacing 10
 actor Educator
 
 activate Educator
-Educator->System: 1: requestTournamentPage(tournament-name)
+Educator->System: 1: requestTournamentPage(tournament name)
 
 activate System
-System-->Educator: 2: show(tournament-page)
+System-->Educator: 2: show(tournament page)
 deactivate System
 
 actor Student
@@ -17,7 +17,7 @@ activate System
 alt creator == false
 System-->Educator: show(not-creator Message)
 else allBattlesTerminated == false
-System-->Educator: show(battles-not-finished Message)
+System-->Educator: show(battles not finished Message)
 else 
 System->System: 4: calculateRankAwards(rank, awards)
 System->Student: 5: awardStudent(student)
