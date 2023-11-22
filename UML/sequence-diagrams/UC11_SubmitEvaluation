@@ -4,7 +4,7 @@ participantspacing 15
 actor Educator
 
 activate Educator
-Educator->System: 1: requestBattlePage()
+Educator->System: 1: requestBattlePage(battle-name)
 activate System
 System-->Educator: 2: show(battle-page)
 deactivate System

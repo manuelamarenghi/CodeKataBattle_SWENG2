@@ -4,7 +4,7 @@ participantspacing 10
 actor Educator
 
 activate Educator
-Educator->System: 1: requestTournamentCreationPage()
+Educator->System: 1: requestTournamentListPage()
 
 activate System
 System-->Educator: 2: show(tournament-creation-page)

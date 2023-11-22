@@ -4,13 +4,13 @@ participantspacing 15
 actor Student
 activate Student
 
-Student->System: 1: requestBattlePage()
+Student->System: 1: requestBattlePage(battle-name)
 
 activate System
 System-->Student: 2: show(battle-page)
 deactivate System
 
-Student->System: 3: joinBattle(battle)
+Student->System: 3: joinBattle(battle-name)
 
 activate System
 alt alreadyJoined == true
