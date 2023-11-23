@@ -23,4 +23,3 @@ System-->Invited Student: 8 : sendNotification(invite)
 System-->Student: 9 : show(Successful Message)
 end
 end
-System-->Student: 10 : show(landing page)

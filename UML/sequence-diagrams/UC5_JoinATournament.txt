@@ -15,4 +15,3 @@ Student->System: 4 : register()
 System->System: 5 : registerNewPartecipant()
 System-->Student: 6 : show(Succesful Message)
 end
-System-->Student: show(landing page)
