@@ -3,13 +3,13 @@ frame Manage battle teams (accept an invite)
 participantspacing 15
 actor Student
 activate Student
-Student->System: 1 : requestBattlePage()
+Student->System: 1 : requestBattlePage(battle name)
 activate System
 System-->Student: 2 : show(battle page)
 deactivate System
-Student->System: 3 : select(invites tab)
+Student->System: 3 : select(invites button)
 activate System
-System-->Student: 4 : show(list of invites)
+System-->Student: 4 : show(team page)
 deactivate System
 Student->System: 5 : select(invite)
 activate System
@@ -31,4 +31,3 @@ else
 System->System: 7 : addPartecipant(username)
 System-->Student: 8 : show(Successful Message)
 end
-System-->Student: 9 : show(landing page)

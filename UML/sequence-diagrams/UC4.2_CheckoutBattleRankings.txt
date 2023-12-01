@@ -2,15 +2,15 @@ frame Browse the platform (checkout battle rankings)
 participantspacing 15
 actor User/Non-Reg User
 activate User/Non-Reg User
-User/Non-Reg User->System: 1 : requestRankingBattlePage()
+User/Non-Reg User->System: 1 : requestTournamentPage(tournament name)
 activate System
-System-->User/Non-Reg User: 2 : show(list of battles)
+System-->User/Non-Reg User: 2 : show(Tournament page)
 deactivate System
-User/Non-Reg User->System:3 : insert(battle name)
+User/Non-Reg User->System:3 : select(battle name)
 activate System
 System->System: 4 : checkExistence(battle name)
 alt existence == true
-System-->User/Non-Reg User: 5 : show(BattleRanking page)
+System-->User/Non-Reg User: 5 : show(Battle page)
 else 
 System-->User/Non-Reg User: show(Error Message)
 end
