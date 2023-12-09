@@ -1,0 +1,33 @@
+frame Create a tournament
+participantspacing 10
+
+actor Educator
+
+activate Educator
+Educator->System: 1: requestTournamentListPage()
+
+activate System
+System-->Educator: 2: show(tournament page)
+deactivate System
+
+Educator->System: 3: createTournament()
+
+activate System
+System-->Educator: 4: show(create tournament form)
+deactivate System
+
+Educator->Educator: 5: compileTournamentForm()
+Educator->System: 6: sendTournamentForm()
+
+activate System
+System->System: 7: checkForm()
+alt wrongContent == true
+System-->Educator: show(wrong content Message)
+else 
+actor Student
+System->Student: 8: notifyStudents(student)
+System-->Educator: 9: show(success Message)
+end
+
+deactivate System
+deactivate Educator

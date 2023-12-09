@@ -1,0 +1,33 @@
+frame Make an API call
+participantspacing 10
+
+actor Student
+actor GitHub
+
+activate Student
+Student->>GitHub: 1: gitPush()
+deactivate Student
+
+activate GitHub
+GitHub->>System: 2: apiCall()
+deactivate GitHub
+
+alt teamRegistered == false
+System-->Student:show(not registered team Message)
+else submissionDeadlineExpired == true
+System-->Student:show(deadline expired Message)
+else submissionPhaseStarted == false
+System-->Student:show(submission phase not started Message)
+else 
+activate System
+System->GitHub: 3: fetchSourceCode()
+
+activate GitHub
+GitHub-->System: 4: sendSourceCode(code)
+deactivate GitHub
+
+System->System: 5: evaluateCode(code)
+System->System: 6: assignScore(team, score)
+end
+
+deactivate System

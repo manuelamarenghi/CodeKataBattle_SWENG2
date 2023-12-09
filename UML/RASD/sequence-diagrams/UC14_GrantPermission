@@ -1,0 +1,27 @@
+frame Grant permission to colleagues
+participantspacing 10
+
+actor Educator1
+
+activate Educator1
+Educator1->System: 1: requestTournamentPage(tournament name)
+
+activate System
+System-->Educator1: 2: show(tournament page)
+deactivate System
+
+actor Educator2
+
+Educator1->System: 3: inviteCollaborator(email)
+activate System
+alt creator == false
+System-->Educator1: show(not-creator Message)
+else validEmail == false
+System-->Educator1: show(not-valid-emai Message)
+else 
+System->Educator2: 4: notifyCollaborator()
+System-->Educator1: 5: show(success Message)
+end
+
+deactivate System
+deactivate Educator1

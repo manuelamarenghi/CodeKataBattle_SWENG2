@@ -1,0 +1,16 @@
+frame Browse the platform (checkout tournament rankings)
+participantspacing 15
+actor User/Non-Reg User
+activate User/Non-Reg User
+User/Non-Reg User->System: 1 : requestTournamentsPage()
+activate System
+System-->User/Non-Reg User: 2 : show(list of tournaments)
+deactivate System
+User/Non-Reg User->System:3 : select(tournament name)
+activate System
+System->System: 4 : checkExistence(tournament name)
+alt existence == true
+System-->User/Non-Reg User: 5 : show(TournamentPage)
+else 
+System-->User/Non-Reg User: show(Error Message)
+end
