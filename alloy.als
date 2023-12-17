@@ -28,6 +28,11 @@ sig Tournament {
 	tournament_battles: set Battle
 }
 
+// Tournaments should not have battles in common
+fact {
+	all disj t1, t2 : Tournament | #(t1.tournament_battles & t2.tournament_battles) = 0
+}
+
 // In all the battles that are started the number of member of the team
 // should respect the battle's rule
 fact {
@@ -70,12 +75,31 @@ fact {
 	all b : Battle, s : b.battle_submissions | one t : Team | s in t.team_submissions and t in b.teams_registered
 }
 
-// There are not submissions during the registration phase
+// There are no submissions during the registration phase
 assert no_submission_in_registration_phase {
 	all b: Battle | b.battle_status = RegistrationPhase implies #(b.battle_submissions) = 0
 }
 
-//check no_submission_in_registration_phase
+// If a team is subscribed in a battle the number of participants must follow the rule
+assert number_students_follow_the_conditions {
+	all t : Team, b : Battle | t in b.teams_registered implies 
+	#(t.team_students) >= b.min_members and #(t.team_students) <= b.max_members
+}
+ 
+// A student could not be in team
+assert student_could_not_be_in_team {
+	all t : Team | some s : Student | s not in t.team_students
+}
+
+// A team can submit more than one solution to a single battle
+assert more_than_one_submissions {
+	all b : Battle, t : b.teams_registered | #(t.team_submissions & b.battle_submissions) > 1
+}
+
+check no_submission_in_registration_phase
+check number_students_follow_the_conditions
+check student_could_not_be_in_team
+check more_than_one_submissions
 
 pred show {
 	#Tournament <= 1
@@ -85,4 +109,4 @@ pred show {
 	#Submission <= 5
 }
 
-run show
+//run show
