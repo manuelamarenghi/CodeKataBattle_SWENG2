@@ -1,0 +1,31 @@
+frame Define new variable for badges
+participantspacing 10
+
+actor Educator
+
+activate Educator
+Educator->System: 1: createBadge()
+
+activate System
+System-->Educator: 2: show(badge page)
+deactivate System
+
+Educator->System: 3: createVariable()
+
+activate System
+System-->Educator: 4: show(variable page)
+deactivate System
+
+Educator->Educator: 5: defineVariable()
+Educator->System: 6: sendVariableDefinition()
+
+activate System
+System->System: 7: checkDefinition()
+alt syntaxError == true
+System-->Educator: show(syntax error Message)
+else
+System-->Educator: 8: show(success Message)
+end
+
+deactivate System
+deactivate Educator
