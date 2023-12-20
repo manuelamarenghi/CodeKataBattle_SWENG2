@@ -1,6 +1,7 @@
-<mxfile host="app.diagrams.net" modified="2023-11-05T14:57:32.078Z" agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36" etag="Aqwh0DP2btA8Ge09rBV5" version="22.0.8" type="device">
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="app.diagrams.net" modified="2023-12-20T19:24:57.848Z" agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36" etag="KbStSlMvNt_R3sMF3fy-" version="22.1.11" type="device">
   <diagram id="Wk6kaADx64C-FAjZ-ZGa" name="Pagina-1">
-    <mxGraphModel dx="1364" dy="779" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+    <mxGraphModel dx="1604" dy="779" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -47,16 +48,13 @@
           </mxGeometry>
         </mxCell>
         <mxCell id="ABr4gbFiakU_Uh50vdwn-29" value="checkout tournament rankings" style="ellipse;whiteSpace=wrap;html=1;" parent="1" vertex="1">
-          <mxGeometry x="340" y="450" width="90" height="50" as="geometry" />
+          <mxGeometry x="360" y="440" width="90" height="50" as="geometry" />
         </mxCell>
         <mxCell id="ABr4gbFiakU_Uh50vdwn-30" value="checkout &lt;br&gt;battle rankings" style="ellipse;whiteSpace=wrap;html=1;" parent="1" vertex="1">
-          <mxGeometry x="450" y="430" width="90" height="50" as="geometry" />
-        </mxCell>
-        <mxCell id="ABr4gbFiakU_Uh50vdwn-37" value="checkout &lt;br&gt;notifications" style="ellipse;whiteSpace=wrap;html=1;" parent="1" vertex="1">
-          <mxGeometry x="480" y="315" width="90" height="50" as="geometry" />
+          <mxGeometry x="460" y="390" width="90" height="50" as="geometry" />
         </mxCell>
         <mxCell id="ABr4gbFiakU_Uh50vdwn-40" value="checkout &lt;br&gt;user profiles" style="ellipse;whiteSpace=wrap;html=1;" parent="1" vertex="1">
-          <mxGeometry x="510" y="370" width="90" height="50" as="geometry" />
+          <mxGeometry x="500" y="320" width="90" height="50" as="geometry" />
         </mxCell>
         <mxCell id="ABr4gbFiakU_Uh50vdwn-69" value="" style="endArrow=classic;html=1;rounded=0;" parent="1" source="ABr4gbFiakU_Uh50vdwn-1" target="ABr4gbFiakU_Uh50vdwn-7" edge="1">
           <mxGeometry width="50" height="50" relative="1" as="geometry">
@@ -80,17 +78,6 @@
           <mxGeometry width="50" height="50" relative="1" as="geometry">
             <mxPoint x="140" y="336" as="sourcePoint" />
             <mxPoint x="293" y="193" as="targetPoint" />
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="ruRItDK0_2dM5zuljgGm-1" value="" style="endArrow=classic;html=1;rounded=0;dashed=1;" parent="1" source="ABr4gbFiakU_Uh50vdwn-37" target="ABr4gbFiakU_Uh50vdwn-21" edge="1">
-          <mxGeometry width="50" height="50" relative="1" as="geometry">
-            <mxPoint x="140" y="355" as="sourcePoint" />
-            <mxPoint x="243" y="387" as="targetPoint" />
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="ruRItDK0_2dM5zuljgGm-2" value="extends" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="ruRItDK0_2dM5zuljgGm-1" vertex="1" connectable="0">
-          <mxGeometry x="-0.333" y="5" relative="1" as="geometry">
-            <mxPoint x="11" y="-3" as="offset" />
           </mxGeometry>
         </mxCell>
         <mxCell id="ruRItDK0_2dM5zuljgGm-3" value="" style="endArrow=classic;html=1;rounded=0;dashed=1;" parent="1" source="ABr4gbFiakU_Uh50vdwn-40" target="ABr4gbFiakU_Uh50vdwn-21" edge="1">
