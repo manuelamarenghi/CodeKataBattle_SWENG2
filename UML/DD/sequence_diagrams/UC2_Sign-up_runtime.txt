@@ -1,0 +1,28 @@
+frame Sign up
+participant WebApp
+participant API Gateway
+participant Account Manager
+database Account DB
+participantspacing 7
+
+WebApp->API Gateway:   1.  createNewUser(fullName, email, password, type)         
+
+activate API Gateway
+API Gateway->Account Manager:   2.  createNewUser(fullName, email, password, type)        
+
+activate Account Manager
+alt  validinsert == true 
+Account Manager->Account DB:      3. executeQuery(fullName, email, password, type)        
+activate Account DB
+Account DB-->Account Manager: 4. success
+deactivate Account DB
+else 
+Account Manager->Account Manager: 4. error
+end
+
+Account Manager-->API Gateway: 5. result 
+deactivate Account Manager
+
+API Gateway-->WebApp: 6. result 
+
+

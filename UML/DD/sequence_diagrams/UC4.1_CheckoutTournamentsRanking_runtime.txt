@@ -1,0 +1,39 @@
+
+participant WebApp
+
+participant API Gateway
+
+participant Tournament Manager
+participantspacing 7
+database Tournament DB
+
+frame   Browse the platform (checkout tournament rankings) 
+
+WebApp ->API Gateway:          1. getRanking(id)         
+activate API Gateway
+
+API Gateway->Tournament Manager: 2. getRanking(id)
+activate Tournament Manager
+Tournament Manager->Tournament Manager:  3. checkTournament(id)
+
+alt valid == true 
+Tournament Manager->Tournament DB:  4. executeQuery(id)
+
+activate Tournament DB
+Tournament DB-->Tournament Manager:  5. success
+deactivate Tournament DB
+
+Tournament Manager-->API Gateway: 6. result
+API Gateway-->WebApp: 7. result
+
+else
+
+Tournament Manager->Tournament Manager: 4. error
+Tournament Manager-->API Gateway:5. result
+deactivate Tournament Manager
+API Gateway-->WebApp: 6. result
+
+deactivate API Gateway
+end
+
+
