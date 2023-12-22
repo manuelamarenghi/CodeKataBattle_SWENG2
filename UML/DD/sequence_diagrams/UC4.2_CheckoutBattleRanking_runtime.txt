@@ -13,37 +13,43 @@ WebApp->API Gateway: 1. getTournament(id)
 activate API Gateway
 API Gateway->Tournament Manager: 2. getTournament(id)
 activate Tournament Manager
-
-alt valid == true
 Tournament Manager->Tournament DB:    3. executeQuery(Tournament id)   
 activate Tournament DB
+alt id_valid == true
+
 Tournament DB-->Tournament Manager: 4. success
-deactivate Tournament DB
-else 
-Tournament Manager->Tournament Manager: error
-end
-
 Tournament Manager-->API Gateway: 5. result
-deactivate Tournament Manager
 API Gateway-->WebApp: 6. result
-deactivate API Gateway
-
 WebApp->API Gateway: 7. getBattle(id)
-activate API Gateway
+
 API Gateway->Battle Manager: 8. getBattle(id)
 activate Battle Manager
-
-alt valid == true
-Battle Manager->Battle DB: 9. executeQuery(Battle id)
+Battle Manager->Battle DB: 9. executeQuery( id)
 activate Battle DB
-Battle DB-->Battle Manager: 10. success
-deactivate Battle DB
-else 
-Battle Manager->Battle Manager: error
-end
 
+alt id_valid == true
+Battle DB-->Battle Manager: 10. success
+
+else 
+Battle DB-->Battle Manager: invalid
+deactivate Battle DB
+end
 Battle Manager-->API Gateway: 11. result
 deactivate Battle Manager
 API Gateway-->WebApp: 12. result
+
+
+
+else 
+Tournament DB-->Tournament Manager: invalid
+deactivate Tournament DB
+Tournament Manager-->API Gateway:  result
+deactivate Tournament Manager
+API Gateway-->WebApp:  result
 deactivate API Gateway
 deactivate WebApp
+end
+
+
+
+

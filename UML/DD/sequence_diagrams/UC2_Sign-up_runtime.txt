@@ -9,16 +9,18 @@ activate WebApp
 WebApp->API Gateway:   1.  createNewUser(fullName, email, password, type)         
 
 activate API Gateway
-API Gateway->Account Manager:   2.  createNewUser(fullName, email, password, type)        
-
+API Gateway->Account Manager:   2.  createNewUser(fullName, email, password, type)  
 activate Account Manager
-alt  validinsert == true 
-Account Manager->Account DB:      3. executeQuery(fullName, email, password, type)        
+Account Manager->Account DB:      3. executeQuery(fullName, email, password, type)
 activate Account DB
+
+alt  valid_insert == true 
+      
 Account DB-->Account Manager: 4. success
-deactivate Account DB
+
 else 
-Account Manager->Account Manager:  error
+Account DB-->Account Manager:  invalid
+deactivate Account DB
 end
 
 Account Manager-->API Gateway: 5. result 

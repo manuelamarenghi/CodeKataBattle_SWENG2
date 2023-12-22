@@ -14,19 +14,18 @@ API Gateway ->Account Manager:          2. logUser(email, password)
 
 activate Account Manager
 Account Manager->Account DB:            3. executeQuery(user,password)        
-
 activate Account DB
+alt Login Check == true
 
-Account DB-->Account Manager:       4. result 
+Account DB-->Account Manager:       4. success 
+
+else 
+Account DB-->Account Manager:     invalid
 deactivate Account DB
 
+end
 Account Manager-->API Gateway:     5. result
 deactivate Account Manager
-
-alt Login Check == true
-API Gateway-->WebApp:        6.  success
-else 
-API Gateway-->WebApp:     error
+API Gateway-->WebApp:        6.  result
 deactivate API Gateway
 deactivate WebApp
-end
