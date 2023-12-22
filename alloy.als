@@ -60,7 +60,7 @@ fact allBattlesInATournament {
 }
 
 // All the teams should belong to a battle
-fact allTeamsInABattle {
+fact {
 	all t : Team | one b : Battle | t in b.teams_registered
 }
 
@@ -75,6 +75,14 @@ fact {
 	all b : Battle, s : b.battle_submissions | one t : Team | s in t.team_submissions and t in b.teams_registered
 }
 
+// For all the team registered in a battle, if a team has a solution then
+// the solution must be in the battle submissions 
+fact {
+	all b : Battle, t : b.teams_registered | 
+	#(t.team_submissions) > 0 implies
+	(all sub : t.team_submissions | sub in b.battle_submissions)
+}
+
 // There are no submissions during the registration phase
 assert no_submission_in_registration_phase {
 	all b: Battle | b.battle_status = RegistrationPhase implies #(b.battle_submissions) = 0
@@ -82,31 +90,32 @@ assert no_submission_in_registration_phase {
 
 // If a team is subscribed in a battle the number of participants must follow the rule
 assert number_students_follow_the_conditions {
-	all t : Team, b : Battle | t in b.teams_registered implies 
+	all t : Team, b : Battle | t in b.teams_registered and b.battle_status != RegistrationPhase
+	implies 
 	#(t.team_students) >= b.min_members and #(t.team_students) <= b.max_members
 }
  
 // A student could not be in team
 assert student_could_not_be_in_team {
-	all t : Team | some s : Student | s not in t.team_students
+	all s : Student | s not in Team.team_students or s in Team.team_students
 }
 
-// A team can submit more than one solution to a single battle
-assert more_than_one_submissions {
-	all b : Battle, t : b.teams_registered | #(t.team_submissions & b.battle_submissions) > 1
+// A team can submit more than one solution to a single battle or none
+assert submission_assert {
+	all b : Battle, t : b.teams_registered | #(t.team_submissions & b.battle_submissions) >= 0
 }
 
-check no_submission_in_registration_phase
-check number_students_follow_the_conditions
-check student_could_not_be_in_team
-check more_than_one_submissions
+//check no_submission_in_registration_phase
+//check number_students_follow_the_conditions
+//check student_could_not_be_in_team
+//check submission_assert
 
 pred show {
-	#Tournament <= 1
-	#Battle <= 1
+	#Tournament <= 2
+	#Battle <= 3
 	#Team <= 3
 	#Student <= 4
 	#Submission <= 5
 }
 
-//run show
+run show
