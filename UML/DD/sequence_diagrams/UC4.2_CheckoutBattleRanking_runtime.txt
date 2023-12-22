@@ -1,0 +1,48 @@
+frame Browse the platform (checkout battle rankings)
+
+participant WebApp
+participant API Gateway
+participant Tournament Manager
+database Tournament DB
+participant Battle Manager
+database Battle DB
+participantspacing 5
+
+activate WebApp
+WebApp->API Gateway: 1. getTournament(id)
+activate API Gateway
+API Gateway->Tournament Manager: 2. getTournament(id)
+activate Tournament Manager
+
+alt valid == true
+Tournament Manager->Tournament DB:    3. executeQuery(Tournament id)   
+activate Tournament DB
+Tournament DB-->Tournament Manager: 4. success
+deactivate Tournament DB
+else 
+Tournament Manager->Tournament Manager: error
+end
+
+Tournament Manager-->API Gateway: 5. result
+deactivate Tournament Manager
+API Gateway-->WebApp: 6. result
+deactivate API Gateway
+
+WebApp->API Gateway: 7. getBattle(id)
+activate API Gateway
+API Gateway->Battle Manager: 8. getBattle(id)
+activate Battle Manager
+
+alt valid == true
+Battle Manager->Battle DB: 9. executeQuery(Battle id)
+activate Battle DB
+Battle DB-->Battle Manager: 10. success
+deactivate Battle DB
+else 
+Battle Manager->Battle Manager: error
+end
+
+Battle Manager-->API Gateway: 11. result
+deactivate Battle Manager
+API Gateway-->WebApp: 12. result
+deactivate API Gateway

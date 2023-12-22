@@ -36,10 +36,10 @@ API Gateway-->WebApp:        13.  result
 
 
 else 
-Account Manager->Account Manager: 4. error
-Account Manager-->API Gateway:     5. result
+Account Manager->Account Manager:  error
+Account Manager-->API Gateway:      result
 deactivate Account Manager
-API Gateway-->WebApp:        6.  result
+API Gateway-->WebApp:          result
 deactivate API Gateway
 end
 

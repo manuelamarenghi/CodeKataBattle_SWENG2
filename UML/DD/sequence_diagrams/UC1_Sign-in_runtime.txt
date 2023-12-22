@@ -7,6 +7,7 @@ participant Account Manager
 
 frame Sign in
 database Account DB
+activate WebApp
 WebApp ->API Gateway:       1. logUser(email, password)           
 activate API Gateway
 API Gateway ->Account Manager:          2. logUser(email, password)           
@@ -25,7 +26,7 @@ deactivate Account Manager
 alt Login Check == true
 API Gateway-->WebApp:        6.  success
 else 
-API Gateway-->WebApp:    6.  error
+API Gateway-->WebApp:     error
 deactivate API Gateway
-
+deactivate WebApp
 end

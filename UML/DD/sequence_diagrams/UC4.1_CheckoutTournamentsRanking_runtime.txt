@@ -28,10 +28,10 @@ API Gateway-->WebApp: 7. result
 
 else
 
-Tournament Manager->Tournament Manager: 4. error
-Tournament Manager-->API Gateway:5. result
+Tournament Manager->Tournament Manager:  error
+Tournament Manager-->API Gateway: result
 deactivate Tournament Manager
-API Gateway-->WebApp: 6. result
+API Gateway-->WebApp:  result
 
 deactivate API Gateway
 end
