@@ -13,6 +13,6 @@ System->System:     4 : checkCredentials(email,password)
 alt ValidCreedentials == true
 System->Non-Reg User: 5 : show(landing page)
 else 
-System-->Non-Reg User: 6 : show(invalid_insert Message)
-System-->Non-Reg User: 7 : show(sign-in page)
+System-->Non-Reg User: show(invalid_insert Message)
+System-->Non-Reg User: show(sign-in page)
 end
