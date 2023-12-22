@@ -5,6 +5,7 @@ participant Account Manager
 database Account DB
 participantspacing 7
 
+activate WebApp
 WebApp->API Gateway:   1.  createNewUser(fullName, email, password, type)         
 
 activate API Gateway
@@ -24,5 +25,6 @@ Account Manager-->API Gateway: 5. result
 deactivate Account Manager
 
 API Gateway-->WebApp: 6. result 
-
+deactivate API Gateway
+deactivate WebApp
 

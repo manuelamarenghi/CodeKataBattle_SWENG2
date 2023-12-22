@@ -8,7 +8,7 @@ participantspacing 7
 database Tournament DB
 
 frame   Browse the platform (checkout tournament rankings) 
-
+activate WebApp
 WebApp ->API Gateway:          1. getRanking(id)         
 activate API Gateway
 
@@ -34,6 +34,7 @@ deactivate Tournament Manager
 API Gateway-->WebApp:  result
 
 deactivate API Gateway
+deactivate WebApp
 end
 
 

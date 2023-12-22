@@ -46,3 +46,4 @@ Battle Manager-->API Gateway: 11. result
 deactivate Battle Manager
 API Gateway-->WebApp: 12. result
 deactivate API Gateway
+deactivate WebApp
