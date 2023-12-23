@@ -38,6 +38,11 @@ public class SingleEmailSenderTest {
 
         singleEmailSender = new SingleEmailSender(mailSender, WebClient.builder().build());
         mockServer = ClientAndServer.startClientAndServer(8080);
+
+        mockServer
+                .when(request().withMethod("GET").withPath("/api/account/mail")
+                        .withQueryStringParameter("userID", "userID"))
+                .respond(response().withStatusCode(200).withBody("luca.cattani@mail.polimi.it"));
     }
 
     @AfterAll
@@ -47,10 +52,6 @@ public class SingleEmailSenderTest {
 
     @Test
     public void singleMailRequestTest() {
-
-        mockServer
-                .when(request().withMethod("GET").withPath("/api/account/mail").withQueryStringParameter("userID", "userID"))
-                .respond(response().withStatusCode(200).withBody("luca.cattani@mail.polimi.it"));
 
         SingleMailRequest request = new SingleMailRequest("userID", "subject", "content");
 
@@ -62,12 +63,7 @@ public class SingleEmailSenderTest {
     @Test
     public void noMailFoundTest() {
 
-        mockServer
-                .when(request().withMethod("GET").withPath("/api/account/mail").withQueryStringParameter("userID", "wrongID"))
-                .respond(response().withStatusCode(200).withBody("luca.cattani@mail.polimi.it"));
-
         SingleMailRequest request = new SingleMailRequest("userID", "subject", "content");
-        singleEmailSender.sendEmail(request);
 
         boolean success = singleEmailSender.sendEmail(request);
 

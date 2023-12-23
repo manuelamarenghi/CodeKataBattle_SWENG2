@@ -28,9 +28,9 @@ public class SingleEmailSender {
     public boolean sendEmail(@RequestBody SingleMailRequest request) {
         SimpleMailMessage message = new SimpleMailMessage();
 
-        // request will be constructed like this: http://localhost:8080/api/mail/single?userID=1&userID=2&userID=3 ...
         String mail;
         try {
+            // request will be constructed like this: http://localhost:8080/api/mail/single?userID=1
             mail = webClient.get()
                     .uri("http://localhost:8080/api/account/mail",
                             uriBuilder -> uriBuilder.queryParam("userID", request.getUserID()).build())
