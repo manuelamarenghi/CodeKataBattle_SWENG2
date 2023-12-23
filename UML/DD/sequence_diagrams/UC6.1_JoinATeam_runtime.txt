@@ -1,0 +1,57 @@
+participantspacing 10
+participant WebApp
+participant API Gateway
+participant Battle Manager
+participant Battle DB
+
+frame Manage battle teams (join a team)
+
+activate WebApp
+WebApp->API Gateway: 1. getTeam(id)
+activate API Gateway
+API Gateway->Battle Manager: 2. getTeam(id)
+activate Battle Manager
+Battle Manager->Battle DB: 3. executeQuery(id)
+activate Battle DB
+alt id_valid == true 
+Battle DB-->Battle Manager: 4. success
+Battle Manager-->API Gateway: 5. result
+API Gateway-->WebApp: 6. result
+WebApp->API Gateway: 7. registerTeam(id_team, id_user)
+API Gateway->Battle Manager: 8. registerTeam(id_team, id_user)
+Battle Manager->Battle DB: 9. executeQuery(id_team, id_user)
+alt free == true
+Battle DB-->Battle Manager: 10. success
+Battle Manager-->API Gateway: 11. result
+API Gateway-->WebApp: 12. result
+
+else already_inanother == true
+Battle DB-->Battle Manager:  invalid
+Battle Manager-->API Gateway:  result
+API Gateway-->WebApp:  result
+WebApp->API Gateway: leaveTeam(id_old_team, id_user, id_new_team)
+API Gateway->Battle Manager: leaveTeam(id_old_team, id_user, id_new_team)
+Battle Manager->Battle DB: executeQuery(id_old_team, id_user)
+Battle Manager->Battle DB: executeQuery(id_new_team, id_user)
+Battle DB-->Battle Manager:  success
+Battle Manager-->API Gateway:  result
+API Gateway-->WebApp:  result
+
+else already_inthis == true || fullteam == true
+Battle DB-->Battle Manager: invalid
+
+end
+
+else
+Battle DB-->Battle Manager: invalid
+
+end
+deactivate Battle DB
+
+
+Battle Manager-->API Gateway: result
+deactivate Battle Manager
+
+API Gateway-->WebApp: result
+deactivate API Gateway
+deactivate WebApp
