@@ -25,7 +25,7 @@ public class SingleEmailSender {
 
     @PostMapping
     @ResponseStatus(HttpStatus.OK)
-    public void sendEmail(@RequestBody SingleMailRequest request) {
+    public boolean sendEmail(@RequestBody SingleMailRequest request) {
         SimpleMailMessage message = new SimpleMailMessage();
 
         // request will be constructed like this: http://localhost:8080/api/mail/single?userID=1&userID=2&userID=3 ...
@@ -39,7 +39,7 @@ public class SingleEmailSender {
                     .block(); // block until the response is received
         } catch (Exception e) {
             log.error("Error while retrieving email address for user {}\n", request.getUserID());
-            return;
+            return false;
         }
 
         message.setTo(mail);
@@ -48,5 +48,6 @@ public class SingleEmailSender {
 
         mailSender.send(message);
         log.info("Email sent to {}\n", mail);
+        return true;
     }
 }

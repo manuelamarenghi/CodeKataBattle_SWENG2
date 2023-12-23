@@ -11,6 +11,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 
 import java.util.Properties;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockserver.model.HttpRequest.request;
 import static org.mockserver.model.HttpResponse.response;
@@ -52,9 +53,10 @@ public class SingleEmailSenderTest {
                 .respond(response().withStatusCode(200).withBody("luca.cattani@mail.polimi.it"));
 
         SingleMailRequest request = new SingleMailRequest("userID", "subject", "content");
-        singleEmailSender.sendEmail(request);
 
-        assertTrue(true);
+        boolean success = singleEmailSender.sendEmail(request);
+
+        assertTrue(success);
     }
 
     @Test
@@ -67,6 +69,8 @@ public class SingleEmailSenderTest {
         SingleMailRequest request = new SingleMailRequest("userID", "subject", "content");
         singleEmailSender.sendEmail(request);
 
-        assertTrue(true);
+        boolean success = singleEmailSender.sendEmail(request);
+
+        assertFalse(success);
     }
 }
