@@ -1,0 +1,34 @@
+participantspacing 10
+participant WebApp
+participant API Gateway
+participant Account Manager
+database Account DB
+
+
+frame Browse the platform (checkout user profiles)
+
+activate WebApp
+WebApp->API Gateway: 1. getUser(id)
+
+activate API Gateway
+API Gateway->Account Manager: 2. getUser(id)
+
+activate Account Manager
+Account Manager->Account DB: 3. executeQuery(id)
+
+activate Account DB
+alt id_Valid == true
+Account DB-->Account Manager: 4. success
+
+else 
+Account DB-->Account Manager: invalid
+deactivate Account DB
+
+end
+
+Account Manager-->API Gateway: 5. result
+deactivate Account Manager
+
+API Gateway-->WebApp: 6. result
+deactivate API Gateway
+deactivate WebApp
