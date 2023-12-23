@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 @Service
 @RestController
-@RequestMapping("/api/mail")
+@RequestMapping("/api/mail/single")
 @Slf4j
 public class SingleEmailSender {
     @Autowired
@@ -25,7 +25,7 @@ public class SingleEmailSender {
 
         // String userID = request.getUserID();
         String mail = "luca.cattani@mail.polimi.it"; // only for testing...
-        //TODO get email from userID
+        //TODO get email from userID -- request to account manager
 
         message.setTo(mail);
         message.setSubject(request.getSubject());
