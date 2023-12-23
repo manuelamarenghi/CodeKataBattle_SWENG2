@@ -24,7 +24,7 @@ public class MultipleEmailSender {
         SimpleMailMessage message = new SimpleMailMessage();
 
         // String userIDs = request.getUserIDs();
-        String mails = "luca.cattani@mail.polimi.it, lucacattani.job@gmail.com"; // only for testing...
+        String mails = "luca.cattani@mail.polimi.it, lucacattani2001@gmail.com"; // only for testing...
         //TODO get emails from userIDs -- request to account manager
 
         // need to identify a mail for the "to" field and a list of mails for the "bcc" field
