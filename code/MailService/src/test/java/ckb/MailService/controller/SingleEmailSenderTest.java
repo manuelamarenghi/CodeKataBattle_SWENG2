@@ -1,6 +1,7 @@
 package ckb.MailService.controller;
 
 import ckb.MailService.dto.SingleMailRequest;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.mockserver.integration.ClientAndServer;
@@ -38,6 +39,11 @@ public class SingleEmailSenderTest {
         mockServer = ClientAndServer.startClientAndServer(8080);
     }
 
+    @AfterAll
+    public static void tearDown() {
+        mockServer.stop();
+    }
+
     @Test
     public void singleMailRequestTest() {
 
@@ -49,6 +55,18 @@ public class SingleEmailSenderTest {
         singleEmailSender.sendEmail(request);
 
         assertTrue(true);
-        mockServer.stop();
+    }
+
+    @Test
+    public void noMailFoundTest() {
+
+        mockServer
+                .when(request().withMethod("GET").withPath("/api/account/mail").withQueryStringParameter("userID", "wrongID"))
+                .respond(response().withStatusCode(200).withBody("luca.cattani@mail.polimi.it"));
+
+        SingleMailRequest request = new SingleMailRequest("userID", "subject", "content");
+        singleEmailSender.sendEmail(request);
+
+        assertTrue(true);
     }
 }

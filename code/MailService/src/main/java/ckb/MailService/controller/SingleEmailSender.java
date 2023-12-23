@@ -29,12 +29,18 @@ public class SingleEmailSender {
         SimpleMailMessage message = new SimpleMailMessage();
 
         // request will be constructed like this: http://localhost:8080/api/mail/single?userID=1&userID=2&userID=3 ...
-        String mail = webClient.get()
-                .uri("http://localhost:8080/api/account/mail",
-                        uriBuilder -> uriBuilder.queryParam("userID", request.getUserID()).build())
-                .retrieve()
-                .bodyToMono(String.class) // we expect the response to only be a String containing the email address
-                .block(); // block until the response is received
+        String mail;
+        try {
+            mail = webClient.get()
+                    .uri("http://localhost:8080/api/account/mail",
+                            uriBuilder -> uriBuilder.queryParam("userID", request.getUserID()).build())
+                    .retrieve()
+                    .bodyToMono(String.class) // we expect the response to only be a String containing the email address
+                    .block(); // block until the response is received
+        } catch (Exception e) {
+            log.error("Error while retrieving email address for user {}\n", request.getUserID());
+            return;
+        }
 
         message.setTo(mail);
         message.setSubject(request.getSubject());
