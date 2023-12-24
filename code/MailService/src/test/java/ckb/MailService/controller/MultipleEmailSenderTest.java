@@ -1,9 +1,7 @@
 package ckb.MailService.controller;
 
 import ckb.MailService.dto.MultipleMailRequest;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.mockserver.integration.ClientAndServer;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -35,12 +33,15 @@ public class MultipleEmailSenderTest {
         props.put("mail.smtp.starttls.enable", "true");
 
         multipleEmailSender = new MultipleEmailSender(mailSender, WebClient.builder().build());
+    }
+    @BeforeEach
+    public void setUpServer() {
         mockServer = ClientAndServer.startClientAndServer(8080);
-
     }
 
-    @AfterAll
-    public static void tearDown() {
+
+    @AfterEach
+    public void tearDownServer() {
         mockServer.stop();
     }
 
@@ -52,7 +53,7 @@ public class MultipleEmailSenderTest {
                         .withQueryStringParameter("userID", "userID1"))
                 .respond(response().withStatusCode(200).withBody("luca.cattani@mail.polimi.it"));
 
-        MultipleMailRequest request = new MultipleMailRequest("userID1", "subject", "content");
+        MultipleMailRequest request = new MultipleMailRequest("userID1", "content");
 
         boolean success = multipleEmailSender.sendEmail(request);
 
@@ -67,7 +68,7 @@ public class MultipleEmailSenderTest {
                         .withQueryStringParameter("userID", "userID1, userID2, userID3"))
                 .respond(response().withStatusCode(200).withBody("luca.cattani@mail.polimi.it, lucacattani2001@gmail.com, lucacattani.job@gmail.com"));
 
-        MultipleMailRequest request = new MultipleMailRequest("userID1, userID2, userID3", "subject", "content");
+        MultipleMailRequest request = new MultipleMailRequest("userID1, userID2, userID3", "content");
 
         boolean success = multipleEmailSender.sendEmail(request);
 
@@ -82,7 +83,7 @@ public class MultipleEmailSenderTest {
                         .withQueryStringParameter("userID", "userID1"))
                 .respond(response().withStatusCode(200).withBody("luca.cattani@mail.polimi.it"));
 
-        MultipleMailRequest request = new MultipleMailRequest("userID4", "subject", "content");
+        MultipleMailRequest request = new MultipleMailRequest("userID4", "content");
 
         boolean success = multipleEmailSender.sendEmail(request);
 

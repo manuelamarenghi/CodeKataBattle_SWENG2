@@ -9,7 +9,5 @@ import lombok.Data;
 @AllArgsConstructor
 public class SingleMailRequest {
     private String userID;
-    private String subject;
     private String content;
-
 }

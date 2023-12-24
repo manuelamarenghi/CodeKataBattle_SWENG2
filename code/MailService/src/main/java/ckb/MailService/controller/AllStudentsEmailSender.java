@@ -1,6 +1,6 @@
 package ckb.MailService.controller;
 
-import ckb.MailService.dto.MultipleMailRequest;
+import ckb.MailService.dto.AllStudentsMailRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,9 +14,10 @@ import org.springframework.web.reactive.function.client.WebClient;
 @Service
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/mail-multiple")
+@RequestMapping("/api/mail-all-students")
 @Slf4j
-public class MultipleEmailSender {
+public class AllStudentsEmailSender {
+
 
     @Autowired
     private final JavaMailSender mailSender;
@@ -25,42 +26,38 @@ public class MultipleEmailSender {
 
     @PostMapping
     @ResponseStatus(HttpStatus.OK)
-    public boolean sendEmail(@RequestBody MultipleMailRequest request) {
+    public boolean sendEmail(@RequestBody AllStudentsMailRequest request) {
         SimpleMailMessage message = new SimpleMailMessage();
 
-        String userIDs = request.getUserIDs();
         String addressesString;
         try {
-            addressesString = getEmailAddresses(userIDs);
+            addressesString = getEmailAddresses();
         } catch (Exception e) {
-            log.error("Error while retrieving email address for users {}\n", userIDs);
+            log.error("Error while retrieving email address for students\n");
             return false;
         }
 
-        // need to identify a mail for the "to" field and an array of mails for the "bcc" field
         if (moreThanOneValidMail(addressesString)) {
             int firstComma = addressesString.indexOf(",");
             // first address
             String mailTo = addressesString.substring(0, firstComma);
             // all other addresses
-            String[] bcc = addressesString.substring(firstComma+2).split(",");
+            String[] bcc = addressesString.substring(firstComma + 2).split(",");
 
             message.setTo(mailTo);
             message.setBcc(bcc);
         } else if (noValidMail(addressesString)) {
-            log.error("No email was sent due to no valid addresses found in: {}\n", request.getUserIDs());
-            log.error("maybe no valid userID was provided?\n");
+            log.error("No email was sent due to no valid student mail address found\n");
             return false;
         } else { // only one valid mail was retrieved
-            log.warn("Only one valid address found in: {}\n", request.getUserIDs());
-            log.warn("Consider sending requests to /api/mail/single\n");
+            log.warn("Only one valid address found\n");
             message.setTo(addressesString);
         }
 
         message.setSubject("CKB - Notification");
         message.setText(request.getContent());
 
-        try{
+        try {
             mailSender.send(message);
         } catch (Exception e) {
             log.error("Error while sending email to {}\n", addressesString);
@@ -78,13 +75,11 @@ public class MultipleEmailSender {
         return string == null || string.isEmpty() || string.indexOf('@') < 0;
     }
 
-    private String getEmailAddresses(String userIDs) {
-        // request will be constructed like this: http://localhost:8080/api/mail/single?userID=1&userID=2&userID=3 ...
+    private String getEmailAddresses() {
         return webClient.get()
-                .uri("http://localhost:8080/api/account/mail",
-                        uriBuilder -> uriBuilder.queryParam("userID", userIDs).build())
+                .uri("http://localhost:8080/api/account/mail-students")
                 .retrieve()
-                .bodyToMono(String.class) // we expect the response to only be a String containing the email addresses
-                .block(); // block until the response is received
+                .bodyToMono(String.class)
+                .block();
     }
 }

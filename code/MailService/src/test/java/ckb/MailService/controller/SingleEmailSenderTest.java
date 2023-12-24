@@ -53,7 +53,7 @@ public class SingleEmailSenderTest {
     @Test
     public void singleMailRequestTest() {
 
-        SingleMailRequest request = new SingleMailRequest("userID", "subject", "content");
+        SingleMailRequest request = new SingleMailRequest("userID", "content");
 
         boolean success = singleEmailSender.sendEmail(request);
 
@@ -63,7 +63,7 @@ public class SingleEmailSenderTest {
     @Test
     public void noMailFoundTest() {
 
-        SingleMailRequest request = new SingleMailRequest("userID", "subject", "content");
+        SingleMailRequest request = new SingleMailRequest("wrongID", "content");
 
         boolean success = singleEmailSender.sendEmail(request);
 

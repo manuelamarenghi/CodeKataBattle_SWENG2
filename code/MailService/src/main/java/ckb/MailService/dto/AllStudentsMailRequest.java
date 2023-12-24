@@ -7,7 +7,6 @@ import lombok.Data;
 @Data
 @Builder
 @AllArgsConstructor
-public class MultipleMailRequest {
-    private String userIDs;
+public class AllStudentsMailRequest {
     private String content;
 }
