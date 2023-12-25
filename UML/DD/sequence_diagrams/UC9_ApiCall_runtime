@@ -1,0 +1,37 @@
+frame API Call
+
+fontawesome f09b Github
+participant API Gateway
+participant Github Manager
+participant Solution Evaluation Service
+participant Battle Manager
+database Battle DB
+
+participantspacing 5
+
+Github->API Gateway: apiCall()
+activate API Gateway
+API Gateway->Solution Evaluation Service: evaluateSolution()
+deactivate API Gateway
+activate Solution Evaluation Service
+Solution Evaluation Service->Github Manager: fetchSolution()
+activate Github Manager
+Github Manager->Github:git_pull()
+Github-->Github Manager: result
+Github Manager-->Solution Evaluation Service: result
+deactivate Github Manager
+
+Solution Evaluation Service->Solution Evaluation Service: checkSumbission()
+
+alt submission_metadata == ok
+
+Solution Evaluation Service->Battle Manager: assignScore(Team, score)
+deactivate Solution Evaluation Service
+activate Battle Manager
+// Update Query
+Battle Manager->Battle DB: executeQuery(Team, score)
+activate Battle DB
+Battle DB-->Battle Manager: result
+end
+deactivate Battle DB
+deactivate Battle Manager

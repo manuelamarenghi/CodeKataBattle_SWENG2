@@ -1,0 +1,26 @@
+frame Grant permission to colleagues
+
+fontawesome6solid f390 WebApp
+participant API Gateway
+participant Tournament Manager
+participant Mail Manager
+
+participantspacing 5
+
+activate WebApp
+WebApp->API Gateway: grantPermission(id Tournament, id Educator)
+activate API Gateway
+API Gateway->Tournament Manager: grantPermission(id Tournament, id Educator)
+activate Tournament Manager
+
+Tournament Manager->Mail Manager: sendEmail(id Educator, content)
+activate Mail Manager
+Mail Manager-->Tournament Manager: result
+deactivate Mail Manager
+Tournament Manager-->API Gateway: result
+deactivate Tournament Manager
+
+API Gateway-->WebApp: result
+deactivate WebApp
+deactivate API Gateway
+
