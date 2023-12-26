@@ -9,7 +9,7 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>ckb</groupId>
-    <artifactId>MailService</artifactId>
+    <artifactId>mail-service</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>MailService</name>
     <description>Mail service for CodeKataBattle</description>
