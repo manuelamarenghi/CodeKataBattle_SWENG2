@@ -21,7 +21,7 @@ public class MailController extends Controller {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<Object> mail(@RequestBody MailRequest request) {
+    public ResponseEntity<Object> getMail(@RequestBody MailRequest request) {
         List<String> userIDs = List.of(request.getUserIDs().split(","));
 
         String mailAddresses = userIDs.stream()
