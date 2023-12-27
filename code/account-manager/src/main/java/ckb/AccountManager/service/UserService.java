@@ -6,6 +6,8 @@ import ckb.AccountManager.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class UserService {
@@ -30,5 +32,11 @@ public class UserService {
         return userRepository.findUserByEmailAndPassword(email, password).isPresent();
     }
 
+    public User getUserById(Long id) {
+        return userRepository.findUserById(id).orElse(null);
+    }
 
+    public List<User> getUsersByRole(String role) {
+        return userRepository.findUserByRole(role).orElse(null);
+    }
 }

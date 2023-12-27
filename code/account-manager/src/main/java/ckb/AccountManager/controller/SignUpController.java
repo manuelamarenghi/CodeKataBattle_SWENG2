@@ -36,7 +36,7 @@ public class SignUpController extends Controller {
     }
 
     private boolean roleNotValid(String role) {
-        return !role.equals("Student") && !role.equals("Educator");
+        return !role.equals("student") && !role.equals("educator");
     }
 
     private boolean emailInUse(String email) {
