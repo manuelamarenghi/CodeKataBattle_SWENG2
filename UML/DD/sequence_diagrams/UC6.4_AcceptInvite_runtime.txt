@@ -11,24 +11,16 @@ activate API Gateway
 API Gateway->Battle Manager: 2. registerTeam(id_team, id_user)
 
 activate Battle Manager
-Battle Manager->Battle DB: 3. executeQuery(id_team, id_user)
+Battle Manager->Battle DB:       3. executeQuery(id_team, id_user)      
 
 activate Battle DB
 alt free = true
 Battle DB-->Battle Manager: 4. success
-else  already_memb == true 
-Battle DB-->Battle Manager: invalid
-Battle Manager-->API Gateway: result
-API Gateway-->WebApp: result
-WebApp->API Gateway: leaveTeam(id_old_team, id_user, id_new_team)
-API Gateway->Battle Manager: leaveTeam(id_old_team, id_user, id_new_team)
-Battle Manager->Battle DB: executeQuery(id_old_team, id_user)
-Battle Manager->Battle DB: executeQuery(id_new_team, id_user)
-Battle DB-->Battle Manager: success
-
-else  already_full == true 
+else   already_inteam == true ||  already_full == true 
 Battle DB-->Battle Manager: invalid
 deactivate Battle DB
+
+
 end
 
 Battle Manager-->API Gateway: 5. result

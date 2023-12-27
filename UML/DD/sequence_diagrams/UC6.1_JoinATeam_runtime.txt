@@ -22,22 +22,10 @@ API Gateway->Battle Manager: 8. registerTeam(id_team, id_user)
 Battle Manager->Battle DB: 9. executeQuery(id_team, id_user)
 alt free == true
 Battle DB-->Battle Manager: 10. success
-Battle Manager-->API Gateway: 11. result
-API Gateway-->WebApp: 12. result
 
-else already_inanother == true
-Battle DB-->Battle Manager:  invalid
-Battle Manager-->API Gateway:  result
-API Gateway-->WebApp:  result
-WebApp->API Gateway: leaveTeam(id_old_team, id_user, id_new_team)
-API Gateway->Battle Manager: leaveTeam(id_old_team, id_user, id_new_team)
-Battle Manager->Battle DB: executeQuery(id_old_team, id_user)
-Battle Manager->Battle DB: executeQuery(id_new_team, id_user)
-Battle DB-->Battle Manager:  success
-Battle Manager-->API Gateway:  result
-API Gateway-->WebApp:  result
 
-else already_inthis == true || fullteam == true
+
+else already_inteam == true || fullteam == true
 Battle DB-->Battle Manager: invalid
 
 end
@@ -49,9 +37,9 @@ end
 deactivate Battle DB
 
 
-Battle Manager-->API Gateway: result
+Battle Manager-->API Gateway: 11. result
 deactivate Battle Manager
 
-API Gateway-->WebApp: result
+API Gateway-->WebApp: 12. result
 deactivate API Gateway
 deactivate WebApp

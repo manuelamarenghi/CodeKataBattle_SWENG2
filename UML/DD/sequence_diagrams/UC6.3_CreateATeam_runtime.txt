@@ -27,13 +27,6 @@ alt registered == true && not_in_team == true
 Battle DB-->Battle Manager: 10. success
 else 
 Battle DB-->Battle Manager: invalid
-Battle Manager-->API Gateway:  result
-API Gateway-->WebApp: result
-WebApp->API Gateway: leaveTeam(id_team_vecchio, id_user, id_team_nuovo)
-API Gateway->Battle Manager: leaveTeam(id_old_team, id_user, id_new_team)
-Battle Manager->Battle DB: executeQuery(id_old_team, id_user)
-Battle Manager->Battle DB: executeQuery(id_new_team, id_user)
-Battle DB-->Battle Manager: success
 
 
 end
