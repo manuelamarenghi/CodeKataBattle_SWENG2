@@ -1,5 +1,6 @@
 package ckb.AccountManager.controller;
 
+import ckb.AccountManager.model.Role;
 import ckb.AccountManager.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,7 +20,7 @@ public class MailStudentsController extends Controller{
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<Object> mailStudents() {
         String mailAddresses = userService
-                .getUsersByRole("student")
+                .getUsersByRole(Role.STUDENT)
                 .stream()
                 .collect(StringBuilder::new, (sb, user) -> sb.append(user.getEmail()).append(", "), StringBuilder::append)
                 .toString();

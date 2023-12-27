@@ -1,6 +1,7 @@
 package ckb.AccountManager.service;
 
 import ckb.AccountManager.dto.SignUpRequest;
+import ckb.AccountManager.model.Role;
 import ckb.AccountManager.model.User;
 import ckb.AccountManager.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -36,7 +37,7 @@ public class UserService {
         return userRepository.findUserById(id).orElse(null);
     }
 
-    public List<User> getUsersByRole(String role) {
+    public List<User> getUsersByRole(Role role) {
         return userRepository.findUserByRole(role).orElse(null);
     }
 }

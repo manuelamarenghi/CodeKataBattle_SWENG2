@@ -24,19 +24,11 @@ public class SignUpController extends Controller {
             log.error("Email {} already in use", request.getEmail());
             return new ResponseEntity<>("Email already in use", getHeaders(), HttpStatus.CONFLICT);
         }
-        if(roleNotValid(request.getRole())) {
-            log.error("Role {} is not valid, valid roles are: Student, Educator", request.getRole());
-            return new ResponseEntity<>("Role not valid", getHeaders(), HttpStatus.BAD_REQUEST);
-        }
 
         userService.createUser(request);
         log.info("Account created for email {}", request.getEmail());
 
         return new ResponseEntity<>( "Account created", getHeaders(), HttpStatus.CREATED);
-    }
-
-    private boolean roleNotValid(String role) {
-        return !role.equals("student") && !role.equals("educator");
     }
 
     private boolean emailInUse(String email) {

@@ -1,5 +1,6 @@
 package ckb.AccountManager.repository;
 
+import ckb.AccountManager.model.Role;
 import ckb.AccountManager.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -10,5 +11,5 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findByEmail(String email);
     Optional<User> findUserById(Long id);
     Optional<User> findUserByEmailAndPassword(String email, String password);
-    Optional<List<User>> findUserByRole(String role);
+    Optional<List<User>> findUserByRole(Role role);
 }
