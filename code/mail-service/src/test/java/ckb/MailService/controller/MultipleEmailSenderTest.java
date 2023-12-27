@@ -1,14 +1,17 @@
 package ckb.MailService.controller;
 
 import ckb.MailService.dto.MultipleMailRequest;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockserver.integration.ClientAndServer;
+import org.springframework.http.ResponseEntity;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import java.util.Properties;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockserver.model.HttpRequest.request;
 import static org.mockserver.model.HttpResponse.response;
@@ -55,9 +58,9 @@ public class MultipleEmailSenderTest {
 
         MultipleMailRequest request = new MultipleMailRequest("userID1", "content");
 
-        boolean success = multipleEmailSender.sendEmail(request);
+        ResponseEntity<Object> response = multipleEmailSender.sendEmail(request);
 
-        assertTrue(success);
+        assertTrue(response.getStatusCode().is2xxSuccessful());
     }
 
     @Test
@@ -70,9 +73,9 @@ public class MultipleEmailSenderTest {
 
         MultipleMailRequest request = new MultipleMailRequest("userID1, userID2, userID3", "content");
 
-        boolean success = multipleEmailSender.sendEmail(request);
+        ResponseEntity<Object> response = multipleEmailSender.sendEmail(request);
 
-        assertTrue(success);
+        assertTrue(response.getStatusCode().is2xxSuccessful());
     }
 
     @Test
@@ -85,8 +88,8 @@ public class MultipleEmailSenderTest {
 
         MultipleMailRequest request = new MultipleMailRequest("userID4", "content");
 
-        boolean success = multipleEmailSender.sendEmail(request);
+        ResponseEntity<Object> response = multipleEmailSender.sendEmail(request);
 
-        assertFalse(success);
+        assertTrue(response.getStatusCode().is4xxClientError());
     }
 }

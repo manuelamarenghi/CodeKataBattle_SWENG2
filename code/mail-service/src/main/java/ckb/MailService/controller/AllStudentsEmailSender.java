@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
@@ -16,7 +17,8 @@ import org.springframework.web.reactive.function.client.WebClient;
 @RequiredArgsConstructor
 @RequestMapping("/api/mail/all-students")
 @Slf4j
-public class AllStudentsEmailSender {
+@CrossOrigin(origins = "*")
+public class AllStudentsEmailSender extends EmailSender {
 
 
     @Autowired
@@ -26,7 +28,7 @@ public class AllStudentsEmailSender {
 
     @PostMapping
     @ResponseStatus(HttpStatus.OK)
-    public boolean sendEmail(@RequestBody AllStudentsMailRequest request) {
+    public ResponseEntity<Object> sendEmail(@RequestBody AllStudentsMailRequest request) {
         SimpleMailMessage message = new SimpleMailMessage();
 
         String addressesString;
@@ -34,7 +36,7 @@ public class AllStudentsEmailSender {
             addressesString = getEmailAddresses();
         } catch (Exception e) {
             log.error("Error while retrieving email address for students\n");
-            return false;
+            return new ResponseEntity<>(getHeaders(), HttpStatus.BAD_REQUEST);
         }
 
         if (moreThanOneValidMail(addressesString)) {
@@ -48,7 +50,7 @@ public class AllStudentsEmailSender {
             message.setBcc(bcc);
         } else if (noValidMail(addressesString)) {
             log.error("No email was sent due to no valid student mail address found\n");
-            return false;
+            return new ResponseEntity<>(getHeaders(), HttpStatus.BAD_REQUEST);
         } else { // only one valid mail was retrieved
             log.warn("Only one valid address found\n");
             message.setTo(addressesString);
@@ -61,10 +63,10 @@ public class AllStudentsEmailSender {
             mailSender.send(message);
         } catch (Exception e) {
             log.error("Error while sending email to {}\n", addressesString);
-            return false;
+            return new ResponseEntity<>(getHeaders(), HttpStatus.BAD_REQUEST);
         }
         log.info("Email sent to {}\n", addressesString);
-        return true;
+        return new ResponseEntity<>(getHeaders(), HttpStatus.OK);
     }
 
     private boolean moreThanOneValidMail(String string) {

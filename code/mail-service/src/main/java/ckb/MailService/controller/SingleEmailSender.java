@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
@@ -17,7 +18,8 @@ import org.springframework.web.reactive.function.client.WebClient;
 @RequiredArgsConstructor
 @RequestMapping("/api/mail/single")
 @Slf4j
-public class SingleEmailSender {
+@CrossOrigin(origins = "*")
+public class SingleEmailSender extends EmailSender{
     @Autowired
     private final JavaMailSender mailSender;
     @Autowired
@@ -25,7 +27,7 @@ public class SingleEmailSender {
 
     @PostMapping
     @ResponseStatus(HttpStatus.OK)
-    public boolean sendEmail(@RequestBody SingleMailRequest request) {
+    public ResponseEntity<Object> sendEmail(@RequestBody SingleMailRequest request) {
         SimpleMailMessage message = new SimpleMailMessage();
 
         String mail;
@@ -39,7 +41,7 @@ public class SingleEmailSender {
                     .block(); // block until the response is received
         } catch (Exception e) {
             log.error("Error while retrieving email address for user {}\n", request.getUserID());
-            return false;
+            return new ResponseEntity<>(getHeaders(), HttpStatus.BAD_REQUEST);
         }
 
         message.setTo(mail);
@@ -48,6 +50,6 @@ public class SingleEmailSender {
 
         mailSender.send(message);
         log.info("Email sent to {}\n", mail);
-        return true;
+        return new ResponseEntity<>(getHeaders(), HttpStatus.OK);
     }
 }

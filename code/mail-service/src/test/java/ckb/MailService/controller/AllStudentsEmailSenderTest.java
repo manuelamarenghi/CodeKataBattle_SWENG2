@@ -6,12 +6,12 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockserver.integration.ClientAndServer;
+import org.springframework.http.ResponseEntity;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import java.util.Properties;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockserver.model.HttpRequest.request;
 import static org.mockserver.model.HttpResponse.response;
@@ -57,9 +57,9 @@ public class AllStudentsEmailSenderTest {
 
         AllStudentsMailRequest request = new AllStudentsMailRequest("content");
 
-        boolean success = allStudentsEmailSender.sendEmail(request);
+        ResponseEntity<Object> response = allStudentsEmailSender.sendEmail(request);
 
-        assertTrue(success);
+        assertTrue(response.getStatusCode().is2xxSuccessful());
     }
 
     @Test
@@ -72,9 +72,9 @@ public class AllStudentsEmailSenderTest {
 
         AllStudentsMailRequest request = new AllStudentsMailRequest("content");
 
-        boolean success = allStudentsEmailSender.sendEmail(request);
+        ResponseEntity<Object> response = allStudentsEmailSender.sendEmail(request);
 
-        assertTrue(success);
+        assertTrue(response.getStatusCode().is2xxSuccessful());
     }
 
     @Test
@@ -86,8 +86,8 @@ public class AllStudentsEmailSenderTest {
 
         AllStudentsMailRequest request = new AllStudentsMailRequest("content");
 
-        boolean success = allStudentsEmailSender.sendEmail(request);
+        ResponseEntity<Object> response = allStudentsEmailSender.sendEmail(request);
 
-        assertFalse(success);
+        assertTrue(response.getStatusCode().is4xxClientError());
     }
 }

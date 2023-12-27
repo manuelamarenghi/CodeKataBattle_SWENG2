@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
@@ -16,7 +17,8 @@ import org.springframework.web.reactive.function.client.WebClient;
 @RequiredArgsConstructor
 @RequestMapping("/api/mail/multiple")
 @Slf4j
-public class MultipleEmailSender {
+@CrossOrigin(origins = "*")
+public class MultipleEmailSender extends EmailSender{
 
     @Autowired
     private final JavaMailSender mailSender;
@@ -25,7 +27,7 @@ public class MultipleEmailSender {
 
     @PostMapping
     @ResponseStatus(HttpStatus.OK)
-    public boolean sendEmail(@RequestBody MultipleMailRequest request) {
+    public ResponseEntity<Object> sendEmail(@RequestBody MultipleMailRequest request) {
         SimpleMailMessage message = new SimpleMailMessage();
 
         String userIDs = request.getUserIDs();
@@ -34,7 +36,7 @@ public class MultipleEmailSender {
             addressesString = getEmailAddresses(userIDs);
         } catch (Exception e) {
             log.error("Error while retrieving email address for users {}\n", userIDs);
-            return false;
+            return new ResponseEntity<>(getHeaders(), HttpStatus.BAD_REQUEST);
         }
 
         // need to identify a mail for the "to" field and an array of mails for the "bcc" field
@@ -50,7 +52,7 @@ public class MultipleEmailSender {
         } else if (noValidMail(addressesString)) {
             log.error("No email was sent due to no valid addresses found in: {}\n", request.getUserIDs());
             log.error("maybe no valid userID was provided?\n");
-            return false;
+            return new ResponseEntity<>(getHeaders(), HttpStatus.BAD_REQUEST);
         } else { // only one valid mail was retrieved
             log.warn("Only one valid address found in: {}\n", request.getUserIDs());
             log.warn("Consider sending requests to /api/mail/single\n");
@@ -64,10 +66,10 @@ public class MultipleEmailSender {
             mailSender.send(message);
         } catch (Exception e) {
             log.error("Error while sending email to {}\n", addressesString);
-            return false;
+            return new ResponseEntity<>(getHeaders(), HttpStatus.BAD_REQUEST);
         }
         log.info("Email sent to {}\n", addressesString);
-        return true;
+        return new ResponseEntity<>(getHeaders(), HttpStatus.OK);
     }
 
     private boolean moreThanOneValidMail(String string) {
