@@ -14,7 +14,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 @Service
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/mail-multiple")
+@RequestMapping("/api/mail/multiple")
 @Slf4j
 public class MultipleEmailSender {
 

@@ -14,7 +14,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 @Service
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/mail-all-students")
+@RequestMapping("/api/mail/all-students")
 @Slf4j
 public class AllStudentsEmailSender {
 

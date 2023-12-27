@@ -15,7 +15,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 @Service
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/mail-single")
+@RequestMapping("/api/mail/single")
 @Slf4j
 public class SingleEmailSender {
     @Autowired
