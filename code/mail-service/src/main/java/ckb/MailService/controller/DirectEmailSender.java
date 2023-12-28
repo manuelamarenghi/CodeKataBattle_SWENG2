@@ -2,24 +2,20 @@ package ckb.MailService.controller;
 
 import ckb.MailService.dto.MultipleMailRequest;
 import ckb.MailService.service.MailService;
-import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Flux;
 
 import java.util.List;
 
-@Service
 @RestController
 @RequestMapping("/api/mail/direct")
 @RequiredArgsConstructor
 @Slf4j
-@Builder
 @CrossOrigin(origins = "*")
 public class DirectEmailSender extends EmailSender {
 

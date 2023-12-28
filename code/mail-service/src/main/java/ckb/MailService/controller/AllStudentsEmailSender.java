@@ -1,18 +1,17 @@
 package ckb.MailService.controller;
 
 import ckb.MailService.dto.AllStudentsMailRequest;
+import ckb.MailService.service.MailService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Flux;
 
-@Service
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/mail/all-students")
@@ -21,67 +20,38 @@ import org.springframework.web.reactive.function.client.WebClient;
 public class AllStudentsEmailSender extends EmailSender {
 
 
-    @Autowired
-    private final JavaMailSender mailSender;
-    @Autowired
+    private final MailService mailService;
     private final WebClient webClient;
 
     @PostMapping
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<Object> sendEmail(@RequestBody AllStudentsMailRequest request) {
-        SimpleMailMessage message = new SimpleMailMessage();
 
-        String addressesString;
+        List<String> addresses;
         try {
-            addressesString = getEmailAddresses();
+            addresses = getEmailAddresses();
         } catch (Exception e) {
             log.error("Error while retrieving email address for students\n");
             return new ResponseEntity<>(getHeaders(), HttpStatus.BAD_REQUEST);
         }
 
-        if (moreThanOneValidMail(addressesString)) {
-            int firstComma = addressesString.indexOf(",");
-            // first address
-            String mailTo = addressesString.substring(0, firstComma);
-            // all other addresses
-            String[] bcc = addressesString.substring(firstComma + 2).split(",");
-
-            message.setTo(mailTo);
-            message.setBcc(bcc);
-        } else if (noValidMail(addressesString)) {
-            log.error("No email was sent due to no valid student mail address found\n");
-            return new ResponseEntity<>(getHeaders(), HttpStatus.BAD_REQUEST);
-        } else { // only one valid mail was retrieved
-            log.warn("Only one valid address found\n");
-            message.setTo(addressesString);
+        if (mailService.sendEmail(addresses, request.getContent())) {
+            log.info("Email sent to {}\n", addresses);
+            return new ResponseEntity<>(getHeaders(), HttpStatus.OK);
         }
 
-        message.setSubject("CKB - Notification");
-        message.setText(request.getContent());
-
-        try {
-            mailSender.send(message);
-        } catch (Exception e) {
-            log.error("Error while sending email to {}\n", addressesString);
-            return new ResponseEntity<>(getHeaders(), HttpStatus.BAD_REQUEST);
-        }
-        log.info("Email sent to {}\n", addressesString);
-        return new ResponseEntity<>(getHeaders(), HttpStatus.OK);
+        log.error("No valid address found students\n");
+        return new ResponseEntity<>(getHeaders(), HttpStatus.BAD_REQUEST);
     }
 
-    private boolean moreThanOneValidMail(String string) {
-        return string.indexOf(',') > 0;
-    }
-
-    private boolean noValidMail(String string) {
-        return string == null || string.isEmpty() || string.indexOf('@') < 0;
-    }
-
-    private String getEmailAddresses() {
+    private List<String> getEmailAddresses() {
         return webClient.get()
                 .uri("http://localhost:8080/api/account/mail-students")
                 .retrieve()
                 .bodyToMono(String.class)
+                .flatMapMany(responseBody -> Flux.fromArray(responseBody.split(",")))
+                .map(String::trim)
+                .collectList()
                 .block();
     }
 }

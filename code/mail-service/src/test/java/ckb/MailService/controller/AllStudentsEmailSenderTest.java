@@ -1,6 +1,8 @@
 package ckb.MailService.controller;
 
 import ckb.MailService.dto.AllStudentsMailRequest;
+import ckb.MailService.service.MailService;
+import org.json.JSONArray;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -35,7 +37,7 @@ public class AllStudentsEmailSenderTest {
         props.put("mail.smtp.auth", "true");
         props.put("mail.smtp.starttls.enable", "true");
 
-        allStudentsEmailSender = new AllStudentsEmailSender(mailSender, WebClient.builder().build());
+        allStudentsEmailSender = new AllStudentsEmailSender(new MailService(mailSender), WebClient.builder().build() );
     }
 
     @BeforeEach
@@ -66,9 +68,15 @@ public class AllStudentsEmailSenderTest {
     public void multipleStudentsTest() {
 
 
+        JSONArray jsonArray = new JSONArray();
+        jsonArray.put("luca.cattani@mail.polimi.it");
+        jsonArray.put("lucacattani2001@gmail.com");
+
+        String answer = jsonArray.toString().substring(1, jsonArray.toString().length() - 1);
+
         mockServer
                 .when(request().withMethod("GET").withPath("/api/account/mail-students"))
-                .respond(response().withStatusCode(200).withBody("luca.cattani@mail.polimi.it, lucacattani2001@gmail.com"));
+                .respond(response().withStatusCode(200).withBody(answer));
 
         AllStudentsMailRequest request = new AllStudentsMailRequest("content");
 
