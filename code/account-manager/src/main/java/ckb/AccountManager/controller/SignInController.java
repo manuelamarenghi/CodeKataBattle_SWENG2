@@ -23,7 +23,9 @@ public class SignInController extends Controller {
             log.error("Credentials not valid for email {}", request.getEmail());
             return new ResponseEntity<>("Credentials not valid", getHeaders(), HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity<>("Credentials are valid", getHeaders(), HttpStatus.OK);
+
+        String userID = userService.getUserBy(request.getEmail()).toString();
+        return new ResponseEntity<>(userID, getHeaders(), HttpStatus.OK);
     }
 
     private boolean credentialsNotValid(String email, String password) {
