@@ -9,7 +9,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/account/mail")
@@ -22,9 +21,9 @@ public class MailController extends Controller {
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<Object> getMail(@RequestBody MailRequest request) {
-        List<String> userIDs = List.of(request.getUserIDs().split(","));
+        List<String> userIDs = request.getUserIDs();
 
-        String mailAddresses = userIDs.stream()
+        List<String> mailAddresses = userIDs.stream()
                 .map(userID -> {
                     try {
                         return userService.getUserById(Long.valueOf(userID.trim())).getEmail();
@@ -33,10 +32,11 @@ public class MailController extends Controller {
                         return "";
                     }
                 })
-                .collect(Collectors.joining(", "));
+                .filter(mailAddress -> !mailAddress.isEmpty())
+                .toList();
 
-        if (mailAddresses.isEmpty()){
-            log.error("No mail found for userIDs: {} not found", userIDs);
+        if (mailAddresses.isEmpty()) {
+            log.error("No mail found for userIDs: {} not found", String.join(", ", userIDs));
             return new ResponseEntity<>(null, getHeaders(), HttpStatus.NOT_FOUND);
         }
 
