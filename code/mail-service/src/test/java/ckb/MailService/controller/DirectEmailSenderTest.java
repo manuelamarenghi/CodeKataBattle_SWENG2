@@ -1,6 +1,7 @@
 package ckb.MailService.controller;
 
 import ckb.MailService.dto.MultipleMailRequest;
+import ckb.MailService.service.MailService;
 import org.json.JSONArray;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
@@ -19,8 +20,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockserver.model.HttpRequest.request;
 import static org.mockserver.model.HttpResponse.response;
 
-public class MultipleEmailSenderTest {
-    private static MultipleEmailSender multipleEmailSender;
+public class DirectEmailSenderTest {
+    private static DirectEmailSender directEmailSender;
     private static ClientAndServer mockServer;
 
     @BeforeAll
@@ -38,7 +39,7 @@ public class MultipleEmailSenderTest {
         props.put("mail.smtp.auth", "true");
         props.put("mail.smtp.starttls.enable", "true");
 
-        multipleEmailSender = new MultipleEmailSender(mailSender, WebClient.builder().build());
+        directEmailSender = new DirectEmailSender(WebClient.create(), new MailService(mailSender));
     }
 
     @BeforeEach
@@ -64,7 +65,7 @@ public class MultipleEmailSenderTest {
         list.add("userID1");
         MultipleMailRequest request = new MultipleMailRequest(list, "content");
 
-        ResponseEntity<Object> response = multipleEmailSender.sendEmail(request);
+        ResponseEntity<Object> response = directEmailSender.sendEmail(request);
 
         assertTrue(response.getStatusCode().is2xxSuccessful());
     }
@@ -89,7 +90,7 @@ public class MultipleEmailSenderTest {
         list.add("userID3");
         MultipleMailRequest request = new MultipleMailRequest(list, "content");
 
-        ResponseEntity<Object> response = multipleEmailSender.sendEmail(request);
+        ResponseEntity<Object> response = directEmailSender.sendEmail(request);
 
         assertTrue(response.getStatusCode().is2xxSuccessful());
     }
@@ -106,7 +107,7 @@ public class MultipleEmailSenderTest {
         list.add("userID4");
         MultipleMailRequest request = new MultipleMailRequest(list, "content");
 
-        ResponseEntity<Object> response = multipleEmailSender.sendEmail(request);
+        ResponseEntity<Object> response = directEmailSender.sendEmail(request);
 
         assertTrue(response.getStatusCode().is4xxClientError());
     }
