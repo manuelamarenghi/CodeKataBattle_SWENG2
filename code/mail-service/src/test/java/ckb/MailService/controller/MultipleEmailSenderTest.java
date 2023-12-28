@@ -1,6 +1,7 @@
 package ckb.MailService.controller;
 
 import ckb.MailService.dto.MultipleMailRequest;
+import org.json.JSONArray;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -10,6 +11,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -37,6 +40,7 @@ public class MultipleEmailSenderTest {
 
         multipleEmailSender = new MultipleEmailSender(mailSender, WebClient.builder().build());
     }
+
     @BeforeEach
     public void setUpServer() {
         mockServer = ClientAndServer.startClientAndServer(8080);
@@ -56,7 +60,9 @@ public class MultipleEmailSenderTest {
                         .withQueryStringParameter("userID", "userID1"))
                 .respond(response().withStatusCode(200).withBody("luca.cattani@mail.polimi.it"));
 
-        MultipleMailRequest request = new MultipleMailRequest("userID1", "content");
+        List<String> list = new ArrayList<>();
+        list.add("userID1");
+        MultipleMailRequest request = new MultipleMailRequest(list, "content");
 
         ResponseEntity<Object> response = multipleEmailSender.sendEmail(request);
 
@@ -65,13 +71,23 @@ public class MultipleEmailSenderTest {
 
     @Test
     public void multipleMailRequestTest() {
+        JSONArray jsonArray = new JSONArray();
+        jsonArray.put("luca.cattani@mail.polimi.it");
+        jsonArray.put("lucacattani2001@gmail.com");
+        jsonArray.put("lucacattani.job@gmail.com");
+
+        String answer = jsonArray.toString().substring(1, jsonArray.toString().length() - 1);
 
         mockServer
                 .when(request().withMethod("GET").withPath("/api/account/mail")
-                        .withQueryStringParameter("userID", "userID1, userID2, userID3"))
-                .respond(response().withStatusCode(200).withBody("luca.cattani@mail.polimi.it, lucacattani2001@gmail.com, lucacattani.job@gmail.com"));
+                        .withQueryStringParameter("userID", "userID1", "userID2", "userID3"))
+                .respond(response().withStatusCode(200).withBody(answer));
 
-        MultipleMailRequest request = new MultipleMailRequest("userID1, userID2, userID3", "content");
+        List<String> list = new ArrayList<>();
+        list.add("userID1");
+        list.add("userID2");
+        list.add("userID3");
+        MultipleMailRequest request = new MultipleMailRequest(list, "content");
 
         ResponseEntity<Object> response = multipleEmailSender.sendEmail(request);
 
@@ -86,7 +102,9 @@ public class MultipleEmailSenderTest {
                         .withQueryStringParameter("userID", "userID1"))
                 .respond(response().withStatusCode(200).withBody("luca.cattani@mail.polimi.it"));
 
-        MultipleMailRequest request = new MultipleMailRequest("userID4", "content");
+        List<String> list = new ArrayList<>();
+        list.add("userID4");
+        MultipleMailRequest request = new MultipleMailRequest(list, "content");
 
         ResponseEntity<Object> response = multipleEmailSender.sendEmail(request);
 
