@@ -13,6 +13,7 @@ import java.util.Date;
 public class Tournament {
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
+    @Column(name = "id", nullable = false, updatable = false)
     private Long id;
     @Column(name= "reg_deadline")
     private Date reg_deadline;
