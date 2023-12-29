@@ -8,6 +8,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Arrays;
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/account/mail-students")
 @Slf4j
@@ -18,7 +21,7 @@ public class MailStudentsController extends Controller{
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<Object> mailStudents() {
+    public ResponseEntity<Object> getStudentMails() {
         String mailAddresses = userService
                 .getUsersByRole(Role.STUDENT)
                 .stream()
@@ -30,8 +33,11 @@ public class MailStudentsController extends Controller{
             return new ResponseEntity<>("No students found", getHeaders(), HttpStatus.NOT_FOUND);
         }
 
-        mailAddresses = mailAddresses.substring(0, mailAddresses.length() - 2);
-        log.info("Students found: {}", mailAddresses);
-        return new ResponseEntity<>(mailAddresses, getHeaders(), HttpStatus.OK);
+        List<String> addresses = Arrays.stream(mailAddresses.split(","))
+                .map(String::trim)
+                .toList();
+
+        log.info("Students found: {}", addresses);
+        return new ResponseEntity<>(addresses, getHeaders(), HttpStatus.OK);
     }
 }

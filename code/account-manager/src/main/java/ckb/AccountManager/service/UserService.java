@@ -42,7 +42,7 @@ public class UserService {
         return userRepository.findUserByRole(role).orElse(null);
     }
 
-    public Long getUserBy(String email) {
+    public Long getUserByEmail(String email) {
         User user = userRepository.findUserByEmail(email).orElse(null);
         return user == null ? null : user.getId();
     }
