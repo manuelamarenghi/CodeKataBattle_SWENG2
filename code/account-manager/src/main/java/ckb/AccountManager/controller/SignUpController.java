@@ -9,12 +9,18 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 @RestController
 @RequestMapping("/api/account/sign-up")
 @RequiredArgsConstructor
 @Slf4j
 @CrossOrigin(origins = "*")
 public class SignUpController extends Controller {
+
+    private static final String EMAIL_REGEX = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
+    private static final Pattern pattern = Pattern.compile(EMAIL_REGEX);
 
     private final UserService userService;
 
@@ -51,7 +57,10 @@ public class SignUpController extends Controller {
             log.error("Email {} already in use", email);
             return true;
         }
-        return false;
+
+        // check if the email is valid
+        Matcher matcher = pattern.matcher(email);
+        return !matcher.matches();
     }
 
     private boolean missingName(String name) {

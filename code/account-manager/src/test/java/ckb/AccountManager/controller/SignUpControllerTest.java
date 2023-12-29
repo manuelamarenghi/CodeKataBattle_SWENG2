@@ -57,6 +57,15 @@ public class SignUpControllerTest {
     }
 
     @Test
+    public void invalidEmailFormatTest() {
+        SignUpRequest request = new SignUpRequest("SoMe@#Weird_-'1Wrong@Email.idk....", "Test User", "password", Role.STUDENT);
+        ResponseEntity<Object> response = signUpController.signUp(request);
+
+        assertTrue(response.getStatusCode().is4xxClientError());
+    }
+
+
+    @Test
     public void missingNameTest() {
         SignUpRequest request = new SignUpRequest("ckb.test.user@mail.ckb", "", "password", Role.STUDENT);
         ResponseEntity<Object> response = signUpController.signUp(request);
