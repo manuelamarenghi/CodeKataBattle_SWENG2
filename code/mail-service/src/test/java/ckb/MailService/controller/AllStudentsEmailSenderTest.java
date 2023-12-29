@@ -37,7 +37,7 @@ public class AllStudentsEmailSenderTest {
         props.put("mail.smtp.auth", "true");
         props.put("mail.smtp.starttls.enable", "true");
 
-        allStudentsEmailSender = new AllStudentsEmailSender(new MailService(mailSender), WebClient.builder().build() );
+        allStudentsEmailSender = new AllStudentsEmailSender(new MailService(mailSender), WebClient.builder().build());
     }
 
     @BeforeEach
