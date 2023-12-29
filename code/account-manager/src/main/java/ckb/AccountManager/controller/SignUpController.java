@@ -60,7 +60,11 @@ public class SignUpController extends Controller {
 
         // check if the email is valid
         Matcher matcher = pattern.matcher(email);
-        return !matcher.matches();
+        if(!matcher.matches()) {
+            log.error("Email {} is not valid", email);
+            return true;
+        }
+        return false;
     }
 
     private boolean missingName(String name) {

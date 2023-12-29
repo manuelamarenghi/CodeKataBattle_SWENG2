@@ -34,13 +34,12 @@ public class UpdateControllerTest {
         assertTrue(response.getStatusCode().is2xxSuccessful());
 
         User updatedUser = userRepository.findUserById(id).orElse(null);
+        deleteTestUser();
         assert updatedUser != null; // should never happen
         assertEquals("ckb.test.user@mail.ckb", updatedUser.getEmail());
         assertEquals("Test User", updatedUser.getFullName());
         assertEquals("new_password", updatedUser.getPassword());
         assertEquals(Role.STUDENT, updatedUser.getRole());
-
-        deleteTestUser();
     }
 
     @Test
@@ -51,7 +50,6 @@ public class UpdateControllerTest {
         ResponseEntity<Object> response = updateController.updatePersonalInformation(request);
 
         deleteTestUser();
-
         assertTrue(response.getStatusCode().is4xxClientError());
     }
 
@@ -62,6 +60,19 @@ public class UpdateControllerTest {
         UpdateRequest request = new UpdateRequest(id, "", "Test User", "password", Role.STUDENT);
         ResponseEntity<Object> response = updateController.updatePersonalInformation(request);
 
+        deleteTestUser();
+        assertTrue(response.getStatusCode().is4xxClientError());
+    }
+
+    @Test
+    public void invalidEmailFormatTest() {
+        Long id = createTestUser();
+
+        UpdateRequest request = new UpdateRequest(id, "SoMe@#Weird_-'1Wrong@Email.idk....", "Test User", "password", Role.STUDENT);
+        ResponseEntity<Object> response = updateController.updatePersonalInformation(request);
+
+
+        userRepository.findUserById(id).ifPresent(user -> userRepository.delete(user));
         assertTrue(response.getStatusCode().is4xxClientError());
     }
 
@@ -72,6 +83,7 @@ public class UpdateControllerTest {
         UpdateRequest request = new UpdateRequest(id, "ckb.test.user@mail.ckb", "", "password", Role.STUDENT);
         ResponseEntity<Object> response = updateController.updatePersonalInformation(request);
 
+        deleteTestUser();
         assertTrue(response.getStatusCode().is4xxClientError());
     }
 
@@ -82,6 +94,7 @@ public class UpdateControllerTest {
         UpdateRequest request = new UpdateRequest(id, "ckb.test.user@mail.ckb", "Test User", "", Role.STUDENT);
         ResponseEntity<Object> response = updateController.updatePersonalInformation(request);
 
+        deleteTestUser();
         assertTrue(response.getStatusCode().is4xxClientError());
     }
 
@@ -92,6 +105,7 @@ public class UpdateControllerTest {
         UpdateRequest request = new UpdateRequest(id, "ckb.test.user@mail.ckb", "Test User", "password", null);
         ResponseEntity<Object> response = updateController.updatePersonalInformation(request);
 
+        deleteTestUser();
         assertTrue(response.getStatusCode().is4xxClientError());
     }
 

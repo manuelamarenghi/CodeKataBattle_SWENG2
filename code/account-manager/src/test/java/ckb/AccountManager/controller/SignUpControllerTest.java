@@ -44,7 +44,6 @@ public class SignUpControllerTest {
         ResponseEntity<Object> response = signUpController.signUp(request);
 
         deleteTestUser();
-
         assertTrue(response.getStatusCode().is4xxClientError());
     }
 
@@ -53,6 +52,7 @@ public class SignUpControllerTest {
         SignUpRequest request = new SignUpRequest("", "Test User", "password", Role.STUDENT);
         ResponseEntity<Object> response = signUpController.signUp(request);
 
+        deleteTestUser();
         assertTrue(response.getStatusCode().is4xxClientError());
     }
 
@@ -61,6 +61,7 @@ public class SignUpControllerTest {
         SignUpRequest request = new SignUpRequest("SoMe@#Weird_-'1Wrong@Email.idk....", "Test User", "password", Role.STUDENT);
         ResponseEntity<Object> response = signUpController.signUp(request);
 
+        deleteTestUser();
         assertTrue(response.getStatusCode().is4xxClientError());
     }
 
@@ -70,6 +71,7 @@ public class SignUpControllerTest {
         SignUpRequest request = new SignUpRequest("ckb.test.user@mail.ckb", "", "password", Role.STUDENT);
         ResponseEntity<Object> response = signUpController.signUp(request);
 
+        deleteTestUser();
         assertTrue(response.getStatusCode().is4xxClientError());
     }
 
@@ -78,6 +80,7 @@ public class SignUpControllerTest {
         SignUpRequest request = new SignUpRequest("ckb.test.user@mail.ckb", "Test User", "", Role.STUDENT);
         ResponseEntity<Object> response = signUpController.signUp(request);
 
+        deleteTestUser();
         assertTrue(response.getStatusCode().is4xxClientError());
     }
 
@@ -86,6 +89,7 @@ public class SignUpControllerTest {
         SignUpRequest request = new SignUpRequest("ckb.test.user@mail.ckb", "Test User", "password", null);
         ResponseEntity<Object> response = signUpController.signUp(request);
 
+        deleteTestUser();
         assertTrue(response.getStatusCode().is4xxClientError());
     }
 

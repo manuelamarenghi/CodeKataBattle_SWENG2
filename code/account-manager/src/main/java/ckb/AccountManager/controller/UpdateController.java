@@ -9,12 +9,19 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 @RestController
 @RequestMapping("/api/account/update")
 @RequiredArgsConstructor
 @Slf4j
 @CrossOrigin(origins = "*")
 public class UpdateController extends Controller {
+
+    private static final String EMAIL_REGEX = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
+    private static final Pattern pattern = Pattern.compile(EMAIL_REGEX);
+
     private final UserService userService;
 
     @PostMapping
@@ -58,6 +65,13 @@ public class UpdateController extends Controller {
         }
         if (emailDiffersFromCurrent(id, email) && userService.emailInUse(email)) {
             log.error("Email {} already in use", email);
+            return true;
+        }
+
+        // check if the email is valid
+        Matcher matcher = pattern.matcher(email);
+        if(!matcher.matches()) {
+            log.error("Email {} is not valid", email);
             return true;
         }
         return false;
