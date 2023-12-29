@@ -19,7 +19,9 @@ public class SignUpControllerTest {
     @Autowired
     private UserRepository userRepository;
 
-    /** not using @BeforeEach because using @Autowired on static fields is not allowed **/
+    /**
+     * not using @BeforeEach because using @Autowired on static fields is not allowed
+     **/
 
     @Test
     public void correctTest() {

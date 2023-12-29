@@ -56,7 +56,7 @@ public class UpdateController extends Controller {
             log.error("Email not provided for update on user {}", email);
             return true;
         }
-        if (emailDiffersFromCurrent(id ,email) && userService.emailInUse(email)) {
+        if (emailDiffersFromCurrent(id, email) && userService.emailInUse(email)) {
             log.error("Email {} already in use", email);
             return true;
         }

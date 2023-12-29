@@ -16,7 +16,7 @@ import java.util.List;
 @Slf4j
 @RequiredArgsConstructor
 @CrossOrigin(origins = "*")
-public class MailStudentsController extends Controller{
+public class MailStudentsController extends Controller {
     private final UserService userService;
 
     @GetMapping
