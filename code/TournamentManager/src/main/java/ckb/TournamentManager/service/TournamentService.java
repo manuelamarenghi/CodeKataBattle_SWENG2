@@ -1,5 +1,6 @@
 package ckb.TournamentManager.service;
 
+import ckb.TournamentManager.dto.GetTournamentPageRequest;
 import ckb.TournamentManager.dto.NewTournamentRequest;
 import ckb.TournamentManager.dto.PermissionRequest;
 import ckb.TournamentManager.dto.SubscriptionRequest;
@@ -9,6 +10,10 @@ import ckb.TournamentManager.repo.TournamentRankingRepo;
 import ckb.TournamentManager.repo.TournamentRepo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -20,8 +25,8 @@ public class TournamentService {
     public String createTournament(NewTournamentRequest request) {
         Tournament tournament = new Tournament();
         tournament.setReg_deadline(request.getReg_deadline());
+        tournament.setStatus(true);
         tournamentRepo.save(tournament);
-
         String tournamentUrl = "http://tournament-service/tournaments/" + tournament.getId();
         return tournamentUrl;
     }
@@ -53,4 +58,17 @@ public class TournamentService {
         String tournamentUrl = "http://tournament-service/tournaments/" + tournament.getId();
         return tournamentUrl;
     }
+
+    public List<TournamentRanking> getTournamentPage(GetTournamentPageRequest request) {
+        Tournament tournament = tournamentRepo.findById(request.getTournamentId()).orElse(null);
+        List<TournamentRanking> rankings = tournamentRankingRepo.orderByScore(request.getTournamentId());
+        return rankings;
+    }
+
+    public void closeTournament(Long tournamentId) {
+        Tournament tournament = tournamentRepo.findById(tournamentId).orElse(null);
+        tournament.setStatus(false);
+        tournamentRepo.save(tournament);
+    }
+
 }

@@ -18,4 +18,7 @@ public interface TournamentRankingRepo extends JpaRepository<TournamentRanking,L
     <S extends TournamentRanking> S save(S entity);
     @Override
     <S extends TournamentRanking> List<S> saveAll(Iterable<S> entities);
+
+    List<TournamentRanking> findAllById(Long tournamentId);
+    List<TournamentRanking> orderByScore(Long tournamentId);
 }

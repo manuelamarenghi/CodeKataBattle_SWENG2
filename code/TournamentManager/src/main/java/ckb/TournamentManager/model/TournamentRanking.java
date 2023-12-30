@@ -4,12 +4,14 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.Setter;
 
+import java.io.Serializable;
+
 @Data
 @Entity
 @Setter
 @Table(name= "TournamentRankings")
 
-public class TournamentRanking {
+public class TournamentRanking implements Serializable {
     @Id
     @Column(name = "tournament_id", nullable = false, updatable = false)
     private Long tournamentID;
