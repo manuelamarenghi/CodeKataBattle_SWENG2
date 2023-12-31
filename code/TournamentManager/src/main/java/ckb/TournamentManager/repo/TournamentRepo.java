@@ -11,6 +11,7 @@ public interface TournamentRepo extends JpaRepository<Tournament,Long> {
 
     @Override
     Optional<Tournament> findById(Long aLong);
+    Optional<Tournament> findByTournamentID(Long tournamentID);
     @Override
     void delete(Tournament entity);
     @Override

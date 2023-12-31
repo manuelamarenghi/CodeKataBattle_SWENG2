@@ -32,7 +32,7 @@ public class TournamentService {
     }
 
     public Tournament getTournament(Long id) {
-        return tournamentRepo.findById(id).orElse(null);
+        return tournamentRepo.findByTournamentID(id).orElse(null);
     }
 
     public void deleteTournament(Long id) {
@@ -43,7 +43,7 @@ public class TournamentService {
     }
 
     public void addSubscription(SubscriptionRequest request) {
-        Tournament tournament = tournamentRepo.findById(request.getTournamentId()).orElse(null);
+        Tournament tournament = tournamentRepo.findByTournamentID(request.getTournamentId()).orElse(null);
         TournamentRanking ranking = new TournamentRanking();
         if (tournament == null) return;
         ranking.setTournamentID(request.getTournamentId());
@@ -53,20 +53,20 @@ public class TournamentService {
     }
 
     public String addPermission(PermissionRequest request) {
-        Tournament tournament = tournamentRepo.findById(request.getTournamentId()).orElse(null);
+        Tournament tournament = tournamentRepo.findByTournamentID(request.getTournamentId()).orElse(null);
         TournamentRanking ranking = new TournamentRanking();
         String tournamentUrl = "http://tournament-service/tournaments/" + tournament.getId();
         return tournamentUrl;
     }
 
     public List<TournamentRanking> getTournamentPage(GetTournamentPageRequest request) {
-        Tournament tournament = tournamentRepo.findById(request.getTournamentId()).orElse(null);
+        Tournament tournament = tournamentRepo.findByTournamentID(request.getTournamentId()).orElse(null);
         List<TournamentRanking> rankings = tournamentRankingRepo.orderByScore(request.getTournamentId());
         return rankings;
     }
 
     public void closeTournament(Long tournamentId) {
-        Tournament tournament = tournamentRepo.findById(tournamentId).orElse(null);
+        Tournament tournament = tournamentRepo.findByTournamentID(tournamentId).orElse(null);
         tournament.setStatus(false);
         tournamentRepo.save(tournament);
     }
