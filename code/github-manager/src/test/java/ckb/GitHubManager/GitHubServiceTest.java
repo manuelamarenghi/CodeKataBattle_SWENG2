@@ -1,9 +1,13 @@
 package ckb.GitHubManager;
 
 import ckb.GitHubManager.service.GitHubService;
+import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.junit.jupiter.api.Test;
 import org.kohsuke.github.GHRepository;
 import org.springframework.boot.test.context.SpringBootTest;
+
+import java.io.IOException;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.fail;
 
@@ -13,13 +17,32 @@ public class GitHubServiceTest {
     private final GitHubService gitHubService = new GitHubService();
 
     @Test
-    public void createRepositoryTest() {
+    public void createRepositoryTest() throws IOException {
+        GHRepository repo = null;
         try {
-            GHRepository repo = gitHubService.createRepository("test_repo");
-            repo.delete();
+            repo = gitHubService.createRepository("test_repo");
         } catch (Exception e) {
             e.printStackTrace();
             fail();
+        } finally {
+            if (repo != null)  repo.delete();
+        }
+    }
+    @Test
+    public void firstCommitTest() throws IOException {
+        GHRepository repo = null;
+        List<ImmutablePair<String, String>> files = List.of(
+                new ImmutablePair<>("README.md", "This is a test file"),
+                new ImmutablePair<>("directory/TEST.md", "This is a test file in a directory")
+        );
+        try {
+            repo = gitHubService.createRepository("test_repo");
+            gitHubService.commitAndPush(repo, files);
+        } catch (Exception e) {
+            e.printStackTrace();
+            fail();
+        } finally {
+            if (repo != null)  repo.delete();
         }
     }
 }
