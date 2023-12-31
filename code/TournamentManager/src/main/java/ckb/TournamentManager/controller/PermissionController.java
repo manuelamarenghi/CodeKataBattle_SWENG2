@@ -5,6 +5,7 @@ import ckb.TournamentManager.dto.SubscriptionRequest;
 import ckb.TournamentManager.service.TournamentService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
@@ -16,9 +17,12 @@ import reactor.core.publisher.Mono;
 @Slf4j
 @RequestMapping("/api/tournament/permission")
 @RequiredArgsConstructor
+@CrossOrigin(origins = "*")
 
 public class PermissionController extends Controller{
     private final TournamentService tournamentService;
+    @Autowired
+    private final WebClient webClient;
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
@@ -48,7 +52,7 @@ public class PermissionController extends Controller{
     }
 
     private Mono<String> sendRequest(String s, String content, Long userId) {
-        return WebClient.create()
+        return webClient
                 .post()
                 .uri(builder -> builder
                         .path(s)

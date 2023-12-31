@@ -16,6 +16,7 @@ import reactor.core.publisher.Mono;
 @Slf4j
 @RequestMapping("/api/tournament/new-tournament")
 @RequiredArgsConstructor
+@CrossOrigin(origins = "*")
 
 public class NewTournamentController extends Controller{
      private final TournamentService tournamentService;
