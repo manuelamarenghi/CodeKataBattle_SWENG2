@@ -9,6 +9,7 @@ import java.util.Optional;
 public interface TournamentRankingRepo extends JpaRepository<TournamentRanking,Long> {
     @Override
     Optional<TournamentRanking> findById(Long aLong);
+    Optional<TournamentRanking> findByTournamentID(Long tournamentID);
     Optional<TournamentRanking> findByTournamentIDAndUserID(Long tournamentID, Long userID);
     @Override
     void delete(TournamentRanking entity);
@@ -19,6 +20,5 @@ public interface TournamentRankingRepo extends JpaRepository<TournamentRanking,L
     @Override
     <S extends TournamentRanking> List<S> saveAll(Iterable<S> entities);
 
-    List<TournamentRanking> findAllById(Long tournamentId);
     List<TournamentRanking> orderByScore(Long tournamentId);
 }

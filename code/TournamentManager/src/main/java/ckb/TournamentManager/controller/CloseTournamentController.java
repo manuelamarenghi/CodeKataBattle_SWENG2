@@ -17,6 +17,7 @@ import java.util.List;
 @Slf4j
 @RequestMapping("/api/tournament/CloseTournament")
 @RequiredArgsConstructor
+@CrossOrigin(origins = "*")
 
 public class CloseTournamentController extends Controller{
     private final TournamentService tournamentService;
