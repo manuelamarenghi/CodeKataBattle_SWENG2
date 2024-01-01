@@ -2,21 +2,25 @@ package ckb.TournamentManager.model;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.Date;
 
 
 @Data
+@Getter
+@Setter
 @Entity
-@Table(name= "Tournaments")
+@Table(name= "tournaments")
 
 public class Tournament {
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false, updatable = false)
-    private Long id;
-    @Column(name= "reg_deadline")
-    private Date reg_deadline;
+    @Column( name = "tournamentID",nullable = false, updatable = false)
+    private Long tournamentID;
+    @Column(name= "regdeadline")
+    private Date regdeadline;
 
     @Column(name= "status")
     private Boolean status;
@@ -24,23 +28,4 @@ public class Tournament {
 
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public Date getReg_deadline() {
-        return reg_deadline;
-    }
-
-    public void setReg_deadline(Date reg_deadline) {
-        this.reg_deadline = reg_deadline;
-    }
-
-    public Boolean getStatus() {
-        return status;
-    }
-
-    public void setStatus(Boolean status) {
-        this.status = status;
-    }
 }

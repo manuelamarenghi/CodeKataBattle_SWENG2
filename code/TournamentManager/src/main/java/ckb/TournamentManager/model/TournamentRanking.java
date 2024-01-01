@@ -2,6 +2,7 @@ package ckb.TournamentManager.model;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.Getter;
 import lombok.Setter;
 
 import java.io.Serializable;
@@ -9,13 +10,14 @@ import java.io.Serializable;
 @Data
 @Entity
 @Setter
-@Table(name= "TournamentRankings")
+@Getter
+@Table(name= "tournamentrankings")
 
 public class TournamentRanking implements Serializable {
     @Id
-    @Column(name = "tournament_id", nullable = false, updatable = false)
+    @Column( name= "tournamentID",nullable = false, updatable = false)
     private Long tournamentID;
-    @Column(name= "user_id")
+    @Column(name= "userID")
     private Long userID;
 
     @Column(name= "score")
@@ -24,13 +26,5 @@ public class TournamentRanking implements Serializable {
     public TournamentRanking() {
 
     }
-    public Long getTournamentID() {
-        return tournamentID;
-    }
-    public Long getUserID() {
-        return userID;
-    }
-    public int getScore() {
-        return score;
-    }
+
 }

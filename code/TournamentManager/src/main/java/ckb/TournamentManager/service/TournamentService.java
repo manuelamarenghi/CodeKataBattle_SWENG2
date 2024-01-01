@@ -4,8 +4,10 @@ import ckb.TournamentManager.dto.GetTournamentPageRequest;
 import ckb.TournamentManager.dto.NewTournamentRequest;
 import ckb.TournamentManager.dto.PermissionRequest;
 import ckb.TournamentManager.dto.SubscriptionRequest;
+import ckb.TournamentManager.model.Permission;
 import ckb.TournamentManager.model.Tournament;
 import ckb.TournamentManager.model.TournamentRanking;
+import ckb.TournamentManager.repo.PermissionRepo;
 import ckb.TournamentManager.repo.TournamentRankingRepo;
 import ckb.TournamentManager.repo.TournamentRepo;
 import lombok.RequiredArgsConstructor;
@@ -21,13 +23,14 @@ import java.util.Map;
 public class TournamentService {
     private TournamentRepo tournamentRepo;
     private TournamentRankingRepo tournamentRankingRepo;
+    private PermissionRepo permissionRepo;
 
     public String createTournament(NewTournamentRequest request) {
         Tournament tournament = new Tournament();
-        tournament.setReg_deadline(request.getReg_deadline());
+        tournament.setRegdeadline(request.getReg_deadline());
         tournament.setStatus(true);
         tournamentRepo.save(tournament);
-        String tournamentUrl = "http://tournament-service/tournaments/" + tournament.getId();
+        String tournamentUrl = "http://tournament-service/tournaments/" + tournament.getTournamentID();
         return tournamentUrl;
     }
 
@@ -53,15 +56,15 @@ public class TournamentService {
     }
 
     public String addPermission(PermissionRequest request) {
-        Tournament tournament = tournamentRepo.findByTournamentID(request.getTournamentId()).orElse(null);
-        TournamentRanking ranking = new TournamentRanking();
-        String tournamentUrl = "http://tournament-service/tournaments/" + tournament.getId();
+        Permission p = new Permission(request.getTournamentId(), request.getUserId());
+        permissionRepo.save(p);
+        String tournamentUrl = "http://tournament-service/tournaments/" + request.getTournamentId();
         return tournamentUrl;
     }
 
     public List<TournamentRanking> getTournamentPage(GetTournamentPageRequest request) {
         Tournament tournament = tournamentRepo.findByTournamentID(request.getTournamentId()).orElse(null);
-        List<TournamentRanking> rankings = tournamentRankingRepo.orderByScore(request.getTournamentId());
+        List<TournamentRanking> rankings = tournamentRankingRepo.findByTournamentIDOrderByScore(request.getTournamentId());
         return rankings;
     }
 
