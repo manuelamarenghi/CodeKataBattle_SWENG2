@@ -38,7 +38,7 @@ public class SubscriptionController extends Controller{
             log.error("Invalid tournament id request");
             return new ResponseEntity<>("Invalid tournament id request", getHeaders(), HttpStatus.BAD_REQUEST);
         }
-        if(tournamentService.getTournament(request.getTournamentId()).getReg_deadline().after(new java.util.Date())){
+        if(tournamentService.getTournament(request.getTournamentId()).getRegdeadline().after(new java.util.Date())){
             log.error("Reg deadline expired request");
             return new ResponseEntity<>("Reg deadline expired request", getHeaders(), HttpStatus.BAD_REQUEST);
         }
