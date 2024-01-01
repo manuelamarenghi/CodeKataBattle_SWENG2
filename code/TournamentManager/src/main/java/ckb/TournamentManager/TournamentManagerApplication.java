@@ -9,6 +9,7 @@ public class TournamentManagerApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(TournamentManagerApplication.class, args);
+
 	}
 
 }

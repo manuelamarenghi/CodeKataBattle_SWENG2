@@ -65,9 +65,9 @@ public class PermissionController extends Controller{
     }
 
     private ResponseEntity<Object> checkRequest(PermissionRequest request) {
-        if(request.getUserId() == null){
-            log.error("Invalid user id request");
-            return new ResponseEntity<>("Invalid user id request", getHeaders(), HttpStatus.BAD_REQUEST);
+        if(request.getUserId() == null || request.getTournamentId() == null){
+            log.error("Invalid user or tournament id request");
+            return new ResponseEntity<>("Invalid user or tournament id request", getHeaders(), HttpStatus.BAD_REQUEST);
         }
         if(tournamentService.getTournament(request.getTournamentId()) == null){
             log.error("Invalid tournament id request");
