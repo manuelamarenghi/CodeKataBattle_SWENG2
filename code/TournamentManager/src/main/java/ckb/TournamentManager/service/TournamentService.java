@@ -21,9 +21,9 @@ import java.util.Map;
 @RequiredArgsConstructor
 
 public class TournamentService {
-    private TournamentRepo tournamentRepo;
-    private TournamentRankingRepo tournamentRankingRepo;
-    private PermissionRepo permissionRepo;
+    private final TournamentRepo tournamentRepo;
+    private final TournamentRankingRepo tournamentRankingRepo;
+    private final PermissionRepo permissionRepo;
 
     public String createTournament(NewTournamentRequest request) {
         Tournament tournament = new Tournament();
@@ -46,12 +46,12 @@ public class TournamentService {
     }
 
     public void addSubscription(SubscriptionRequest request) {
-        Tournament tournament = tournamentRepo.findByTournamentID(request.getTournamentId()).orElse(null);
+        Tournament tournament = tournamentRepo.findByTournamentID(request.getTournamentID()).orElse(null);
         TournamentRanking ranking = new TournamentRanking();
         if (tournament == null) return;
-        ranking.setTournamentID(request.getTournamentId());
+        ranking.setTournamentID(request.getTournamentID());
         ranking.setScore(0);
-        ranking.setUserID(request.getUserId());
+        ranking.setUserID(request.getUserID());
         tournamentRankingRepo.save(ranking);
     }
 

@@ -9,6 +9,6 @@ import lombok.Data;
 @AllArgsConstructor
 
 public class SubscriptionRequest {
-    private Long tournamentId;
-    private Long userId;
+    private Long tournamentID;
+    private Long userID;
 }

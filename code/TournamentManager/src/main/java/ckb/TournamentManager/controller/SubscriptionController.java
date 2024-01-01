@@ -30,23 +30,23 @@ public class SubscriptionController extends Controller{
     }
 
     private ResponseEntity<Object> checkRequest(SubscriptionRequest request) {
-        if(request.getUserId() == null){
+        if(request.getUserID() == null){
             log.error("Invalid user id request");
             return new ResponseEntity<>("Invalid user id request", getHeaders(), HttpStatus.BAD_REQUEST);
         }
-        if(tournamentService.getTournament(request.getTournamentId()) == null){
+        if(tournamentService.getTournament(request.getTournamentID()) == null){
             log.error("Invalid tournament id request");
             return new ResponseEntity<>("Invalid tournament id request", getHeaders(), HttpStatus.BAD_REQUEST);
         }
-        if(tournamentService.getTournament(request.getTournamentId()).getRegdeadline().after(new java.util.Date())){
+        if(tournamentService.getTournament(request.getTournamentID()).getRegdeadline().before(new java.util.Date())){
             log.error("Reg deadline expired request");
             return new ResponseEntity<>("Reg deadline expired request", getHeaders(), HttpStatus.BAD_REQUEST);
         }
-        if(tournamentService.isSubscribed(request.getTournamentId(),request.getUserId())){
+        if(tournamentService.isSubscribed(request.getTournamentID(),request.getUserID())){
             log.error("User already subscribed");
             return new ResponseEntity<>("User already subscribed", getHeaders(), HttpStatus.BAD_REQUEST);
         }
-        if(tournamentService.getTournament(request.getTournamentId()).getStatus() == false){
+        if(tournamentService.getTournament(request.getTournamentID()).getStatus() == false){
             log.error("Tournament already ended");
             return new ResponseEntity<>("Tournament already ended", getHeaders(), HttpStatus.BAD_REQUEST);
         }
