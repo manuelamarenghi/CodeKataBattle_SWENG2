@@ -31,7 +31,7 @@ public class NewTournamentController extends Controller{
         String content = " Hi! A new tournament is created click here to subscribe "+tournamentService.createTournament(request);
         log.info("New tournament created");
         // mandare mail a tutti gli utenti registrati
-        sendRequest("http://localhost:8085/api/mail/all-students", content)
+        sendRequest("/api/mail/all-students", content)
                 .doOnError(error -> {
                     log.error("Error sending mail", error);
                     // Puoi aggiungere ulteriori log o gestione degli errori qui se necessario
@@ -62,11 +62,11 @@ public class NewTournamentController extends Controller{
 
 
     private ResponseEntity<Object> checkRequest(NewTournamentRequest request) {
-        if (request.getReg_deadline() == null) {
+        if (request.getRegdeadline() == null) {
             log.error("Invalid request");
             return new ResponseEntity<>("Invalid data request", getHeaders(), HttpStatus.BAD_REQUEST);
         }
-        if(request.getReg_deadline().before(new java.util.Date())){
+        if(request.getRegdeadline().before(new java.util.Date())){
             log.error("Invalid request");
             return new ResponseEntity<>("Invalid data request", getHeaders(), HttpStatus.BAD_REQUEST);
         }

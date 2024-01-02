@@ -32,7 +32,7 @@ public class PermissionController extends Controller{
         if (response.getStatusCode().is4xxClientError()) return response;
         String content = "You've gained permission to create battles in tournament: "+tournamentService.addPermission(request);
         log.info("Permission inserted");
-        sendRequest("http://localhost:8085/api/mail/direct", content, request.getUserId())
+        sendRequest("http://localhost:8085/api/mail/direct", content, request.getUserID())
                 .doOnError(error -> {
                     log.error("Error sending mail", error);
                     // Puoi aggiungere ulteriori log o gestione degli errori qui se necessario
@@ -65,15 +65,15 @@ public class PermissionController extends Controller{
     }
 
     private ResponseEntity<Object> checkRequest(PermissionRequest request) {
-        if(request.getUserId() == null || request.getTournamentId() == null){
+        if(request.getUserID() == null || request.getTournamentID() == null){
             log.error("Invalid user or tournament id request");
             return new ResponseEntity<>("Invalid user or tournament id request", getHeaders(), HttpStatus.BAD_REQUEST);
         }
-        if(tournamentService.getTournament(request.getTournamentId()) == null){
+        if(tournamentService.getTournament(request.getTournamentID()) == null){
             log.error("Invalid tournament id request");
             return new ResponseEntity<>("Invalid tournament id request", getHeaders(), HttpStatus.BAD_REQUEST);
         }
-        if(tournamentService.getTournament(request.getTournamentId()).getStatus() == false){
+        if(tournamentService.getTournament(request.getTournamentID()).getStatus() == false){
             log.error("Tournament already ended");
             return new ResponseEntity<>("Tournament already ended", getHeaders(), HttpStatus.BAD_REQUEST);
         }

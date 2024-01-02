@@ -9,6 +9,6 @@ import lombok.Data;
 @AllArgsConstructor
 
 public class PermissionRequest {
-    private Long userId;
-    private Long tournamentId;
+    private Long tournamentID;
+    private Long userID;
 }

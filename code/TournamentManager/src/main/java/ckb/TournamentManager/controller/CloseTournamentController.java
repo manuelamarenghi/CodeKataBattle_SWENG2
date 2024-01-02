@@ -29,16 +29,16 @@ public class CloseTournamentController extends Controller{
         // check if the request has valid data
         ResponseEntity<Object> response = checkRequest(request);
         if (response.getStatusCode().is4xxClientError()) return response;
-        tournamentService.closeTournament(request.getTournamentId());
+        tournamentService.closeTournament(request.getTournamentID());
         return new ResponseEntity<>("Tournament closed", getHeaders(), HttpStatus.CREATED);
     }
 
     private ResponseEntity<Object> checkRequest(CloseTournamentRequest request) {
-        if(request.getTournamentId() == null){
+        if(request.getTournamentID() == null){
             log.error("Invalid tournament id request");
             return new ResponseEntity<>("Invalid tournament id request", getHeaders(), HttpStatus.BAD_REQUEST);
         }
-        if(tournamentService.getTournament(request.getTournamentId()) == null){
+        if(tournamentService.getTournament(request.getTournamentID()) == null){
             log.error("Invalid tournament id request");
             return new ResponseEntity<>("Invalid tournament id request", getHeaders(), HttpStatus.BAD_REQUEST);
         }
