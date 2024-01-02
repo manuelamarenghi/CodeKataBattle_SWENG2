@@ -12,5 +12,5 @@ import java.util.Date;
 @AllArgsConstructor
 
 public class NewTournamentRequest {
-    private Date reg_deadline;
+    private Date regdeadline;
 }

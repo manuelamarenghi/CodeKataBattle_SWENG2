@@ -35,7 +35,7 @@ public class GetTournamentPageController extends Controller{
         List<TournamentRanking> t = tournamentService.getTournamentPage(request);
         log.info("Tournament page retrieved");
         // mandare richiesta a battle service per le battle relative al tournament
-        List<Long> battles = getBattles(request.getTournamentId());
+        List<Long> battles = getBattles(request.getTournamentID());
         ResponseWrapper responseWrapper = new ResponseWrapper(battles,t);
         return new ResponseEntity<>(responseWrapper, getHeaders(), HttpStatus.CREATED);
     }
@@ -52,7 +52,7 @@ public class GetTournamentPageController extends Controller{
                 .block();
     }
     private ResponseEntity<Object> checkRequest(GetTournamentPageRequest request) {
-        if(request.getTournamentId() == null){
+        if(request.getTournamentID() == null || tournamentService.getTournament(request.getTournamentID()) == null){
             log.error("Invalid tournament id request");
             return new ResponseEntity<>("Invalid tournament id request", getHeaders(), HttpStatus.BAD_REQUEST);
         }

@@ -9,5 +9,5 @@ import lombok.Data;
 @AllArgsConstructor
 
 public class GetTournamentPageRequest {
-    private Long tournamentId;
+    private Long tournamentID;
 }

@@ -12,10 +12,12 @@ import lombok.*;
 
 public class Permission{
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "tournamentID",nullable = false, updatable = false)
     private Long tournamentID;
     @Column(name= "userID")
     private Long userID;
 
+    public Permission() {
+
+    }
 }
