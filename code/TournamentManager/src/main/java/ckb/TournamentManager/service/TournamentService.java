@@ -27,7 +27,7 @@ public class TournamentService {
 
     public String createTournament(NewTournamentRequest request) {
         Tournament tournament = new Tournament();
-        tournament.setRegdeadline(request.getReg_deadline());
+        tournament.setRegdeadline(request.getRegdeadline());
         tournament.setStatus(true);
         tournamentRepo.save(tournament);
         String tournamentUrl = "http://tournament-service/tournaments/" + tournament.getTournamentID();
@@ -56,15 +56,15 @@ public class TournamentService {
     }
 
     public String addPermission(PermissionRequest request) {
-        Permission p = new Permission(request.getTournamentId(), request.getUserId());
+        Permission p = new Permission(request.getTournamentID(), request.getUserID());
         permissionRepo.save(p);
-        String tournamentUrl = "http://tournament-service/tournaments/" + request.getTournamentId();
+        String tournamentUrl = "http://tournament-service/tournaments/" + request.getTournamentID();
         return tournamentUrl;
     }
 
     public List<TournamentRanking> getTournamentPage(GetTournamentPageRequest request) {
-        Tournament tournament = tournamentRepo.findByTournamentID(request.getTournamentId()).orElse(null);
-        List<TournamentRanking> rankings = tournamentRankingRepo.findByTournamentIDOrderByScore(request.getTournamentId());
+        Tournament tournament = tournamentRepo.findByTournamentID(request.getTournamentID()).orElse(null);
+        List<TournamentRanking> rankings = tournamentRankingRepo.findByTournamentIDOrderByScore(request.getTournamentID());
         return rankings;
     }
 
