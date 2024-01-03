@@ -1,6 +1,6 @@
 frame Browse the platform (checkout battle rankings)
 
-participant WebApp
+fontawesome6solid f390 WebApp
 participant API Gateway
 participant Tournament Manager
 database Tournament DB

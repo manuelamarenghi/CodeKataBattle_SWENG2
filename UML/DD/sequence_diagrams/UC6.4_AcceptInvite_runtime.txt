@@ -1,5 +1,5 @@
 participantspacing 7
-participant WebApp
+fontawesome6solid f390 WebApp
 participant API Gateway
 participant Battle Manager
 database Battle DB
