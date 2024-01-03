@@ -44,7 +44,7 @@ public class GetTournamentPageController extends Controller{
         return webClient.get()
                 .uri(builder -> builder
                         .path("http://localhost:8082/api/battle/nome-servizio")
-                        .queryParam("variableName", variableValue)
+                        .queryParam("tournamentID", variableValue)
                         .build())
                 .retrieve()
                 .bodyToFlux(Long.class)

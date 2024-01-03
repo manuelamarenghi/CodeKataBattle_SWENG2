@@ -36,12 +36,12 @@ public class NewTournamentControllerTest {
     }
     @Test
     public void correctRequestTest() {
-        Date d = new Date((2024-1900),01,20);
-        NewTournamentRequest request = new NewTournamentRequest(d);
-        ResponseEntity<Object> response = newTournamentController.newTournament(request);
         mockServer
                 .when(request().withMethod("POST").withPath("/api/mail/all-students"))
                 .respond(response().withStatusCode(200).withBody("ok!"));
+        Date d = new Date((2024-1900),01,20);
+        NewTournamentRequest request = new NewTournamentRequest(d);
+        ResponseEntity<Object> response = newTournamentController.newTournament(request);
         assertTrue(response.getBody().equals("Tournament created"));
     }
 

@@ -20,7 +20,7 @@ public class PermissionControllerTest {
     private PermissionController permissionController;
     @Autowired
     private TournamentRepo tournamentRepo;
-    // controllare che l'invio della mail avvenga correttamente
+
     @Test
     public void correctTest() {
         Long tournamentID = null;
