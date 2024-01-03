@@ -19,7 +19,6 @@ import java.util.List;
 @CrossOrigin(origins = "*")
 public class AllStudentsEmailSender extends EmailSender {
 
-
     private final MailService mailService;
     private final WebClient webClient;
 

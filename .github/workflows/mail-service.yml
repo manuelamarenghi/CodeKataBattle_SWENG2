@@ -1,0 +1,26 @@
+name: Java CI - mail-service
+
+on:
+  workflow_dispatch: 
+  push:
+    branches: [ "mail-service" ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Set up JDK 21
+      uses: actions/setup-java@v4
+      with:
+        java-version: '21'
+        distribution: 'temurin'
+        cache: maven
+    - name: Run the Maven verify phase
+      run: mvn --batch-mode --update-snapshots verify
+      working-directory: code/mail-service/
+    - name: Build with Maven
+      run: mvn --batch-mode --update-snapshots package
+      working-directory: code/mail-service/
