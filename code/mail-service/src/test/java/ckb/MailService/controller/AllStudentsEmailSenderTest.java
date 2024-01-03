@@ -1,44 +1,25 @@
 package ckb.MailService.controller;
 
 import ckb.MailService.dto.AllStudentsMailRequest;
-import ckb.MailService.service.MailService;
 import org.json.JSONArray;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockserver.integration.ClientAndServer;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.ResponseEntity;
-import org.springframework.mail.javamail.JavaMailSenderImpl;
-import org.springframework.web.reactive.function.client.WebClient;
-
-import java.util.Properties;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockserver.model.HttpRequest.request;
 import static org.mockserver.model.HttpResponse.response;
 
+@SpringBootTest
 public class AllStudentsEmailSenderTest {
-    private static AllStudentsEmailSender allStudentsEmailSender;
-    private static ClientAndServer mockServer;
+    @Autowired
+    private AllStudentsEmailSender allStudentsEmailSender;
+    private ClientAndServer mockServer;
 
-    @BeforeAll
-    public static void setUp() {
-
-        JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
-        mailSender.setHost("smtp.gmail.com");
-        mailSender.setPort(587);
-        mailSender.setUsername("polimi.ckb@gmail.com");
-        mailSender.setPassword("soitdnqbieeqoagj");
-
-
-        Properties props = mailSender.getJavaMailProperties();
-        props.put("mail.transport.protocol", "smtp");
-        props.put("mail.smtp.auth", "true");
-        props.put("mail.smtp.starttls.enable", "true");
-
-        allStudentsEmailSender = new AllStudentsEmailSender(new MailService(mailSender), WebClient.builder().build());
-    }
 
     @BeforeEach
     public void setUpServer() {
