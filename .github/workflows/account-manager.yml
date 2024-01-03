@@ -1,0 +1,46 @@
+name: Java CI - account-manager
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ "account-manager" ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    services:
+      mysql:
+        image: mysql:latest
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: test_db
+          MYSQL_USERNAME: root
+          MYSQL_PASSWORD: root
+        ports:
+          - 3306:3306
+        options: --health-cmd "mysqladmin ping" --health-interval 10s --health-timeout 5s --health-retries 5
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+          cache: maven
+
+      - name: Build with Maven
+        run: ./mvnw clean install -DskipTests
+        working-directory: code/account-manager/
+
+      - name: Run Spring Boot Application
+        run: ./mvnw spring-boot:run &
+        working-directory: code/account-manager/
+
+      - name: Run tests
+        run: ./mvnw test
+        working-directory: code/account-manager/
