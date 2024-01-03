@@ -42,7 +42,7 @@ public class AllStudentsEmailSenderTest {
 
     @BeforeEach
     public void setUpServer() {
-        mockServer = ClientAndServer.startClientAndServer(8080);
+        mockServer = ClientAndServer.startClientAndServer(8086);
     }
 
 

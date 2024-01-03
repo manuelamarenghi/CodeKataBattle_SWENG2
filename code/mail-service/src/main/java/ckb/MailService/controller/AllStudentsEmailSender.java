@@ -46,7 +46,7 @@ public class AllStudentsEmailSender extends EmailSender {
 
     private List<String> getEmailAddresses() {
         return webClient.get()
-                .uri("http://localhost:8080/api/account/mail-students")
+                .uri(accountManagerUrl + "/api/account/mail-students")
                 .retrieve()
                 .bodyToMono(String.class)
                 .flatMapMany(responseBody -> Flux.fromArray(responseBody.split(",")))

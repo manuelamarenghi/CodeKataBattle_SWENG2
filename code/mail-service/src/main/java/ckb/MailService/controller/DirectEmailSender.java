@@ -1,6 +1,6 @@
 package ckb.MailService.controller;
 
-import ckb.MailService.dto.MultipleMailRequest;
+import ckb.MailService.dto.DirectMailRequest;
 import ckb.MailService.service.MailService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,7 +24,7 @@ public class DirectEmailSender extends EmailSender {
 
     @PostMapping
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<Object> sendEmail(@RequestBody MultipleMailRequest request) {
+    public ResponseEntity<Object> sendEmail(@RequestBody DirectMailRequest request) {
 
         List<String> userIDs = request.getUserIDs();
         List<String> addresses;
@@ -45,9 +45,9 @@ public class DirectEmailSender extends EmailSender {
     }
 
     private List<String> getEmailAddresses(List<String> userIDs) {
-        // request will be constructed like this: http://localhost:8080/api/mail/single?userID=1&userID=2&userID=3 ...
+        // request will be constructed like this: http://localhost:8086/api/mail/single?userID=1&userID=2&userID=3 ...
         return webClient.get()
-                .uri("http://localhost:8080/api/account/mail",
+                .uri(accountManagerUrl + "/api/account/mail",
                         uriBuilder -> uriBuilder.queryParam("userID", userIDs).build())
                 .retrieve()
                 .bodyToMono(String.class) // we expect the response to only be a String containing the email addresses

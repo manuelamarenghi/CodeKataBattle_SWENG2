@@ -11,7 +11,7 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class MultipleMailRequest {
+public class DirectMailRequest {
     private List<String> userIDs;
     private String content;
 }
