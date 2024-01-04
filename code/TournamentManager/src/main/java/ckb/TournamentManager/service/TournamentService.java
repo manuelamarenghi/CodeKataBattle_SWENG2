@@ -63,8 +63,8 @@ public class TournamentService {
     }
 
     public List<TournamentRanking> getTournamentPage(GetTournamentPageRequest request) {
-        Tournament tournament = tournamentRepo.findByTournamentID(request.getTournamentID()).orElse(null);
-        List<TournamentRanking> rankings = tournamentRankingRepo.findByTournamentIDOrderByScore(request.getTournamentID());
+        List<TournamentRanking> rankings = tournamentRankingRepo.findAllByTournamentIDOrderByScoreAsc(request.getTournamentID());
+        System.out.println("res"+rankings);
         return rankings;
     }
 
