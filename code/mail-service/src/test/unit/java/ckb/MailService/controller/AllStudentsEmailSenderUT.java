@@ -1,6 +1,6 @@
 package ckb.MailService.controller;
 
-import ckb.MailService.dto.in.AllStudentsMailRequest;
+import ckb.MailService.dto.AllStudentsMailRequest;
 import org.json.JSONArray;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -15,7 +15,7 @@ import static org.mockserver.model.HttpRequest.request;
 import static org.mockserver.model.HttpResponse.response;
 
 @SpringBootTest
-public class AllStudentsEmailSenderTest {
+public class AllStudentsEmailSenderUT {
     @Autowired
     private AllStudentsEmailSender allStudentsEmailSender;
     private ClientAndServer mockServer;

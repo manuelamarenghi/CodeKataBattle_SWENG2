@@ -1,17 +1,14 @@
-package ckb.MailService.dto.in;
+package ckb.AccountManager.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class DirectMailRequest {
-    private List<String> userIDs;
-    private String content;
+public class UserRequest {
+    private Long userID;
 }

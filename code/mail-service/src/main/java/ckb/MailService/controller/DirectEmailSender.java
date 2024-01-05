@@ -1,7 +1,7 @@
 package ckb.MailService.controller;
 
-import ckb.MailService.dto.in.DirectMailRequest;
-import ckb.MailService.dto.out.MailRequest;
+import ckb.AccountManager.dto.MailRequest;
+import ckb.MailService.dto.DirectMailRequest;
 import ckb.MailService.service.MailService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

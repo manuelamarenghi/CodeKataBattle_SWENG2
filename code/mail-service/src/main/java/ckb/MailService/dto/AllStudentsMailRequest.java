@@ -1,4 +1,4 @@
-package ckb.MailService.dto.in;
+package ckb.MailService.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

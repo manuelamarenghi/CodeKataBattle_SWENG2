@@ -1,6 +1,6 @@
 package ckb.AccountManager.controller;
 
-import ckb.AccountManager.dto.in.MailRequest;
+import ckb.AccountManager.dto.MailRequest;
 import ckb.AccountManager.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

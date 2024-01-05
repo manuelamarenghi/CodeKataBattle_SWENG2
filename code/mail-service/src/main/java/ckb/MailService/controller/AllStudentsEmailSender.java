@@ -1,6 +1,6 @@
 package ckb.MailService.controller;
 
-import ckb.MailService.dto.in.AllStudentsMailRequest;
+import ckb.MailService.dto.AllStudentsMailRequest;
 import ckb.MailService.service.MailService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

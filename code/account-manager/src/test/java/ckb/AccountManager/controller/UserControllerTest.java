@@ -1,6 +1,6 @@
 package ckb.AccountManager.controller;
 
-import ckb.AccountManager.dto.in.UserRequest;
+import ckb.AccountManager.dto.UserRequest;
 import ckb.AccountManager.model.Role;
 import ckb.AccountManager.model.User;
 import ckb.AccountManager.repository.UserRepository;

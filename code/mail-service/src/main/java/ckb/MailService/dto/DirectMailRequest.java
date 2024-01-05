@@ -1,4 +1,4 @@
-package ckb.MailService.dto.out;
+package ckb.MailService.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,6 +11,7 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class MailRequest {
+public class DirectMailRequest {
     private List<String> userIDs;
+    private String content;
 }

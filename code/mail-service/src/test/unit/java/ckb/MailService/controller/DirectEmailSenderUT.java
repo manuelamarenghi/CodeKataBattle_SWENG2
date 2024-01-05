@@ -1,6 +1,6 @@
 package ckb.MailService.controller;
 
-import ckb.MailService.dto.in.DirectMailRequest;
+import ckb.MailService.dto.DirectMailRequest;
 import org.json.JSONArray;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -18,7 +18,7 @@ import static org.mockserver.model.HttpRequest.request;
 import static org.mockserver.model.HttpResponse.response;
 
 @SpringBootTest
-public class DirectEmailSenderTest {
+public class DirectEmailSenderUT {
     @Autowired
     private DirectEmailSender directEmailSender;
     private ClientAndServer mockServer;
@@ -38,8 +38,7 @@ public class DirectEmailSenderTest {
     public void singleMailRequestTest() {
 
         mockServer
-                .when(request().withMethod("GET").withPath("/api/account/mail")
-                        .withQueryStringParameter("userID", "userID1"))
+                .when(request().withMethod("POST").withPath("/api/account/mail"))
                 .respond(response().withStatusCode(200).withBody("luca.cattani@mail.polimi.it"));
 
         List<String> list = new ArrayList<>();
@@ -61,8 +60,7 @@ public class DirectEmailSenderTest {
         String answer = jsonArray.toString().substring(1, jsonArray.toString().length() - 1);
 
         mockServer
-                .when(request().withMethod("GET").withPath("/api/account/mail")
-                        .withQueryStringParameter("userID", "userID1", "userID2", "userID3"))
+                .when(request().withMethod("POST").withPath("/api/account/mail"))
                 .respond(response().withStatusCode(200).withBody(answer));
 
         List<String> list = new ArrayList<>();
@@ -80,9 +78,8 @@ public class DirectEmailSenderTest {
     public void wrongMailRequestTest() {
 
         mockServer
-                .when(request().withMethod("GET").withPath("/api/account/mail")
-                        .withQueryStringParameter("userID", "userID1"))
-                .respond(response().withStatusCode(200).withBody("luca.cattani@mail.polimi.it"));
+                .when(request().withMethod("POST").withPath("/api/account/mail"))
+                .respond(response().withStatusCode(404));
 
         List<String> list = new ArrayList<>();
         list.add("userID4");

@@ -1,6 +1,6 @@
 package ckb.AccountManager.controller;
 
-import ckb.AccountManager.dto.in.SignUpRequest;
+import ckb.AccountManager.dto.SignUpRequest;
 import ckb.AccountManager.model.Role;
 import ckb.AccountManager.service.UserService;
 import lombok.RequiredArgsConstructor;
