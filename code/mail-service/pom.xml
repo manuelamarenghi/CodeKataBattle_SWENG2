@@ -11,7 +11,7 @@
     <groupId>ckb</groupId>
     <artifactId>mail-service</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>MailService</name>
+    <name>mail-service</name>
     <description>Mail service for CodeKataBattle</description>
     <properties>
         <java.version>21</java.version>
