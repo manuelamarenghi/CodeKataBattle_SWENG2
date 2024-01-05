@@ -1,12 +1,43 @@
+Battle
+// get a battle
 Battle getBattle(Integer id)
-List<User> getRanking(Integer id)
+
+// create a new Battle
+void createBattle(Battle battle)
+
+// the student is registered to the battle (id_battle), create a new team with only the student
 void joinBattle(Integer id_battle, Integer id_student)
+
+// the student wants to leave the battle, delete the record in participation and if the team has 0 members
+// delete also the team
 void leaveBattle(Integer id_battle, Integer id_student)
-Team getTeam(Integer id)
-List<Team> getTeams()
-List<Pair<Team, Integer>> getAllTeamPoints()
+
+Ranking
+// DEPRECATED
+// List<User> getRanking(Integer id)
+
+Team
+// get a team
+Team getTeam(Integer id_team)
+
+// get the list of teams that participate to a battle
+List<Team> getTeams(Integer id_battle)
+
+// get the list of user and points of a battle
+List<Pair<User, Integer>> getAllTeamPoints(Integer id_tournament)
+
+// register the user id_user in team id_team
 void registerTeam(Integer id_team, Integer id_user)
-void inviteStudent(Integer id_team,Integer id_user)
+
+// send a mail to the user inviting him/her to the team
+void inviteStudent(Integer id_team, Integer id_user)
+
+// create a new team with id_user
 void createTeam(Integer id_user)
+
+Assign score
+// assign a score to the team
 void assignScore(Integer id_team, Integer points)
-void assignPersonalScore(int score, Integer battleID, String teamName)
+
+// assign a personal score to the team
+void assignPersonalScore(Integer team_id, int score)

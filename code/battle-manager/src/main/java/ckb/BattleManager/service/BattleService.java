@@ -8,10 +8,12 @@ import org.springframework.stereotype.Service;
 @Service
 public class BattleService {
     private final BattleRepository battleRepository;
+    private final TeamService teamService;
 
     @Autowired
-    public BattleService(BattleRepository battleRepository) {
+    public BattleService(BattleRepository battleRepository, TeamService teamService) {
         this.battleRepository = battleRepository;
+        this.teamService = teamService;
     }
 
     public Battle getBattle(Long id) {
@@ -19,6 +21,10 @@ public class BattleService {
     }
 
     public void addNewBattle(Battle battle) {
+        battleRepository.save(battle);
+    }
 
+    public void joinBattle(Long battleId, Long studentId) {
+        teamService.createTeam(battleId, studentId);
     }
 }

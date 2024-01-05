@@ -1,9 +1,13 @@
 package ckb.BattleManager.model;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 
 @Entity(name = "Team")
 @Table(name = "Teams")
+@AllArgsConstructor
+@NoArgsConstructor
 public class Team {
     @Id
     @Column(name = "team_id", nullable = false, updatable = false)
