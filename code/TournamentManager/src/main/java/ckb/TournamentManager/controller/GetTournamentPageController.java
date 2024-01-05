@@ -1,12 +1,11 @@
 package ckb.TournamentManager.controller;
 
-import ckb.TournamentManager.dto.GetTournamentPageRequest;
+import ckb.TournamentManager.dto.incoming.NewTournamentRequest;
 import ckb.TournamentManager.model.TournamentRanking;
 import ckb.TournamentManager.service.TournamentService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -30,7 +29,7 @@ public class GetTournamentPageController extends Controller{
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<Object> getTournamentPage(@RequestBody GetTournamentPageRequest request) {
+    public ResponseEntity<Object> getTournamentPage(@RequestBody NewTournamentRequest.GetTournamentPageRequest request) {
         // check if the request has valid data
         ResponseEntity<Object> response = checkRequest(request);
         if (response.getStatusCode().is4xxClientError()) return response;
@@ -49,14 +48,14 @@ public class GetTournamentPageController extends Controller{
     }
     private List<Long> getBattles(Long variableValue) {
         try {
-            return webClient.get()
+             String s =webClient.get()
                     .uri("http://localhost:8082/api/battle/nome", uribuilder -> uribuilder
                             .queryParam("tournamentID", variableValue)
                             .build())
                     .retrieve()
-                    .bodyToFlux(Long.class)
-                    .collectList()
-                    .block();
+                    .bodyToMono(String.class)
+                     .block();
+             System.out.println(s);
         } catch (WebClientResponseException e) {
             // Gestire l'eccezione solo se il codice di stato non è 200 OK
             if (e.getStatusCode() != HttpStatus.OK) {
@@ -66,8 +65,9 @@ public class GetTournamentPageController extends Controller{
             // Puoi gestire l'errore restituendo una lista vuota o un altro valore di default
             return Collections.emptyList();
         }
+        return Collections.emptyList();
     }
-    private ResponseEntity<Object> checkRequest(GetTournamentPageRequest request) {
+    private ResponseEntity<Object> checkRequest(NewTournamentRequest.GetTournamentPageRequest request) {
         if(request.getTournamentID() == null || tournamentService.getTournament(request.getTournamentID()) == null){
             log.error("Invalid tournament id request");
             return new ResponseEntity<>("Invalid tournament id request", getHeaders(), HttpStatus.BAD_REQUEST);

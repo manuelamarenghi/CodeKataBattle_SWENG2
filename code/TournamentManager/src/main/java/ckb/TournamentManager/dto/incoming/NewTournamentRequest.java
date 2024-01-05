@@ -1,9 +1,8 @@
-package ckb.TournamentManager.dto;
+package ckb.TournamentManager.dto.incoming;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import java.util.Date;
 
@@ -13,4 +12,12 @@ import java.util.Date;
 
 public class NewTournamentRequest {
     private Date regdeadline;
+
+    @Data
+    @Builder
+    @AllArgsConstructor
+
+    public static class GetTournamentPageRequest {
+        private Long tournamentID;
+    }
 }

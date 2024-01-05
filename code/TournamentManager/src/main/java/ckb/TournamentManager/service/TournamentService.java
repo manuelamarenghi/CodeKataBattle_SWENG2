@@ -1,9 +1,8 @@
 package ckb.TournamentManager.service;
 
-import ckb.TournamentManager.dto.GetTournamentPageRequest;
-import ckb.TournamentManager.dto.NewTournamentRequest;
-import ckb.TournamentManager.dto.PermissionRequest;
-import ckb.TournamentManager.dto.SubscriptionRequest;
+import ckb.TournamentManager.dto.incoming.NewTournamentRequest;
+import ckb.TournamentManager.dto.incoming.PermissionRequest;
+import ckb.TournamentManager.dto.incoming.SubscriptionRequest;
 import ckb.TournamentManager.model.Permission;
 import ckb.TournamentManager.model.Tournament;
 import ckb.TournamentManager.model.TournamentRanking;
@@ -11,11 +10,10 @@ import ckb.TournamentManager.repo.PermissionRepo;
 import ckb.TournamentManager.repo.TournamentRankingRepo;
 import ckb.TournamentManager.repo.TournamentRepo;
 import lombok.RequiredArgsConstructor;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -45,13 +43,13 @@ public class TournamentService {
         return tournamentRankingRepo.findByTournamentIDAndUserID(tournamentID,userID).isPresent();
     }
 
-    public void addSubscription(SubscriptionRequest request) {
+    public void addSubscription(@NotNull SubscriptionRequest request) {
         Tournament tournament = tournamentRepo.findByTournamentID(request.getTournamentID()).orElse(null);
         TournamentRanking ranking = new TournamentRanking();
         if (tournament == null) return;
         ranking.setTournamentID(request.getTournamentID());
-        ranking.setScore(0);
         ranking.setUserID(request.getUserID());
+        ranking.setScore(0);
         tournamentRankingRepo.save(ranking);
     }
 
@@ -62,10 +60,13 @@ public class TournamentService {
         return tournamentUrl;
     }
 
-    public List<TournamentRanking> getTournamentPage(GetTournamentPageRequest request) {
+    public List<TournamentRanking> getTournamentPage(NewTournamentRequest.GetTournamentPageRequest request) {
         List<TournamentRanking> rankings = tournamentRankingRepo.findByTournamentIDOrderByScoreAsc(request.getTournamentID());
         System.out.println("res"+rankings);
         return rankings;
+    }
+    public List<Tournament> getAllTournaments(){
+        return tournamentRepo.findAll();
     }
 
     public void closeTournament(Long tournamentId) {
