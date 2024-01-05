@@ -1,0 +1,37 @@
+frame Define new variables for badges
+
+fontawesome6solid f390 WebApp
+participant API Gateway
+participant Tournament Manager
+participant Badges Manager
+database Badge DB
+
+participantspacing 5
+
+activate WebApp
+WebApp->API Gateway: createNewVariable(code)
+activate API Gateway
+API Gateway->Tournament Manager: createNewVariable(code)
+activate Tournament Manager
+
+Tournament Manager->Badges Manager: createNewVariable(code)
+activate Badges Manager
+Badges Manager->Badges Manager: checkCode(code)
+
+alt valid_code == true
+// Insert new variable
+Badges Manager->Badge DB: executeQuery(Variable)
+activate Badge DB
+Badge DB-->Badges Manager: result
+deactivate Badge DB
+end
+
+Badges Manager-->Tournament Manager: result
+deactivate Badges Manager
+
+Tournament Manager-->API Gateway: result
+deactivate Tournament Manager
+
+API Gateway-->WebApp: result
+deactivate WebApp
+deactivate API Gateway

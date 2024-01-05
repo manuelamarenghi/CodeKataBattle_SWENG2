@@ -1,5 +1,5 @@
 
-participant WebApp
+fontawesome6solid f390 WebApp
 
 participant API Gateway
 

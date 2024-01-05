@@ -1,0 +1,46 @@
+participantspacing 10
+fontawesome6solid f390 WebApp
+participant API Gateway
+participant Account Manager
+database Account DB
+participant Badges Manager
+database Badges DB
+
+frame Browse the platform (checkout user profiles)
+
+activate WebApp
+WebApp->API Gateway: 1. getUser(id)
+
+activate API Gateway
+API Gateway->Account Manager: 2. getUser(id)
+
+activate Account Manager
+Account Manager->Account DB: 3. executeQuery(id)
+activate Account DB
+
+Account Manager->Badges Manager: 4. getBadges(owner_id)
+activate Badges Manager
+
+Badges Manager->Badges DB: 5. executeQuery(owner_id)
+activate Badges DB
+
+Badges DB->Badges Manager: 6. success
+deactivate Badges DB
+
+Badges Manager->Account Manager: 7. result
+deactivate Badges Manager
+alt id_Valid == true
+Account DB-->Account Manager: 8. success
+
+else 
+Account DB-->Account Manager: invalid
+deactivate Account DB
+
+end
+
+Account Manager-->API Gateway: 9. result
+deactivate Account Manager
+
+API Gateway-->WebApp: 10. result
+deactivate API Gateway
+deactivate WebApp

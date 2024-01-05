@@ -1,0 +1,56 @@
+// Suppose that the battle information are coherent and the educator has the permission of create a battle in that tournament
+frame Create Battle
+
+fontawesome6solid f390 WebApp
+participant API Gateway
+participant Tournament Manager
+database Tournament DB
+participant Battle Manager
+database Battle DB
+participantspacing 5
+
+activate WebApp
+WebApp->API Gateway: getTournament(id)
+activate API Gateway
+API Gateway->Tournament Manager: getTournament(id)
+activate Tournament Manager
+
+Tournament Manager->Tournament DB: executeQuery(Tournament id)
+activate Tournament DB
+
+alt tournament_id_valid == true
+Tournament DB-->Tournament Manager: result
+Tournament Manager-->API Gateway: result
+API Gateway-->WebApp: result
+WebApp->API Gateway: createBattle(form)
+API Gateway->Tournament Manager: createBattle(form)
+
+Tournament Manager->Battle Manager: createBattle(form)
+activate Battle Manager
+
+Battle Manager->Battle Manager: checkForm(form)
+
+alt valid_content == true
+// Insert Battle
+Battle Manager->Battle DB: executeQuery(Battle)
+
+activate Battle DB
+Battle DB-->Battle Manager: result
+
+end
+deactivate Battle DB
+
+Battle Manager-->Tournament Manager: result
+deactivate Battle Manager
+
+Tournament Manager-->API Gateway: result
+API Gateway-->WebApp: result
+
+else 
+Tournament DB-->Tournament Manager: invalid_id
+deactivate Tournament DB
+Tournament Manager-->API Gateway: result
+deactivate Tournament Manager
+API Gateway-->WebApp: result
+end
+

@@ -1,0 +1,42 @@
+// The educator is the creator of the tournament and all the battles are finished
+frame Close Tournament
+
+fontawesome6solid f390 WebApp
+participant API Gateway
+participant Tournament Manager
+database Tournament DB
+participant Battle Manager
+database Battle DB
+
+participantspacing 5
+
+activate WebApp
+WebApp->API Gateway: closeTournament(id)
+activate API Gateway
+API Gateway->Tournament Manager: closeTournament(id)
+activate Tournament Manager
+
+Tournament Manager->Battle Manager: getAllTeamPoints(Tournament id)
+activate Battle Manager
+// Get points of all the teams
+Battle Manager->Battle DB: executeQuery(Tournament id)
+activate Battle DB
+Battle DB-->Battle Manager: result
+deactivate Battle DB
+
+Battle Manager-->Tournament Manager: result
+deactivate Battle Manager
+
+// Update tournament
+Tournament Manager->Tournament DB: executeQuery(Tournament id, score)
+activate Tournament DB
+Tournament DB-->Tournament Manager: result
+deactivate Tournament DB
+
+Tournament Manager-->API Gateway: result
+deactivate Tournament Manager
+
+API Gateway-->WebApp: result
+deactivate WebApp
+deactivate API Gateway
+

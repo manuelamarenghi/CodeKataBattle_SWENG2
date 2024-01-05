@@ -1,0 +1,32 @@
+participantspacing 7
+fontawesome6solid f390 WebApp
+participant API Gateway
+participant Battle Manager
+database Battle DB
+
+frame Manage battle teams (accept invite)
+activate WebApp
+WebApp->API Gateway: 1. registerTeam(id_team, id_user)
+activate API Gateway
+API Gateway->Battle Manager: 2. registerTeam(id_team, id_user)
+
+activate Battle Manager
+Battle Manager->Battle DB:       3. executeQuery(id_team, id_user)      
+
+activate Battle DB
+alt free = true
+Battle DB-->Battle Manager: 4. success
+else   already_inteam == true ||  already_full == true 
+Battle DB-->Battle Manager: invalid
+deactivate Battle DB
+
+
+end
+
+Battle Manager-->API Gateway: 5. result
+deactivate Battle Manager
+
+API Gateway-->WebApp: 6. result
+
+deactivate API Gateway
+deactivate WebApp

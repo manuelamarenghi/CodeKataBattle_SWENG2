@@ -1,0 +1,37 @@
+frame Create Tournament
+
+fontawesome6solid f390 WebApp
+participant API Gateway
+participant Tournament Manager
+participant Badges Manager
+database Tournament DB
+database Badges DB
+
+participantspacing 5
+
+activate WebApp
+WebApp->API Gateway: createTournament(form)
+activate API Gateway
+API Gateway->Tournament Manager: createTournament(form)
+activate Tournament Manager
+Tournament Manager->Tournament Manager: checkForms()
+
+alt valid_content == true
+// Insert a new tournament
+Tournament Manager->Tournament DB: executeQuery(Tournament)
+
+Tournament DB-->Tournament Manager: result
+Tournament Manager->Badges Manager: createBadge(form)
+activate Badges Manager
+// Insert new badges
+Badges Manager->Badges DB: executeQuery(Badge)
+
+Badges DB-->Badges Manager: result
+Badges Manager-->Tournament Manager: result
+deactivate Badges Manager
+end
+Tournament Manager-->API Gateway: result
+deactivate Tournament Manager
+API Gateway-->WebApp: result
+deactivate WebApp
+deactivate API Gateway

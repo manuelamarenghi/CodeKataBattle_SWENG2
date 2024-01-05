@@ -1,0 +1,55 @@
+participantspacing 7
+fontawesome6solid f390 WebApp
+participant API Gateway
+participant Battle Manager
+database Battle DB
+participant Mail Manager
+participant Mail Server
+participant Account Manager
+database Account DB
+
+frame Manage battle teams (invite another student)
+
+activate WebApp
+WebApp->API Gateway: 1. getTeam(id)
+activate API Gateway
+API Gateway->Battle Manager: 2. getTeam(id)
+activate Battle Manager
+Battle Manager->Battle DB: 3. executeQuery(id)
+activate Battle DB
+alt id_valid == true 
+Battle DB-->Battle Manager: 4. success
+Battle Manager-->API Gateway: 5. result
+API Gateway-->WebApp: 6. result
+WebApp->API Gateway: 7. inviteStudent(id_team, id_user)
+API Gateway->Battle Manager: 8. inviteStudent(id_team, id_user)
+Battle Manager->Mail Manager: 9. sendMail(id_user, content)
+activate Mail Manager
+Mail Manager->Account Manager: 10. getUser(id) 
+activate Account Manager
+Account Manager->Account DB: 11. executeQuery(id)
+activate Account DB
+alt id_valid == true
+Account DB-->Account Manager: 12. success
+else
+Account DB-->Account Manager: invalid
+deactivate Account DB
+end
+Account Manager-->Mail Manager: 13. result
+deactivate Account Manager
+Mail Manager->Mail Server: 14. dispatchMail(email,message)
+Mail Manager-->Battle Manager: 15. result
+
+deactivate Mail Manager
+
+else 
+Battle DB-->Battle Manager: invalid
+deactivate Battle DB
+end
+
+Battle Manager-->API Gateway: 16. result
+deactivate Battle Manager
+
+API Gateway-->WebApp: 17. result
+deactivate API Gateway
+deactivate WebApp
