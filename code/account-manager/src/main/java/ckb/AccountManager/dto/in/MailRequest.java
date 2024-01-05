@@ -1,4 +1,4 @@
-package ckb.AccountManager.dto;
+package ckb.AccountManager.dto.in;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

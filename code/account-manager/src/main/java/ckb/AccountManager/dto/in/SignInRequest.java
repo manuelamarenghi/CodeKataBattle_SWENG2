@@ -1,6 +1,5 @@
-package ckb.AccountManager.dto;
+package ckb.AccountManager.dto.in;
 
-import ckb.AccountManager.model.Role;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -8,9 +7,7 @@ import lombok.Data;
 @Data
 @Builder
 @AllArgsConstructor
-public class SignUpRequest {
+public class SignInRequest {
     private String email;
-    private String fullName;
     private String password;
-    private Role role;
 }

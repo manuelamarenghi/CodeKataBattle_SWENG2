@@ -1,17 +1,14 @@
-package ckb.AccountManager.dto;
+package ckb.AccountManager.dto.in;
 
 import ckb.AccountManager.model.Role;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 @Data
 @Builder
 @AllArgsConstructor
-@NoArgsConstructor
-public class UpdateRequest {
-    private Long id;
+public class SignUpRequest {
     private String email;
     private String fullName;
     private String password;

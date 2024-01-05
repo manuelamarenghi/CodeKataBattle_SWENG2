@@ -1,7 +1,7 @@
 package ckb.AccountManager.service;
 
-import ckb.AccountManager.dto.SignUpRequest;
-import ckb.AccountManager.dto.UpdateRequest;
+import ckb.AccountManager.dto.in.SignUpRequest;
+import ckb.AccountManager.dto.in.UpdateRequest;
 import ckb.AccountManager.model.Role;
 import ckb.AccountManager.model.User;
 import ckb.AccountManager.repository.UserRepository;

@@ -1,6 +1,6 @@
 package ckb.AccountManager.controller;
 
-import ckb.AccountManager.dto.SignInRequest;
+import ckb.AccountManager.dto.in.SignInRequest;
 import ckb.AccountManager.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
