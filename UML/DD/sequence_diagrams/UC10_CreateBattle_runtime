@@ -7,44 +7,48 @@ participant Tournament Manager
 database Tournament DB
 participant Battle Manager
 database Battle DB
+participant Mail manager
+
 participantspacing 5
 
 activate WebApp
-WebApp->API Gateway: getTournament(id)
+WebApp->API Gateway: 1: getTournament(id)
 activate API Gateway
-API Gateway->Tournament Manager: getTournament(id)
+API Gateway->Tournament Manager: 2: getTournament(id)
 activate Tournament Manager
 
-Tournament Manager->Tournament DB: executeQuery(Tournament id)
+Tournament Manager->Tournament DB: 3: executeQuery(Tournament id)
 activate Tournament DB
 
 alt tournament_id_valid == true
-Tournament DB-->Tournament Manager: result
-Tournament Manager-->API Gateway: result
-API Gateway-->WebApp: result
-WebApp->API Gateway: createBattle(form)
-API Gateway->Tournament Manager: createBattle(form)
+Tournament DB-->Tournament Manager: 4: success
+Tournament Manager-->API Gateway: 5: result
+API Gateway-->WebApp: 6: result
+WebApp->API Gateway: 7: createBattle(battle)
+API Gateway->Tournament Manager: 8: createBattle(battle)
 
-Tournament Manager->Battle Manager: createBattle(form)
+Tournament Manager->Battle Manager: 9: createBattle(battle)
 activate Battle Manager
 
-Battle Manager->Battle Manager: checkForm(form)
+Battle Manager->Battle Manager: 10: checkBattle(battle)
 
 alt valid_content == true
 // Insert Battle
-Battle Manager->Battle DB: executeQuery(Battle)
+Battle Manager->Battle DB: 11: executeQuery(battle)
 
 activate Battle DB
-Battle DB-->Battle Manager: result
-
-end
+Battle DB-->Battle Manager: 12: success
 deactivate Battle DB
 
-Battle Manager-->Tournament Manager: result
+Battle Manager->Mail manager: 13: sendMassMail(Tournament users)
+
+end
+
+Battle Manager-->Tournament Manager: 14: result
 deactivate Battle Manager
 
-Tournament Manager-->API Gateway: result
-API Gateway-->WebApp: result
+Tournament Manager-->API Gateway: 15: result
+API Gateway-->WebApp: 16: result
 
 else 
 Tournament DB-->Tournament Manager: invalid_id

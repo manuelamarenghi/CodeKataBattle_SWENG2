@@ -7,36 +7,39 @@ participant Tournament Manager
 database Tournament DB
 participant Battle Manager
 database Battle DB
+participant Mail Manager
 
 participantspacing 5
 
 activate WebApp
-WebApp->API Gateway: closeTournament(id)
+WebApp->API Gateway: 1: closeTournament(id)
 activate API Gateway
-API Gateway->Tournament Manager: closeTournament(id)
+API Gateway->Tournament Manager: 2: closeTournament(id)
 activate Tournament Manager
 
-Tournament Manager->Battle Manager: getAllTeamPoints(Tournament id)
+Tournament Manager->Battle Manager: 3: getAllUsersPoints(Tournament id)
 activate Battle Manager
 // Get points of all the teams
-Battle Manager->Battle DB: executeQuery(Tournament id)
+Battle Manager->Battle DB: 4: executeQuery(Tournament id)
 activate Battle DB
-Battle DB-->Battle Manager: result
+Battle DB-->Battle Manager: 5: success
 deactivate Battle DB
 
-Battle Manager-->Tournament Manager: result
+Battle Manager-->Tournament Manager: 6: result
 deactivate Battle Manager
 
 // Update tournament
-Tournament Manager->Tournament DB: executeQuery(Tournament id, score)
+Tournament Manager->Tournament DB: 7: executeQuery(Tournament id, user, score)
 activate Tournament DB
-Tournament DB-->Tournament Manager: result
+Tournament DB-->Tournament Manager: 8: success
 deactivate Tournament DB
 
-Tournament Manager-->API Gateway: result
+Tournament Manager->Mail Manager: 9: sendMassMail(Tournament users)
+
+Tournament Manager-->API Gateway: 10: result
 deactivate Tournament Manager
 
-API Gateway-->WebApp: result
+API Gateway-->WebApp: 11: result
 deactivate WebApp
 deactivate API Gateway
 
