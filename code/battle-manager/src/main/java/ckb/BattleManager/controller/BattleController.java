@@ -4,10 +4,11 @@ import ckb.BattleManager.model.Battle;
 import ckb.BattleManager.service.BattleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/battle/get")
+@RequestMapping("/api/battle")
 public class BattleController {
     private final BattleService battleService;
 
@@ -17,13 +18,22 @@ public class BattleController {
     }
 
     @GetMapping
-    @ResponseStatus(HttpStatus.OK)
-    public Battle getBattle(Long id) {
-        return battleService.getBattle(id);
+    public ResponseEntity<Battle> getBattle(Long id) {
+        return ResponseEntity.ok(battleService.getBattle(id));
     }
 
     @PostMapping
-    public void registerNewBattle(@RequestBody Battle battle) {
+    @ResponseStatus(HttpStatus.OK)
+    public void createBattle(@RequestBody Battle battle) {
         battleService.addNewBattle(battle);
+    }
+
+
+    public void joinBattle(Long battleId, Long studentId) {
+        battleService.joinBattle(battleId, studentId);
+    }
+
+    public void leaveBattle() {
+
     }
 }
