@@ -12,13 +12,14 @@ import java.io.Serializable;
 @Setter
 @Getter
 @Table(name= "tournamentrankings")
+@IdClass(TournamentRankingId.class)
 
 public class TournamentRanking implements Serializable {
     @Id
-    @Column( name= "tournamentID",nullable = false, updatable = false)
+    @Column(name= "tournamentID")
     private Long tournamentID;
-
-    @Column(name= "userID",nullable = false, updatable = false)
+    @Id
+    @Column(name= "userID")
     private Long userID;
 
     @Column(name= "score")
