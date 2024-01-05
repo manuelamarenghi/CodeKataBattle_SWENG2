@@ -1,6 +1,6 @@
 package ckb.MailService.controller;
 
-import ckb.MailService.dto.AllStudentsMailRequest;
+import ckb.MailService.dto.in.AllStudentsMailRequest;
 import ckb.MailService.service.MailService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -48,8 +48,12 @@ public class AllStudentsEmailSender extends EmailSender {
                 .uri(accountManagerUrl + "/api/account/mail-students")
                 .retrieve()
                 .bodyToMono(String.class)
+                // clean up the response...
+                .map(a -> a.replace(" ", "")
+                        .replace("[", "")
+                        .replace("]", "")
+                        .replace("\"", ""))
                 .flatMapMany(responseBody -> Flux.fromArray(responseBody.split(",")))
-                .map(String::trim)
                 .collectList()
                 .block();
     }

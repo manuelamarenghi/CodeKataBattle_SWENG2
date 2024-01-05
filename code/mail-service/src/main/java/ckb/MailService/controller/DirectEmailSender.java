@@ -1,6 +1,7 @@
 package ckb.MailService.controller;
 
-import ckb.MailService.dto.DirectMailRequest;
+import ckb.MailService.dto.in.DirectMailRequest;
+import ckb.MailService.dto.out.MailRequest;
 import ckb.MailService.service.MailService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -45,14 +46,17 @@ public class DirectEmailSender extends EmailSender {
     }
 
     private List<String> getEmailAddresses(List<String> userIDs) {
-        // request will be constructed like this: http://localhost:8086/api/mail/single?userID=1&userID=2&userID=3 ...
-        return webClient.get()
-                .uri(accountManagerUrl + "/api/account/mail",
-                        uriBuilder -> uriBuilder.queryParam("userID", userIDs).build())
+        return webClient.post()
+                .uri(accountManagerUrl + "/api/account/mail")
+                .bodyValue(new MailRequest(userIDs))
                 .retrieve()
                 .bodyToMono(String.class) // we expect the response to only be a String containing the email addresses
+                // clean up the response...
+                .map(a -> a.replace(" ", "")
+                        .replace("[", "")
+                        .replace("]", "")
+                        .replace("\"", ""))
                 .flatMapMany(responseBody -> Flux.fromArray(responseBody.split(",")))
-                .map(String::trim)
                 .collectList() // collect the response into a list
                 .block(); // block until the response is received
     }

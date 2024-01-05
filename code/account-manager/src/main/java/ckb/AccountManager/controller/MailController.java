@@ -18,7 +18,7 @@ import java.util.List;
 public class MailController extends Controller {
     private final UserService userService;
 
-    @GetMapping
+    @PostMapping
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<Object> getMail(@RequestBody MailRequest request) {
         List<String> userIDs = request.getUserIDs();

@@ -9,7 +9,7 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>ckb</groupId>
-	<artifactId>AccountManager</artifactId>
+	<artifactId>account-manager</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>account-manager</name>
 	<description>Account Manager service for CodeKataBattle</description>
