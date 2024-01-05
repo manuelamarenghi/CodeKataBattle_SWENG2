@@ -17,7 +17,8 @@ public class TournamentRanking implements Serializable {
     @Id
     @Column( name= "tournamentID",nullable = false, updatable = false)
     private Long tournamentID;
-    @Column(name= "userID")
+
+    @Column(name= "userID",nullable = false, updatable = false)
     private Long userID;
 
     @Column(name= "score")

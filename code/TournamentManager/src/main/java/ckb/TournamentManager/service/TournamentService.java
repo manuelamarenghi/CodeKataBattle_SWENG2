@@ -58,12 +58,12 @@ public class TournamentService {
     public String addPermission(PermissionRequest request) {
         Permission p = new Permission(request.getTournamentID(), request.getUserID());
         permissionRepo.save(p);
-        String tournamentUrl = "http://tournament-service/tournaments/" + request.getTournamentID();
+        String tournamentUrl = "http://localhost:8084/tournament-service/tournaments/" + request.getTournamentID();
         return tournamentUrl;
     }
 
     public List<TournamentRanking> getTournamentPage(GetTournamentPageRequest request) {
-        List<TournamentRanking> rankings = tournamentRankingRepo.findAllByTournamentIDOrderByScoreAsc(request.getTournamentID());
+        List<TournamentRanking> rankings = tournamentRankingRepo.findByTournamentIDOrderByScoreAsc(request.getTournamentID());
         System.out.println("res"+rankings);
         return rankings;
     }
