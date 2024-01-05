@@ -23,4 +23,5 @@ public interface TournamentRepo extends JpaRepository<Tournament,Long> {
     @Override
     <S extends Tournament> List<S> saveAll(Iterable<S> entities);
 
+    List<Tournament> findAll();
 }

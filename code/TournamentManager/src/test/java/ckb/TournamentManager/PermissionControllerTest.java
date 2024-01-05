@@ -1,8 +1,7 @@
 package ckb.TournamentManager;
 
 import ckb.TournamentManager.controller.PermissionController;
-import ckb.TournamentManager.controller.SubscriptionController;
-import ckb.TournamentManager.dto.PermissionRequest;
+import ckb.TournamentManager.dto.incoming.PermissionRequest;
 import ckb.TournamentManager.model.Tournament;
 import ckb.TournamentManager.repo.TournamentRepo;
 import org.junit.jupiter.api.Test;

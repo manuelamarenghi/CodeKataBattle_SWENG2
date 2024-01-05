@@ -1,4 +1,4 @@
-package ckb.TournamentManager.dto;
+package ckb.TournamentManager.dto.incoming;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -8,7 +8,7 @@ import lombok.Data;
 @Builder
 @AllArgsConstructor
 
-public class SubscriptionRequest {
+public class PermissionRequest {
     private Long tournamentID;
     private Long userID;
 }

@@ -1,6 +1,7 @@
 package ckb.TournamentManager.repo;
 
 import ckb.TournamentManager.model.TournamentRanking;
+import ckb.TournamentManager.model.TournamentRankingId;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -10,23 +11,20 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface TournamentRankingRepo extends JpaRepository<TournamentRanking,Long> {
-    Optional<TournamentRanking> findByTournamentID(@Param("tournamentID")Long tournamentID);
-    Optional<TournamentRanking> findByTournamentIDAndUserID(@Param("tournamentID")Long tournamentID, @Param("userID")Long userID);
-    List<TournamentRanking> findAllByTournamentID(@Param("tournamentID")Long tournamentID);
+public interface TournamentRankingRepo extends JpaRepository<TournamentRanking, Long> {
 
-    Optional<List<TournamentRanking>> findDistinctByTournamentID(@Param("tournamentID")Long tournamentID);
-    @Override
-    void delete(TournamentRanking entity);
-    @Override
-    void deleteById(@Param("tournamentID")Long tournamentID);
-    @Override
-    <S extends TournamentRanking> S save(S entity);
-    @Override
-    <S extends TournamentRanking> List<S> saveAll(Iterable<S> entities);
+    Optional<TournamentRanking> findByTournamentID(Long tournamentID);
 
-    List<TournamentRanking> findByTournamentIDOrderByScoreAsc(@Param("tournamentID")Long tournamentID);
-    List<TournamentRanking> findAllByTournamentIDOrderByScoreAsc(@Param("tournamentID")Long tournamentID);
+    Optional<TournamentRanking> findByTournamentIDAndUserID(Long tournamentID, Long userID);
 
+    List<TournamentRanking> findAllByTournamentID(Long tournamentID);
 
+    Optional<List<TournamentRanking>> findDistinctByTournamentID(Long tournamentID);
+
+    void deleteByTournamentID(Long tournamentID);
+
+    List<TournamentRanking> findByTournamentIDOrderByScoreAsc(Long tournamentID);
+
+    List<TournamentRanking> findAllByTournamentIDOrderByScoreAsc(Long tournamentID);
+    List<TournamentRanking> findAllByTournamentIDOrderByScoreDesc(Long tournamentID);
 }

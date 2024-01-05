@@ -1,11 +1,9 @@
 package ckb.TournamentManager;
 
-import ckb.TournamentManager.controller.NewTournamentController;
 import ckb.TournamentManager.controller.SubscriptionController;
-import ckb.TournamentManager.dto.SubscriptionRequest;
+import ckb.TournamentManager.dto.incoming.SubscriptionRequest;
 import ckb.TournamentManager.model.Tournament;
 import ckb.TournamentManager.repo.TournamentRepo;
-import ckb.TournamentManager.service.TournamentService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

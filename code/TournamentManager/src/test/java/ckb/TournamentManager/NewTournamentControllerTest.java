@@ -1,7 +1,7 @@
 package ckb.TournamentManager;
 
 import ckb.TournamentManager.controller.NewTournamentController;
-import ckb.TournamentManager.dto.NewTournamentRequest;
+import ckb.TournamentManager.dto.incoming.NewTournamentRequest;
 import ckb.TournamentManager.repo.TournamentRepo;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
