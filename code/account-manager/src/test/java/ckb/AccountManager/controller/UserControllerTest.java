@@ -27,7 +27,7 @@ public class UserControllerTest {
             user1.setFullName("Catta");
             user1.setEmail("catta@mail.com");
             user1.setPassword("password");
-            user1.setRole(Role.STUDENT);
+            user1.setRole(Role.EDUCATOR);
             userRepository.save(user1);
         } catch (DataIntegrityViolationException ignored) {
         }
@@ -36,7 +36,7 @@ public class UserControllerTest {
             user2.setFullName("Tommy");
             user2.setEmail("tommy@mail.com");
             user2.setPassword("password");
-            user2.setRole(Role.STUDENT);
+            user2.setRole(Role.EDUCATOR);
             userRepository.save(user2);
         } catch (DataIntegrityViolationException ignored) {
         }
@@ -45,7 +45,7 @@ public class UserControllerTest {
             user3.setFullName("Manu");
             user3.setEmail("manu@mail.com");
             user3.setPassword("password");
-            user3.setRole(Role.STUDENT);
+            user3.setRole(Role.EDUCATOR);
             userRepository.save(user3);
         } catch (DataIntegrityViolationException ignored) {
         }
