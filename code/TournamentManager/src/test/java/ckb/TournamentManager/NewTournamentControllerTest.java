@@ -59,4 +59,14 @@ public class NewTournamentControllerTest {
         ResponseEntity<Object> response = newTournamentController.newTournament(request);
         assertTrue(response.getBody().equals("Invalid data request"));
     }
+    @Test
+    public void sendEmailCorrectly(){
+        mockServer
+                .when(request().withMethod("POST").withPath("/api/mail/all-students"))
+                .respond(response().withStatusCode(200).withBody("ok!"));
+        Date d = new Date((2024-1900),11,20);
+        NewTournamentRequest request = new NewTournamentRequest(d);
+        ResponseEntity<Object> response = newTournamentController.newTournament(request);
+        assertTrue(response.getBody().equals("Tournament created"));
+    }
 }

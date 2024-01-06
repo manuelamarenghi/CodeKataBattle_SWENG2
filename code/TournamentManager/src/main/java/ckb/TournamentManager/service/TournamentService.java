@@ -1,5 +1,6 @@
 package ckb.TournamentManager.service;
 
+import ckb.TournamentManager.dto.incoming.GetTournamentPageRequest;
 import ckb.TournamentManager.dto.incoming.NewTournamentRequest;
 import ckb.TournamentManager.dto.incoming.PermissionRequest;
 import ckb.TournamentManager.dto.incoming.SubscriptionRequest;
@@ -56,13 +57,12 @@ public class TournamentService {
     public String addPermission(PermissionRequest request) {
         Permission p = new Permission(request.getTournamentID(), request.getUserID());
         permissionRepo.save(p);
-        String tournamentUrl = "http://localhost:8084/tournament-service/tournaments/" + request.getTournamentID();
+        String tournamentUrl = "http://tournament-service/tournaments/" + request.getTournamentID();
         return tournamentUrl;
     }
 
-    public List<TournamentRanking> getTournamentPage(NewTournamentRequest.GetTournamentPageRequest request) {
-        List<TournamentRanking> rankings = tournamentRankingRepo.findByTournamentIDOrderByScoreAsc(request.getTournamentID());
-        System.out.println("res"+rankings);
+    public List<TournamentRanking> getTournamentPage(GetTournamentPageRequest request) {
+        List<TournamentRanking> rankings = tournamentRankingRepo.findAllByTournamentIDOrderByScoreDesc(request.getTournamentID());
         return rankings;
     }
     public List<Tournament> getAllTournaments(){
