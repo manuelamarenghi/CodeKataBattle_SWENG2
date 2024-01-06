@@ -1,6 +1,10 @@
 package ckb.TournamentManager.controller;
 
 import ckb.TournamentManager.dto.incoming.PermissionRequest;
+import ckb.TournamentManager.dto.outcoming.DirectMailRequest;
+import ckb.TournamentManager.dto.outcoming.UserRequest;
+import ckb.TournamentManager.model.Role;
+import ckb.TournamentManager.model.User;
 import ckb.TournamentManager.service.TournamentService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -11,6 +15,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
+
+import java.util.Collections;
 
 @RestController
 @Slf4j
@@ -29,7 +35,8 @@ public class PermissionController extends Controller{
         // check if the request has valid data
         ResponseEntity<Object> response = checkRequest(request);
         if (response.getStatusCode().is4xxClientError()) return response;
-        if(checkEducator(request)){
+        User e = checkEducator(request);
+        if(e == null || e.getRole() != Role.EDUCATOR){
             log.error("Invalid Request");
             return new ResponseEntity<>("Invalid Request", getHeaders(), HttpStatus.BAD_REQUEST);
         }
@@ -38,40 +45,32 @@ public class PermissionController extends Controller{
         log.info("Permission inserted");
         try {
             sendRequest("http://localhost:8085/api/mail/direct", content, request.getUserID());
-        } catch (Exception e) {
+        } catch (Exception exp) {
             log.error("Error while retrieving send request to mail service\n");
             return new ResponseEntity<>(getHeaders(), HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<>("Permission inserted", getHeaders(), HttpStatus.CREATED);
     }}
 
-    private boolean checkEducator(PermissionRequest request) {
-        try{webClient
+    private User checkEducator(PermissionRequest request) {
+        try{ return webClient
                 .post()
-                .uri(builder -> builder
-                        .path("/api/account/check")
-                        .queryParam("variableName", request.getUserID())
-                        .build())
-                .bodyValue("Educator")
+                .uri("http://localhost:8086/api/account/user")
+                .bodyValue(new UserRequest(request.getUserID()))
                 .retrieve()
                 .onStatus(HttpStatusCode::is4xxClientError, clientResponse -> Mono.error(new RuntimeException("Errore durante la chiamata HTTP")))
-                .bodyToMono(String.class);
-            return false;
+                .bodyToMono(User.class).block();
         }
         catch (Exception e){
-
+            return null;
         }
-        return false;
     }
 
     private Mono<String> sendRequest(String s, String content, Long userId) {
         return webClient
                 .post()
-                .uri(builder -> builder
-                        .path(s)
-                        .queryParam("variableName", userId)
-                        .build())
-                .bodyValue(content)
+                .uri(s)
+                .bodyValue(new DirectMailRequest(Collections.singletonList(userId.toString()),content))
                 .retrieve()
                 .onStatus(HttpStatusCode::is4xxClientError, clientResponse -> Mono.error(new RuntimeException("Errore durante la chiamata HTTP")))
                 .bodyToMono(String.class);

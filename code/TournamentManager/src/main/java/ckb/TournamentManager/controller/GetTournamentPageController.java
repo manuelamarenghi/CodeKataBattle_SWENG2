@@ -1,20 +1,27 @@
 package ckb.TournamentManager.controller;
 
+import ckb.TournamentManager.dto.incoming.GetTournamentPageRequest;
 import ckb.TournamentManager.dto.incoming.NewTournamentRequest;
+import ckb.TournamentManager.dto.outcoming.UserRequest;
 import ckb.TournamentManager.model.TournamentRanking;
+import ckb.TournamentManager.model.User;
 import ckb.TournamentManager.service.TournamentService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
+import reactor.core.publisher.Mono;
 
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @Slf4j
@@ -29,12 +36,10 @@ public class GetTournamentPageController extends Controller{
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<Object> getTournamentPage(@RequestBody NewTournamentRequest.GetTournamentPageRequest request) {
-        // check if the request has valid data
+    public ResponseEntity<Object> getTournamentPage(@RequestBody GetTournamentPageRequest request) {
         ResponseEntity<Object> response = checkRequest(request);
         if (response.getStatusCode().is4xxClientError()) return response;
         List<TournamentRanking> t = tournamentService.getTournamentPage(request);
-        // mandare richiesta a battle service per le battle relative al tournament
         ResponseWrapper responseWrapper;
         try {
             log.info("Tournament page retrieved");
@@ -48,26 +53,30 @@ public class GetTournamentPageController extends Controller{
     }
     private List<Long> getBattles(Long variableValue) {
         try {
-             String s =webClient.get()
-                    .uri("http://localhost:8082/api/battle/nome", uribuilder -> uribuilder
-                            .queryParam("tournamentID", variableValue)
-                            .build())
+             return webClient
+                    .post()
+                    .uri("http://localhost:8082/api/battle/servizio")
+                    .bodyValue(variableValue)
                     .retrieve()
-                    .bodyToMono(String.class)
+                    .onStatus(HttpStatusCode::is4xxClientError, clientResponse -> Mono.error(new RuntimeException("Errore durante la chiamata HTTP")))
+                     .bodyToMono(String.class)
+                     .map(responseBody -> {
+                         responseBody = responseBody.replaceAll("^\\[|\\]$", "");
+                         String[] longStrings = responseBody.split(",");
+                         return Arrays.stream(longStrings)
+                                 .map(Long::valueOf)
+                                 .collect(Collectors.toList());
+                     })
                      .block();
-             System.out.println(s);
         } catch (WebClientResponseException e) {
-            // Gestire l'eccezione solo se il codice di stato non è 200 OK
             if (e.getStatusCode() != HttpStatus.OK) {
                 log.error("Error while retrieving battles: {}", e.getMessage());
                 return Collections.emptyList();
             }
-            // Puoi gestire l'errore restituendo una lista vuota o un altro valore di default
             return Collections.emptyList();
         }
-        return Collections.emptyList();
     }
-    private ResponseEntity<Object> checkRequest(NewTournamentRequest.GetTournamentPageRequest request) {
+    private ResponseEntity<Object> checkRequest(GetTournamentPageRequest request) {
         if(request.getTournamentID() == null || tournamentService.getTournament(request.getTournamentID()) == null){
             log.error("Invalid tournament id request");
             return new ResponseEntity<>("Invalid tournament id request", getHeaders(), HttpStatus.BAD_REQUEST);

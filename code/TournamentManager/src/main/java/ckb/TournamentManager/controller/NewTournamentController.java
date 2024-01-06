@@ -1,6 +1,7 @@
 package ckb.TournamentManager.controller;
 
 import ckb.TournamentManager.dto.incoming.NewTournamentRequest;
+import ckb.TournamentManager.dto.outcoming.AllStudentsMailRequest;
 import ckb.TournamentManager.service.TournamentService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,23 +31,13 @@ public class NewTournamentController extends Controller{
 
         String content = " Hi! A new tournament is created click here to subscribe "+tournamentService.createTournament(request);
         log.info("New tournament created");
-        // mandare mail a tutti gli utenti registrati
-        sendRequest("/api/mail/all-students", content)
-                .doOnError(error -> {
-                    log.error("Error sending mail", error);
-                    // Puoi aggiungere ulteriori log o gestione degli errori qui se necessario
-                })
-                .onErrorResume(throwable -> Mono.just("Error sending mail")) // Fornisce un fallback in caso di errore
-                .subscribe(
-                        r -> {
-                            // Puoi gestire la risposta qui, ad esempio, log o altri passaggi necessari
-                            log.info("Mail sent successfully: {}", r);
-                        },
-                        error -> {
-                            // Puoi gestire l'errore qui, ad esempio, log o altri passaggi necessari
-                            log.error("Error sending mail", error);
-                        }
-                );
+        try {
+            sendRequest("http://localhost:8085/api/mail/all-students", content);
+            log.info("Mail correctly sent!");
+        } catch (Exception e) {
+            log.error("Error while retrieving send request to mail service\n");
+            return new ResponseEntity<>(getHeaders(), HttpStatus.BAD_REQUEST);
+        }
         return new ResponseEntity<>("Tournament created", getHeaders(), HttpStatus.CREATED);
     }
 
@@ -54,7 +45,7 @@ public class NewTournamentController extends Controller{
         return WebClient.create()
                 .post()
                 .uri(s)
-                .bodyValue(content)
+                .bodyValue(new AllStudentsMailRequest(content))
                 .retrieve()
                 .onStatus(HttpStatusCode::is4xxClientError, clientResponse -> Mono.error(new RuntimeException("Errore durante la chiamata HTTP")))
                 .bodyToMono(String.class);
