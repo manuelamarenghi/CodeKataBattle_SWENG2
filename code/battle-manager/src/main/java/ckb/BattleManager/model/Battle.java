@@ -5,38 +5,36 @@ import lombok.*;
 
 import java.util.Date;
 
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
 @Entity(name = "Battle")
 @Table(name = "Battles", uniqueConstraints = {
-        @UniqueConstraint(name = "repo_link_unique", columnNames = "repo_link")
+        @UniqueConstraint(name = "repo_link_unique", columnNames = "repositoryLink")
 })
+@Data
+@NoArgsConstructor
 public class Battle {
     @Id
-    @Column(name = "battle_id", nullable = false, updatable = false)
-    private Long battle_id;
+    @Column(name = "battleId", nullable = false, updatable = false)
+    private Long battleId;
 
-    @Column(name = "tournament_id", nullable = false, updatable = false)
-    private Long tournament_id;
+    @Column(name = "tournamentId", nullable = false, updatable = false)
+    private Long tournamentId;
 
-    @Column(name = "repo_link")
-    private String repo_link;
+    @Column(name = "repositoryLink")
+    private String repositoryLink;
 
-    @Column(name = "min_students", nullable = false, updatable = false)
-    private int min_students;
+    @Column(name = "minStudents", nullable = false, updatable = false)
+    private int minStudents;
 
-    @Column(name = "max_students", nullable = false, updatable = false)
-    private int max_students;
+    @Column(name = "maxStudents", nullable = false, updatable = false)
+    private int maxStudents;
 
-    @Column(name = "registration_deadline", nullable = false, updatable = false, columnDefinition = "DATE")
-    private Date reg_deadline;
+    @Column(name = "registrationDeadline", nullable = false, updatable = false, columnDefinition = "DATE")
+    private Date regDeadline;
 
-    @Column(name = "submission_deadline", nullable = false, updatable = false, columnDefinition = "DATE")
-    private Date sub_deadline;
+    @Column(name = "submissionDeadline", nullable = false, updatable = false, columnDefinition = "DATE")
+    private Date subDeadline;
 
-    @Column(name = "battle_to_eval", nullable = false, updatable = false)
-    private boolean battle_to_eval;
+    @Column(name = "battleToEval", nullable = false, updatable = false)
+    private boolean battleToEval;
 
 }

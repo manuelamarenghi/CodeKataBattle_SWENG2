@@ -2,6 +2,9 @@ Battle
 // get a battle
 Battle getBattle(Integer id)
 
+// get all the battles of a tournament
+List<Battle> getBattleOfTournament(Long idTournament)
+
 // create a new Battle
 void createBattle(Battle battle)
 
@@ -41,3 +44,6 @@ void assignScore(Integer id_team, Integer points)
 
 // assign a personal score to the team
 void assignPersonalScore(Integer team_id, int score)
+
+
+// Data = toString + EqualsAndHashCode + getter + setter + requiredArgsConstructor
