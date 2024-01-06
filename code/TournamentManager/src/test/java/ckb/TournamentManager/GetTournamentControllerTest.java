@@ -1,6 +1,7 @@
 package ckb.TournamentManager;
 
 import ckb.TournamentManager.controller.GetTournamentPageController;
+import ckb.TournamentManager.dto.incoming.GetTournamentPageRequest;
 import ckb.TournamentManager.dto.incoming.NewTournamentRequest;
 import ckb.TournamentManager.repo.TournamentRankingRepo;
 import ckb.TournamentManager.repo.TournamentRepo;
@@ -46,14 +47,11 @@ public class GetTournamentControllerTest {
         jsonArray.put(a);
         jsonArray.put(b);
         String json = jsonArray.toString();
-        Long tournamentID = 90L;
+        Long tournamentID = 98L;
         mockServer
-                .when(request().withMethod("GET").withPath("/api/battle/nome")
-                        .withQueryStringParameter("tournamentID", String.valueOf(tournamentID)))
+                .when(request().withMethod("POST").withPath("/api/battle/servizio"))
                 .respond(response().withStatusCode(200).withBody(json));
-        NewTournamentRequest.GetTournamentPageRequest request = new NewTournamentRequest.GetTournamentPageRequest(tournamentID);
-        /*System.out.println(tournamentRankingRepo.findDistinctByTournamentID(tournamentID));
-        System.out.println(tournamentRankingRepo.findAllByTournamentIDOrderByScoreAsc(tournamentID));*/
+        GetTournamentPageRequest request = new GetTournamentPageRequest(tournamentID);
         ResponseEntity<Object> response = getTournamentController.getTournamentPage(request);
         assertTrue(response.getStatusCode().is2xxSuccessful());
 
