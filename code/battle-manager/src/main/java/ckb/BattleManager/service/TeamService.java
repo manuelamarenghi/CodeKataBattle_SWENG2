@@ -19,6 +19,10 @@ public class TeamService {
         this.battleRepository = battleRepository;
     }
 
+    public Team getTeam(Long idTeam) {
+        return teamRepository.findById(idTeam).orElseThrow(() -> new RuntimeException(""));
+    }
+
     public List<Team> getListTeam(Long idBattle) {
         return teamRepository.findTeamsByBattle(
                 battleRepository.findById(idBattle).orElseThrow(() -> new RuntimeException())
@@ -26,8 +30,13 @@ public class TeamService {
     }
 
     public void createTeam(Long battleId, Long studentId) {
-        teamRepository.save(new Team(studentId, battleId,"" , 0, false));
+        teamRepository.save(
+                new Team(studentId,
+                        battleRepository.findById(battleId).orElseThrow(() -> new RuntimeException()),
+                        "" ,
+                        0,
+                        false
+                )
+        );
     }
-
-
 }
