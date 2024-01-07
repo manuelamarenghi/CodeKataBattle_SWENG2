@@ -23,7 +23,7 @@ public class BattleService {
     public Battle getBattle(Long id) {
         return battleRepository.findById(id).orElseThrow(() -> {
             log.info("Battle not found with id: {}", id);
-            throw new RuntimeException("");
+            return new RuntimeException("");
         });
     }
 
