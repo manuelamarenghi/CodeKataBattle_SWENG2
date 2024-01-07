@@ -2,7 +2,9 @@ package ckb.TournamentManager;
 
 import ckb.TournamentManager.controller.CloseTournamentController;
 import ckb.TournamentManager.dto.incoming.CloseTournamentRequest;
+import ckb.TournamentManager.model.Permission;
 import ckb.TournamentManager.model.Tournament;
+import ckb.TournamentManager.repo.PermissionRepo;
 import ckb.TournamentManager.repo.TournamentRepo;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +12,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.ResponseEntity;
 
 import java.util.Date;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -19,7 +22,8 @@ public class CloseTournamentTest {
     private CloseTournamentController closetController;
     @Autowired
     private TournamentRepo tournamentRepo;
-
+    @Autowired
+    private PermissionRepo permissionRepo;
     @Test
     public void correctTest() {
         Long tournamentID = null;
@@ -32,6 +36,7 @@ public class CloseTournamentTest {
         CloseTournamentRequest request = new CloseTournamentRequest(tournamentID);
         ResponseEntity<Object> response = closetController.CloseTournament(request);
         assertTrue(response.getBody().equals("Tournament closed"));
+        tournamentRepo.deleteById(tournamentID);
     }
     @Test
     public void TournamentNullTest() {
@@ -57,4 +62,5 @@ public class CloseTournamentTest {
         ResponseEntity<Object> response = closetController.CloseTournament(request);
         assertTrue(response.getBody().equals("Invalid tournament id request"));
     }
+
 }
