@@ -6,32 +6,36 @@ participant Tournament Manager
 participant Badges Manager
 database Tournament DB
 database Badges DB
+participant Mail Manager
 
 participantspacing 5
 
 activate WebApp
-WebApp->API Gateway: createTournament(form)
+WebApp->API Gateway: 1: createTournament(tournament)
 activate API Gateway
-API Gateway->Tournament Manager: createTournament(form)
+API Gateway->Tournament Manager: 2: createTournament(tournament)
 activate Tournament Manager
-Tournament Manager->Tournament Manager: checkForms()
+Tournament Manager->Tournament Manager: 3: checkTournament(tournament)
 
-alt valid_content == true
+alt valid_content == true && valid_badges == true
 // Insert a new tournament
-Tournament Manager->Tournament DB: executeQuery(Tournament)
+Tournament Manager->Tournament DB: 4: executeQuery(tournament)
 
-Tournament DB-->Tournament Manager: result
-Tournament Manager->Badges Manager: createBadge(form)
+Tournament DB-->Tournament Manager: 5: success
+Tournament Manager->Mail Manager: 6: sendMassMail(CKB_users, content)
+Tournament Manager->Badges Manager: 7: createBadges(badges)
 activate Badges Manager
 // Insert new badges
-Badges Manager->Badges DB: executeQuery(Badge)
+Badges Manager->Badges DB: 8: executeQuery(badges)
 
-Badges DB-->Badges Manager: result
-Badges Manager-->Tournament Manager: result
+Badges DB-->Badges Manager: 9: success
+Badges Manager-->Tournament Manager: 10: result
 deactivate Badges Manager
+else
+Tournament Manager->Tournament Manager: error()
 end
-Tournament Manager-->API Gateway: result
+Tournament Manager-->API Gateway: 11: result
 deactivate Tournament Manager
-API Gateway-->WebApp: result
+API Gateway-->WebApp: 12: result
 deactivate WebApp
 deactivate API Gateway

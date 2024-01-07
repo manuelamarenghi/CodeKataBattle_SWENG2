@@ -4,57 +4,29 @@ frame Join Battle
 
 fontawesome6solid f390 WebApp
 participant API Gateway
-participant Tournament Manager
-database Tournament DB
 participant Battle Manager
 database Battle DB
 participantspacing 5
 
 activate WebApp
-WebApp->API Gateway: getTournament(id)
+
+WebApp->API Gateway: 1: joinBattle(id_student, id_battle)
 activate API Gateway
-API Gateway->Tournament Manager: getTournament(id)
-activate Tournament Manager
+API Gateway->Battle Manager: 2: joinBattle(id_student, id_battle)
 
-Tournament Manager->Tournament DB: executeQuery(Tournament id)
-activate Tournament DB
-
-alt tournament_id_valid == true
-Tournament DB-->Tournament Manager: result
-Tournament Manager-->API Gateway: result
-API Gateway-->WebApp: result
-WebApp->API Gateway: getBattle(id)
-API Gateway->Battle Manager: getBattle(id)
-activate Battle Manager
-
-Battle Manager->Battle DB: executeQuery(Battle id)
-
-activate Battle DB
-alt battle_id_valid == true
-Battle DB-->Battle Manager: success
-Battle Manager-->API Gateway: result
-API Gateway-->WebApp: result
-deactivate Battle Manager
-WebApp->API Gateway: joinBattle()
-API Gateway->Battle Manager: joinBattle()
 activate Battle Manager
 // THIS IS AN INSERT QUERY
-Battle Manager->Battle DB: executeQuery(Battle id, Student id)
-Battle DB-->Battle Manager: result
+Battle Manager->Battle DB: 3: executeQuery(id_student, id_battle)
+activate Battle DB
+alt student_registered == false
+Battle DB-->Battle Manager: 4: success
 else
-Battle DB->Battle Manager: invalid_id
+Battle DB-->Battle Manager: invalid
 deactivate Battle DB
 end
 
-Battle Manager-->API Gateway: result
+Battle Manager-->API Gateway: 5: result
 deactivate Battle Manager
-API Gateway-->WebApp: result
-
-else 
-Tournament DB-->Tournament Manager: invalid_id
-deactivate Tournament DB
-Tournament Manager-->API Gateway: result
-deactivate Tournament Manager
-API Gateway-->WebApp: result
-end
+API Gateway-->WebApp: 6: result
+deactivate API Gateway
 

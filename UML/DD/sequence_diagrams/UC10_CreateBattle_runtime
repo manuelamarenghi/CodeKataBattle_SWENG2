@@ -3,54 +3,33 @@ frame Create Battle
 
 fontawesome6solid f390 WebApp
 participant API Gateway
-participant Tournament Manager
-database Tournament DB
 participant Battle Manager
 database Battle DB
+participant Mail manager
+
 participantspacing 5
 
 activate WebApp
-WebApp->API Gateway: getTournament(id)
+
+WebApp->API Gateway: 1: createBattle(battle, id_tournament)
 activate API Gateway
-API Gateway->Tournament Manager: getTournament(id)
-activate Tournament Manager
-
-Tournament Manager->Tournament DB: executeQuery(Tournament id)
-activate Tournament DB
-
-alt tournament_id_valid == true
-Tournament DB-->Tournament Manager: result
-Tournament Manager-->API Gateway: result
-API Gateway-->WebApp: result
-WebApp->API Gateway: createBattle(form)
-API Gateway->Tournament Manager: createBattle(form)
-
-Tournament Manager->Battle Manager: createBattle(form)
+API Gateway->Battle Manager: 2: createBattle(battle, id_tournament)
 activate Battle Manager
 
-Battle Manager->Battle Manager: checkForm(form)
+Battle Manager->Battle Manager: 3: checkBattle(battle, id_tournament)
 
-alt valid_content == true
+alt valid_content == true && has_educator_permission == true
 // Insert Battle
-Battle Manager->Battle DB: executeQuery(Battle)
+Battle Manager->Battle DB: 4: executeQuery(battle, id_tournament)
 
 activate Battle DB
-Battle DB-->Battle Manager: result
-
-end
+Battle DB-->Battle Manager: 5: success
 deactivate Battle DB
 
-Battle Manager-->Tournament Manager: result
-deactivate Battle Manager
-
-Tournament Manager-->API Gateway: result
-API Gateway-->WebApp: result
-
+Battle Manager->Mail manager: 6: sendMassMail(users_tournament)
 else 
-Tournament DB-->Tournament Manager: invalid_id
-deactivate Tournament DB
-Tournament Manager-->API Gateway: result
-deactivate Tournament Manager
-API Gateway-->WebApp: result
+Battle Manager->Battle Manager: error()
 end
-
+Battle Manager-->API Gateway: 7: result
+API Gateway-->WebApp: 8: result
+deactivate API Gateway

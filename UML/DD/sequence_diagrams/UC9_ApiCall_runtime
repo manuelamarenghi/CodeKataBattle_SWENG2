@@ -9,29 +9,29 @@ database Battle DB
 
 participantspacing 5
 
-Github->API Gateway: apiCall()
+Github->API Gateway: 1: apiCall(id_battle, id_team)
 activate API Gateway
-API Gateway->Solution Evaluation Service: evaluateSolution()
+API Gateway->Solution Evaluation Service: 2: evaluateSolution(id_battle, id_team)
 deactivate API Gateway
 activate Solution Evaluation Service
-Solution Evaluation Service->Github Manager: fetchSolution()
+Solution Evaluation Service->Github Manager: 3: fetchSolution(id_team)
 activate Github Manager
-Github Manager->Github:git_pull()
-Github-->Github Manager: result
-Github Manager-->Solution Evaluation Service: result
+Github Manager->Github: 4: git_pull()
+Github-->Github Manager: 5: result
+Github Manager-->Solution Evaluation Service: 6: result
 deactivate Github Manager
 
-Solution Evaluation Service->Solution Evaluation Service: checkSumbission()
+Solution Evaluation Service->Solution Evaluation Service: 7: checkSumbission(submission)
 
-alt submission_metadata == ok
-
-Solution Evaluation Service->Battle Manager: assignScore(Team, score)
+alt team_registered == true && date < submission_deadline && battle_started == true
+Solution Evaluation Service->Battle Manager: 8: assignScore(id_team, score)
 deactivate Solution Evaluation Service
 activate Battle Manager
 // Update Query
-Battle Manager->Battle DB: executeQuery(Team, score)
+Battle Manager->Battle DB: 9: executeQuery(id_team, score)
 activate Battle DB
-Battle DB-->Battle Manager: result
-end
+Battle DB-->Battle Manager: 10: success
+
 deactivate Battle DB
 deactivate Battle Manager
+end
