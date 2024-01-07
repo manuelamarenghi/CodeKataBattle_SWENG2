@@ -1,5 +1,6 @@
 package ckb.BattleManager.controller;
 
+import ckb.BattleManager.dto.IdLong;
 import ckb.BattleManager.model.Battle;
 import ckb.BattleManager.service.BattleService;
 import lombok.extern.slf4j.Slf4j;
@@ -22,20 +23,20 @@ public class BattleController {
     }
 
     @GetMapping
-    public ResponseEntity<Battle> getBattle(@RequestBody Long id) {
-        log.info("Get battle request with id: {}", id);
-        return ResponseEntity.ok(battleService.getBattle(id));
+    public ResponseEntity<Battle> getBattle(@RequestBody IdLong idBattle) {
+        log.info("[API REQUEST] Get battle request with id: {}", idBattle.getId());
+        return ResponseEntity.ok(battleService.getBattle(idBattle.getId()));
     }
 
     public ResponseEntity<List<Long>> getBattlesOfTournament(@RequestBody Long idTournament) {
-        log.info("Get battles of tournament request with id: {}", idTournament);
+        log.info("[API REQUEST] Get battles of tournament request with id: {}", idTournament);
         return ResponseEntity.ok(battleService.getBattleOfTournament(idTournament));
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.OK)
     public void createBattle(@RequestBody Battle battle) {
-        log.info("Create battle request with id: {}", battle.getBattleId());
+        log.info("[API REQUEST] Create battle request with id: {}", battle.getBattleId());
         log.debug("Battle: {}", battle);
         battleService.createBattle(battle);
     }
@@ -43,7 +44,7 @@ public class BattleController {
 
     //TODO: not very convinto because there are two services to use participations and team
     public void joinBattle(@RequestBody Long idBattle, @RequestBody Long idStudent) {
-        log.info("Join battle request with id_battle: {}, id_student: {}", idBattle, idStudent);
+        log.info("[API REQUEST] Join battle request with id_battle: {}, id_student: {}", idBattle, idStudent);
         battleService.joinBattle(idBattle, idStudent);
     }
 

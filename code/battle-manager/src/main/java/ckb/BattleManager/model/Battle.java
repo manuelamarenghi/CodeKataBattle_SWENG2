@@ -3,13 +3,14 @@ package ckb.BattleManager.model;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @Entity(name = "Battle")
 @Table(name = "Battles", uniqueConstraints = {
         @UniqueConstraint(name = "repo_link_unique", columnNames = "repositoryLink")
 })
 @Data
+@AllArgsConstructor
 @NoArgsConstructor
 public class Battle {
     @Id
@@ -29,10 +30,10 @@ public class Battle {
     private int maxStudents;
 
     @Column(name = "registrationDeadline", nullable = false, updatable = false, columnDefinition = "DATE")
-    private Date regDeadline;
+    private LocalDateTime regDeadline;
 
     @Column(name = "submissionDeadline", nullable = false, updatable = false, columnDefinition = "DATE")
-    private Date subDeadline;
+    private LocalDateTime subDeadline;
 
     @Column(name = "battleToEval", nullable = false, updatable = false)
     private boolean battleToEval;
