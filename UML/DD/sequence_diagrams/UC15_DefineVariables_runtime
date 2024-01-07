@@ -11,7 +11,7 @@ participantspacing 5
 activate WebApp
 WebApp->API Gateway: 1: createNewVariable(variable)
 activate API Gateway
-API Gateway->Tournament Manager: 2; createNewVariable(variable)
+API Gateway->Tournament Manager: 2: createNewVariable(variable)
 activate Tournament Manager
 
 Tournament Manager->Badges Manager: 3: createNewVariable(variable)
@@ -24,6 +24,8 @@ Badges Manager->Badge DB: 5: executeQuery(variable)
 activate Badge DB
 Badge DB-->Badges Manager: 6: success
 deactivate Badge DB
+else 
+Badges Manager->Badges Manager: error()
 end
 
 Badges Manager-->Tournament Manager: 7: result

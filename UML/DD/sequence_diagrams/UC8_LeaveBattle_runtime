@@ -3,57 +3,26 @@ frame Leave Battle
 
 fontawesome6solid f390 WebApp
 participant API Gateway
-participant Tournament Manager
-database Tournament DB
 participant Battle Manager
 database Battle DB
 participantspacing 5
 
 activate WebApp
-WebApp->API Gateway: 1: getTournament(id)
+WebApp->API Gateway: 1: leaveBattle(id_student, id_battle)
 activate API Gateway
-API Gateway->Tournament Manager: 2: getTournament(id)
-activate Tournament Manager
-
-Tournament Manager->Tournament DB: 3: executeQuery(Tournament id)
-activate Tournament DB
-
-alt tournament_id_valid == true
-Tournament DB-->Tournament Manager: 4: success
-Tournament Manager-->API Gateway: 5: result
-API Gateway-->WebApp: 6: result
-WebApp->API Gateway: 7: getBattle(id)
-API Gateway->Battle Manager: 8: getBattle(id)
-activate Battle Manager
-
-Battle Manager->Battle DB: 9: executeQuery(Battle id)
-
-activate Battle DB
-alt battle_id_valid == true
-Battle DB-->Battle Manager: 10: success
-Battle Manager-->API Gateway: 11: result
-API Gateway-->WebApp: 12: result
-deactivate Battle Manager
-WebApp->API Gateway: 13: leaveBattle(student, battle)
-API Gateway->Battle Manager: 14: leaveBattle(student, battle)
+API Gateway->Battle Manager: 2: leaveBattle(id_student, id_battle)
 activate Battle Manager
 // DELETE QUERY
-Battle Manager->Battle DB: 15: executeQuery(Battle id, Student id)
-Battle DB-->Battle Manager: 16: success
+Battle Manager->Battle DB: 3: executeQuery(id_student, id_battle)
+activate Battle DB
+alt student_registered == true
+Battle DB-->Battle Manager: 4: success
 else
-Battle DB-->Battle Manager: invalid_id
+Battle DB-->Battle Manager: invalid
 deactivate Battle DB
 end
 
-Battle Manager-->API Gateway: 17: result
+Battle Manager-->API Gateway: 5: result
 deactivate Battle Manager
-API Gateway-->WebApp: 18: result
-
-else 
-Tournament DB-->Tournament Manager: invalid_id
-deactivate Tournament DB
-Tournament Manager-->API Gateway: result
-deactivate Tournament Manager
-API Gateway-->WebApp: result
-end
-
+API Gateway-->WebApp: 6: result
+deactivate API Gateway
