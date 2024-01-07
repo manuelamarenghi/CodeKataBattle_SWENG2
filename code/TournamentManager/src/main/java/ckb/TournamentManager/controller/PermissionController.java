@@ -89,6 +89,10 @@ public class PermissionController extends Controller{
             log.error("Tournament already ended");
             return new ResponseEntity<>("Tournament already ended", getHeaders(), HttpStatus.BAD_REQUEST);
         }
+        if(tournamentService.PermissionAlreadyIn(request.getTournamentID(),request.getUserID())){
+            log.error("Permission already inserted");
+            return new ResponseEntity<>("Permission already inserted", getHeaders(), HttpStatus.BAD_REQUEST);
+        }
         return new ResponseEntity<>("Valid request", getHeaders(), HttpStatus.OK);
     }
 }

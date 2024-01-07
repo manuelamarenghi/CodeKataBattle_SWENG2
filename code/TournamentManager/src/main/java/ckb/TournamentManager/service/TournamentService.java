@@ -73,6 +73,13 @@ public class TournamentService {
         Tournament tournament = tournamentRepo.findByTournamentID(tournamentId).orElse(null);
         tournament.setStatus(false);
         tournamentRepo.save(tournament);
+        List<Permission> p = permissionRepo.findAllByTournamentID(tournamentId);
+        for (Permission permission : p) {
+            permissionRepo.delete(permission);
+        }
     }
 
+    public boolean PermissionAlreadyIn(Long tournamentID, Long userID){
+        return permissionRepo.findByTournamentIDAndUserID(tournamentID,userID).isPresent();
+    }
 }

@@ -2,9 +2,11 @@ package ckb.TournamentManager;
 
 import ckb.TournamentManager.controller.PermissionController;
 import ckb.TournamentManager.dto.incoming.PermissionRequest;
+import ckb.TournamentManager.model.Permission;
 import ckb.TournamentManager.model.Role;
 import ckb.TournamentManager.model.Tournament;
 import ckb.TournamentManager.model.User;
+import ckb.TournamentManager.repo.PermissionRepo;
 import ckb.TournamentManager.repo.TournamentRepo;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -30,6 +32,8 @@ public class PermissionControllerTest {
     private TournamentRepo tournamentRepo;
     private static ClientAndServer mockServermail;
     private static ClientAndServer mockServeraccount;
+    @Autowired
+    private PermissionRepo permissionRepo;
     @BeforeEach
     public void setUpServer() {
         mockServeraccount = ClientAndServer.startClientAndServer(8086);
@@ -40,20 +44,7 @@ public class PermissionControllerTest {
     public void tearDownServer() {
         mockServeraccount.stop(); mockServermail.stop();
     }
-    @Test
-    public void correctTest() {
-        Long tournamentID = null;
-        Long userID = 1L;
-        Date d = new Date(2024,01,20);
-        Tournament t = new Tournament();
-        t.setRegdeadline(d);
-        t.setStatus(true);
-        tournamentRepo.save(t);
-        tournamentID = t.getTournamentID();
-        PermissionRequest request = new PermissionRequest(tournamentID, userID);
-        ResponseEntity<Object> response = permissionController.permission(request);
-        assertTrue(response.getBody().equals("Permission inserted"));
-    }
+
     @Test
     public void TournamentAlreadyEndedTest() {
         Long userID = 1L;
@@ -66,6 +57,7 @@ public class PermissionControllerTest {
         PermissionRequest request = new PermissionRequest(tournamentID, userID);
         ResponseEntity<Object> response = permissionController.permission(request);
         assertTrue(response.getBody().equals("Tournament already ended"));
+        tournamentRepo.deleteById(tournamentID);
     }
     @Test
     public void TournamentNotExistsTest() {
@@ -74,6 +66,22 @@ public class PermissionControllerTest {
         PermissionRequest request = new PermissionRequest(tournamentID, userID);
         ResponseEntity<Object> response = permissionController.permission(request);
         assertTrue(response.getBody().equals("Invalid tournament id request"));
+    }
+    @Test
+    public void UserAlreadyHasPermissionTest() {
+        Tournament t = new Tournament();
+        t.setRegdeadline(new Date((2024-1900),01,20));
+        t.setStatus(true);
+        tournamentRepo.save(t);
+        Long userID = 1L;
+        Long tournamentID = t.getTournamentID();
+        Permission p = new Permission(tournamentID, userID);
+        permissionRepo.save(p);
+        PermissionRequest request = new PermissionRequest(tournamentID, userID);
+        ResponseEntity<Object> response = permissionController.permission(request);
+        assertTrue(response.getBody().equals("Permission already inserted"));
+        permissionRepo.delete(p);
+        tournamentRepo.deleteById(tournamentID);
     }
     @Test
     public void WrongUser() throws JsonProcessingException {
