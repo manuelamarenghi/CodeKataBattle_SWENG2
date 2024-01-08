@@ -2,6 +2,8 @@ package ckb.BattleManager.controller;
 
 import ckb.BattleManager.dto.input.IdLong;
 import ckb.BattleManager.dto.input.StudentBattle;
+import ckb.BattleManager.dto.input.StudentTeam;
+import ckb.BattleManager.dto.output.TournamentRanking;
 import ckb.BattleManager.model.Battle;
 import ckb.BattleManager.service.BattleService;
 import lombok.extern.slf4j.Slf4j;
@@ -61,6 +63,11 @@ public class BattleController {
         log.info("[API REQUEST] Leave battle request with id_battle: {}, id_student: {}", request.getIdBattle(), request.getIdStudent());
         battleService.leaveBattle(request.getIdStudent(), request.getIdBattle());
         return ResponseEntity.ok().build();
+    }
+
+    public ResponseEntity<List<TournamentRanking>> getTournamentRanking(Long idTournament) {
+        log.info("[API REQUEST] Get tournament ranking request with id_tournament: {}", idTournament);
+        return ResponseEntity.ok(battleService.getTournamentRanking(idTournament));
     }
 
 }

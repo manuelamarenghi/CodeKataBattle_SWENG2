@@ -2,6 +2,7 @@ package ckb.BattleManager.controller;
 
 import ckb.BattleManager.dto.input.IdLong;
 import ckb.BattleManager.dto.input.PairTeamScore;
+import ckb.BattleManager.dto.input.StudentTeam;
 import ckb.BattleManager.model.Team;
 import ckb.BattleManager.service.TeamService;
 import lombok.extern.slf4j.Slf4j;
@@ -50,6 +51,38 @@ public class TeamController {
         log.info("[API REQUEST] Assign score request with id_team: {}, score: {}", request.getIdTeam(), request.getScore());
         try {
             teamService.assignScore(request.getIdTeam(), request.getScore());
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+    public ResponseEntity<Object> assignPersonalScore(@RequestBody PairTeamScore request) {
+        log.info("[API REQUEST] Assign personal score request with id_team: {}, score: {}", request.getIdTeam(), request.getScore());
+        try {
+            teamService.assignPersonalScore(request.getIdTeam(), request.getScore());
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+    //TODO: finish because i need also the battle_id
+    public ResponseEntity<Object> registerStudentToTeam(@RequestBody StudentTeam request) {
+        log.info("[API REQUEST] Register student to team request with id_team: {}, id_student: {}", request.getIdTeam(), request.getIdStudent());
+        try {
+            teamService.registerStudentToTeam(request.getIdStudent(), request.getIdTeam());
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+    //TODO: finish because i need also the battle_id
+    public ResponseEntity<Object> inviteStudentToTeam(@RequestBody StudentTeam request) {
+        log.info("[API REQUEST] Invite student to team request with id_team: {}, id_student: {}", request.getIdTeam(), request.getIdStudent());
+        try {
+            teamService.inviteStudentToTeam(request.getIdStudent(), request.getIdTeam());
             return ResponseEntity.ok().build();
         } catch (Exception e) {
             return ResponseEntity.badRequest().build();
