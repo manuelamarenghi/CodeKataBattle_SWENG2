@@ -34,6 +34,7 @@ public class AllStudentsEmailSenderTest {
 
     @Test
     public void singleStudentTest() {
+        allStudentsEmailSender.setAccountManagerUrl("http://localhost:8086");
         mockServer
                 .when(request().withMethod("GET").withPath("/api/account/mail-students"))
                 .respond(response().withStatusCode(200).withBody("luca.cattani@mail.polimi.it"));
@@ -47,6 +48,7 @@ public class AllStudentsEmailSenderTest {
 
     @Test
     public void multipleStudentsTest() {
+        allStudentsEmailSender.setAccountManagerUrl("http://localhost:8086");
 
 
         JSONArray jsonArray = new JSONArray();
@@ -68,6 +70,8 @@ public class AllStudentsEmailSenderTest {
 
     @Test
     public void noStudentsTest() {
+        allStudentsEmailSender.setAccountManagerUrl("http://localhost:8086");
+
 
         mockServer
                 .when(request().withMethod("GET").withPath("/api/account/mail-students"))

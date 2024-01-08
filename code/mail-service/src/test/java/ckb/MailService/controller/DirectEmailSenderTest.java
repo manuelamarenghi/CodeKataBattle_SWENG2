@@ -36,6 +36,7 @@ public class DirectEmailSenderTest {
 
     @Test
     public void singleMailRequestTest() {
+        directEmailSender.setAccountManagerUrl("http://localhost:8086");
 
         mockServer
                 .when(request().withMethod("POST").withPath("/api/account/mail"))
@@ -52,6 +53,8 @@ public class DirectEmailSenderTest {
 
     @Test
     public void multipleMailRequestTest() {
+        directEmailSender.setAccountManagerUrl("http://localhost:8086");
+
         JSONArray jsonArray = new JSONArray();
         jsonArray.put("luca.cattani@mail.polimi.it");
         jsonArray.put("lucacattani2001@gmail.com");
@@ -76,6 +79,8 @@ public class DirectEmailSenderTest {
 
     @Test
     public void wrongMailRequestTest() {
+        directEmailSender.setAccountManagerUrl("http://localhost:8086");
+
 
         mockServer
                 .when(request().withMethod("POST").withPath("/api/account/mail"))
