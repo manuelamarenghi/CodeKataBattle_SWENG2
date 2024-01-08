@@ -2,9 +2,7 @@ package ckb.MailService.controller;
 
 import ckb.MailService.dto.in.DirectMailRequest;
 import org.json.JSONArray;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.mockserver.integration.ClientAndServer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -18,10 +16,16 @@ import static org.mockserver.model.HttpRequest.request;
 import static org.mockserver.model.HttpResponse.response;
 
 @SpringBootTest
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class DirectEmailSenderTest {
     @Autowired
     private DirectEmailSender directEmailSender;
     private ClientAndServer mockServer;
+
+    @BeforeAll
+    public void setUp() {
+        directEmailSender.initTestMode();
+    }
 
     @BeforeEach
     public void setUpServer() {
@@ -36,7 +40,6 @@ public class DirectEmailSenderTest {
 
     @Test
     public void singleMailRequestTest() {
-        directEmailSender.setAccountManagerUrl("http://localhost:8086");
 
         mockServer
                 .when(request().withMethod("POST").withPath("/api/account/mail"))
@@ -53,8 +56,6 @@ public class DirectEmailSenderTest {
 
     @Test
     public void multipleMailRequestTest() {
-        directEmailSender.setAccountManagerUrl("http://localhost:8086");
-
         JSONArray jsonArray = new JSONArray();
         jsonArray.put("luca.cattani@mail.polimi.it");
         jsonArray.put("lucacattani2001@gmail.com");
@@ -79,8 +80,6 @@ public class DirectEmailSenderTest {
 
     @Test
     public void wrongMailRequestTest() {
-        directEmailSender.setAccountManagerUrl("http://localhost:8086");
-
 
         mockServer
                 .when(request().withMethod("POST").withPath("/api/account/mail"))

@@ -11,9 +11,8 @@ public abstract class EmailSender {
         return headers;
     }
 
-    String setAccountManagerUrl(String url) {
-        accountManagerUrl = url;
-        return accountManagerUrl;
+    void initTestMode() {
+        accountManagerUrl = "http://localhost:8086";
     }
 
 }

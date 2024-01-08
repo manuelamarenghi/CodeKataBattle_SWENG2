@@ -4,12 +4,15 @@ import ckb.AccountManager.dto.MailRequest;
 import ckb.AccountManager.model.Role;
 import ckb.AccountManager.model.User;
 import ckb.AccountManager.repository.UserRepository;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -17,6 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class MailControllerTest {
 
     @Autowired
@@ -24,8 +28,10 @@ public class MailControllerTest {
     @Autowired
     private UserRepository userRepository;
 
-    // ensures that the 3 test users are present in the database
-    public void setUp(){
+    private List<String> validIDs;
+
+    @BeforeAll
+    public void setUp() {
         try {
             User user1 = new User();
             user1.setFullName("Catta");
@@ -35,7 +41,7 @@ public class MailControllerTest {
             userRepository.save(user1);
         } catch (DataIntegrityViolationException ignored) {
         }
-        try{
+        try {
             User user2 = new User();
             user2.setFullName("Tommy");
             user2.setEmail("tommy@mail.com");
@@ -44,7 +50,7 @@ public class MailControllerTest {
             userRepository.save(user2);
         } catch (DataIntegrityViolationException ignored) {
         }
-        try{
+        try {
             User user3 = new User();
             user3.setFullName("Manu");
             user3.setEmail("manu@mail.com");
@@ -53,12 +59,17 @@ public class MailControllerTest {
             userRepository.save(user3);
         } catch (DataIntegrityViolationException ignored) {
         }
+
+        validIDs = List.of(
+                userRepository.findUserByEmail("catta@mail.com").map(user -> String.valueOf(user.getId())).orElse("0"),
+                userRepository.findUserByEmail("tommy@mail.com").map(user -> String.valueOf(user.getId())).orElse("0"),
+                userRepository.findUserByEmail("manu@mail.com").map(user -> String.valueOf(user.getId())).orElse("0")
+        );
     }
 
     @Test
     public void validRequest() {
-        setUp();
-        ResponseEntity<Object> response = mailController.getMail(new MailRequest(List.of("1", "2", "3")));
+        ResponseEntity<Object> response = mailController.getMail(new MailRequest(validIDs));
 
         List<String> addresses = convertBodyToList(response);
 
@@ -70,7 +81,6 @@ public class MailControllerTest {
 
     @Test
     public void badRequest() {
-
         ResponseEntity<Object> response = mailController.getMail(new MailRequest(List.of("4", "5", "6")));
 
         assertTrue(response.getStatusCode().is4xxClientError());
@@ -78,9 +88,9 @@ public class MailControllerTest {
 
     @Test
     public void partialRequest() {
-        setUp();
-
-        ResponseEntity<Object> response = mailController.getMail(new MailRequest(List.of("1", "2", "3", "-1")));
+        List<String> partiallyValidIds = new ArrayList<>(validIDs);
+        partiallyValidIds.add("-1");
+        ResponseEntity<Object> response = mailController.getMail(new MailRequest(partiallyValidIds));
         // userID -1 should not return any valid address
 
         List<String> addresses = convertBodyToList(response);
