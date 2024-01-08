@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class Team {
     @Id
-    @Column(name = "teamId", nullable = false, updatable = false)
+    @Column(name = "teamId")
     private Long teamId;
 
     @ManyToOne
