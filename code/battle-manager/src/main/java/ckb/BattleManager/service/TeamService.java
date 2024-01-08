@@ -1,11 +1,7 @@
 package ckb.BattleManager.service;
 
 import ckb.BattleManager.model.Team;
-import ckb.BattleManager.repository.BattleRepository;
 import ckb.BattleManager.repository.TeamRepository;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.TypedQuery;
-import jakarta.persistence.criteria.CriteriaBuilder;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -30,7 +26,7 @@ public class TeamService {
     public Team getTeam(Long idTeam) throws Exception {
         return teamRepository.findById(idTeam).orElseThrow(() -> {
             log.info("Team not found with id: {}", idTeam);
-            return new Exception("");
+            return new Exception();
         });
     }
 
@@ -38,7 +34,7 @@ public class TeamService {
         return teamRepository.findTeamsByBattle(
                 battleService.findBattleById(idBattle).orElseThrow(() -> {
                     log.info("Battle not found with id: {}", idBattle);
-                    return new Exception("");
+                    return new Exception();
                 })
         );
     }
@@ -59,20 +55,52 @@ public class TeamService {
     }
 
     public void deleteParticipation(Long idStudent, Long idBattle) {
-        //TODO voglio che quando non ci sono più membri nel team, venga cancellato
-        participationService.deleteParticipation(idStudent, idBattle);
+        participationService.deleteParticipationHavingIdBattle(idStudent, idBattle);
     }
 
     public void assignScore(Long idTeam, Integer score) throws Exception {
-        Optional<Team> team = teamRepository.findById(idTeam);
+        Optional<Team> optionalTeam = teamRepository.findById(idTeam);
 
-        if (team.isPresent()) {
-            team.get().setEduEvaluated(true);
-            team.get().setScore(score);
-            teamRepository.save(team.get());
+        if (optionalTeam.isPresent()) {
+            Team team = optionalTeam.get();
+            team.setScore(score);
+            teamRepository.save(team);
+            log.info("Team score updated with id {} and score: {}", idTeam, score);
         } else {
             log.info("Team not found with id: {}", idTeam);
-            throw new Exception("");
+            throw new Exception();
         }
+    }
+
+    public void assignPersonalScore(Long idTeam, Integer score) throws Exception {
+        Optional<Team> optionalTeam = teamRepository.findById(idTeam);
+
+        if (optionalTeam.isPresent()) {
+            Team team = optionalTeam.get();
+            team.setScore(team.getScore() + score);
+            team.setEduEvaluated(true);
+            teamRepository.save(team);
+            log.info("Team personal score updated with id {} and score: {}", idTeam, score);
+        } else {
+            log.info("Team not found with id: {}", idTeam);
+            throw new Exception();
+        }
+    }
+
+    public void deleteTeam(Long teamId) {
+        teamRepository.deleteById(teamId);
+        log.info("Team deleted with id: {}", teamId);
+    }
+
+    public void registerStudentToTeam(Long idStudent, Long idTeam) {
+        // delete the record in participation and if the team has 0 members
+        // delete the team, also insert a new line in participation
+        participationService.deleteParticipationHavingIdTeam(idStudent,
+                teamRepository.getReferenceById(idTeam));
+        
+    }
+
+    public void inviteStudentToTeam(Long idStudent, Long idTeam) {
+        //TODO
     }
 }
