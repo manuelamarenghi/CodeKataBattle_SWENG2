@@ -15,10 +15,6 @@ void joinBattle(Integer id_battle, Integer id_student)
 // delete also the team
 void leaveBattle(Integer id_battle, Integer id_student)
 
-Ranking
-// DEPRECATED
-// List<User> getRanking(Integer id)
-
 Team
 // get a team
 Team getTeam(Integer id_team)

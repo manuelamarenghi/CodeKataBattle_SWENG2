@@ -1,10 +1,11 @@
 package ckb.BattleManager;
 
 import ckb.BattleManager.controller.BattleController;
-import ckb.BattleManager.dto.IdLong;
+import ckb.BattleManager.dto.input.IdLong;
 import ckb.BattleManager.model.Battle;
 import ckb.BattleManager.repository.BattleRepository;
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -12,24 +13,19 @@ import org.springframework.http.ResponseEntity;
 
 import java.time.LocalDateTime;
 import java.time.Month;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.TimeZone;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 public class BattleControllerTests {
     @Autowired
-    private static BattleController battleController;
+    private BattleController battleController;
 
     @Autowired
-    private static BattleRepository battleRepository;
+    private BattleRepository battleRepository;
 
-    @BeforeAll
-    public static void init() {
+    @BeforeEach
+    public void setUp() {
         battleRepository.save(new Battle(1L,
                 1L,
                 "link1",
@@ -61,15 +57,19 @@ public class BattleControllerTests {
         );
     }
 
+    @AfterEach
+    public void tearDown() {
+        battleRepository.deleteAll();
+    }
+
     @Test
     public void getBattle() {
         ResponseEntity<Battle> battle = battleController.getBattle(new IdLong(1L));
 
         assertTrue(battle.getStatusCode().is2xxSuccessful());
-        assertTrue(battle.getBody().getBattleId() == 1L);
-
+        assertEquals(1L, (long) battle.getBody().getBattleId());
 
         ResponseEntity<Battle> battleFalse = battleController.getBattle(new IdLong(10L));
-        assertFalse(battleFalse.getStatusCode().is4xxClientError());
+        assertTrue(battleFalse.getStatusCode().is4xxClientError());
     }
 }

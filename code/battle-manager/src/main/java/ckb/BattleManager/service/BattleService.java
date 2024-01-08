@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Slf4j
@@ -20,10 +21,10 @@ public class BattleService {
         this.teamService = teamService;
     }
 
-    public Battle getBattle(Long id) {
+    public Battle getBattle(Long id) throws Exception {
         return battleRepository.findById(id).orElseThrow(() -> {
             log.info("Battle not found with id: {}", id);
-            return new RuntimeException("");
+            return new Exception("");
         });
     }
 
@@ -32,17 +33,24 @@ public class BattleService {
         log.info("Battle created with id: {}", battle.getBattleId());
     }
 
-    public void joinBattle(Long idBattle, Long idStudent) {
-        // The student wants to join the battle, create a new team with only the student
-        // and register the team to the battle
-        teamService.createTeam(idBattle, idStudent);
-    }
-
     public List<Long> getBattleOfTournament(Long idTournament) {
         return battleRepository
                 .findBattlesByTournamentId(idTournament)
                 .stream()
                 .map(Battle::getBattleId)
                 .toList();
+    }
+
+    public Optional<Battle> findBattleById(Long id) {
+        return battleRepository
+                .findById(id);
+    }
+
+    public void joinBattle(Long idStudent, Long idBattle) throws Exception {
+        teamService.createTeam(idStudent, idBattle);
+    }
+
+    public void leaveBattle(Long idStudent, Long idBattle) {
+        teamService.deleteParticipation(idStudent, idBattle);
     }
 }

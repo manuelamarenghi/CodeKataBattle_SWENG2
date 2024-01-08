@@ -1,10 +1,12 @@
 package ckb.BattleManager.controller;
 
-import ckb.BattleManager.dto.IdLong;
+import ckb.BattleManager.dto.input.IdLong;
+import ckb.BattleManager.dto.input.PairTeamScore;
 import ckb.BattleManager.model.Team;
 import ckb.BattleManager.service.TeamService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -25,14 +27,32 @@ public class TeamController {
     }
 
     @GetMapping("/team")
-    public Team getTeam(@RequestBody IdLong idTeam) {
+    public ResponseEntity<Team> getTeam(@RequestBody IdLong idTeam) {
         log.info("[API REQUEST] Get team request with id: {}", idTeam.getId());
-        return teamService.getTeam(idTeam.getId());
+        try {
+            return ResponseEntity.ok(teamService.getTeam(idTeam.getId()));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
     }
 
     @GetMapping("/teams")
     public ResponseEntity<List<Team>> getTeamsOfBattle(@RequestBody IdLong idBattle) {
         log.info("[API REQUEST] Get teams of battle request with id: {}", idBattle.getId());
-        return ResponseEntity.ok(teamService.getListTeam(idBattle.getId()));
+        try {
+            return ResponseEntity.ok(teamService.getListTeam(idBattle.getId()));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+    public ResponseEntity<Object> assignScore(@RequestBody PairTeamScore request) {
+        log.info("[API REQUEST] Assign score request with id_team: {}, score: {}", request.getIdTeam(), request.getScore());
+        try {
+            teamService.assignScore(request.getIdTeam(), request.getScore());
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().build();
+        }
     }
 }
