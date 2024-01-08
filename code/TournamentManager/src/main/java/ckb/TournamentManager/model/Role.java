@@ -1,6 +1,6 @@
 package ckb.TournamentManager.model;
 
-public enum Role {
+public enum Role{
     STUDENT,
     EDUCATOR
 }
