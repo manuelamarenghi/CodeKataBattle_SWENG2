@@ -1,6 +1,7 @@
 package ckb.TournamentManager.controller;
 
 import ckb.TournamentManager.dto.incoming.CloseTournamentRequest;
+import ckb.TournamentManager.dto.outcoming.AbleToCloseTRequest;
 import ckb.TournamentManager.service.TournamentService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,8 +26,28 @@ public class CloseTournamentController extends Controller{
         // check if the request has valid data
         ResponseEntity<Object> response = checkRequest(request);
         if (response.getStatusCode().is4xxClientError()) return response;
-        tournamentService.closeTournament(request.getTournamentID());
-        return new ResponseEntity<>("Tournament closed", getHeaders(), HttpStatus.CREATED);
+        if(contactBattleManager(request)){
+            tournamentService.closeTournament(request.getTournamentID());
+            return new ResponseEntity<>("Tournament closed", getHeaders(), HttpStatus.CREATED);
+        }else{
+            return new ResponseEntity<>("Not possible to close", getHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    private boolean contactBattleManager(CloseTournamentRequest request) {
+        try {
+            String responseString = webClient
+                    .post()
+                    .uri("http://localhost:8082/api/battle/servizio")
+                    .bodyValue(new AbleToCloseTRequest(request.getTournamentID()))
+                    .retrieve()
+                    .bodyToMono(String.class)
+                    .block();
+            return Boolean.parseBoolean(responseString);
+        } catch (Exception e) {
+            log.error("Error while retrieving battles");
+            return false;
+        }
     }
 
     private ResponseEntity<Object> checkRequest(CloseTournamentRequest request) {

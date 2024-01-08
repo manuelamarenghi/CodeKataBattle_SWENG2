@@ -1,9 +1,6 @@
 package ckb.TournamentManager.service;
 
-import ckb.TournamentManager.dto.incoming.GetTournamentPageRequest;
-import ckb.TournamentManager.dto.incoming.NewTournamentRequest;
-import ckb.TournamentManager.dto.incoming.PermissionRequest;
-import ckb.TournamentManager.dto.incoming.SubscriptionRequest;
+import ckb.TournamentManager.dto.incoming.*;
 import ckb.TournamentManager.model.Permission;
 import ckb.TournamentManager.model.Tournament;
 import ckb.TournamentManager.model.TournamentRanking;
@@ -78,8 +75,21 @@ public class TournamentService {
             permissionRepo.delete(permission);
         }
     }
-
     public boolean PermissionAlreadyIn(Long tournamentID, Long userID){
         return permissionRepo.findByTournamentIDAndUserID(tournamentID,userID).isPresent();
+    }
+    public boolean updateScore(UpdateScoreRequest request){
+        List<TournamentRanking> records = tournamentRankingRepo.findAllByTournamentID(request.getTournamentID());
+        System.out.println("before: "+records);
+        if(records == null) return false;
+        for(TournamentRanking student : records){
+            if(request.getScores().containsKey(student.getUserID())){
+                student.setScore(student.getScore() + request.getScores().get(student.getUserID()));
+                tournamentRankingRepo.save(student);
+            }
+        }
+        records = tournamentRankingRepo.findAllByTournamentID(request.getTournamentID());
+        System.out.println("after : "+records);
+        return true;
     }
 }
