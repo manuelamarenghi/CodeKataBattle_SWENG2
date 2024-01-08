@@ -24,4 +24,6 @@ public interface TournamentRepo extends JpaRepository<Tournament,Long> {
     <S extends Tournament> List<S> saveAll(Iterable<S> entities);
 
     List<Tournament> findAll();
+
+    List<Long> findAllByTournamentID(Long tournamentID);
 }
