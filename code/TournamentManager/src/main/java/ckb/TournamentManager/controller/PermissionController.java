@@ -6,6 +6,7 @@ import ckb.TournamentManager.dto.outcoming.UserRequest;
 import ckb.TournamentManager.model.Role;
 import ckb.TournamentManager.model.User;
 import ckb.TournamentManager.service.TournamentService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,27 +54,32 @@ public class PermissionController extends Controller{
     }}
 
     private User checkEducator(PermissionRequest request) {
-        try{ return webClient
+        try{ String c =  webClient
                 .post()
                 .uri("http://localhost:8086/api/account/user")
                 .bodyValue(new UserRequest(request.getUserID()))
                 .retrieve()
                 .onStatus(HttpStatusCode::is4xxClientError, clientResponse -> Mono.error(new RuntimeException("Errore durante la chiamata HTTP")))
-                .bodyToMono(User.class).block();
+                .bodyToMono(String.class).block();
+            if (c != null) {
+                ObjectMapper objectMapper = new ObjectMapper();
+                return objectMapper.readValue(c, User.class);
+            }
         }
         catch (Exception e){
             return null;
         }
+        return null;
     }
 
-    private Mono<String> sendRequest(String s, String content, Long userId) {
-        return webClient
-                .post()
-                .uri(s)
-                .bodyValue(new DirectMailRequest(Collections.singletonList(userId.toString()),content))
-                .retrieve()
-                .onStatus(HttpStatusCode::is4xxClientError, clientResponse -> Mono.error(new RuntimeException("Errore durante la chiamata HTTP")))
-                .bodyToMono(String.class);
+    private void sendRequest(String s, String content, Long userId) {
+            Mono<String> c = webClient
+                    .post()
+                    .uri(s)
+                    .bodyValue(new DirectMailRequest(Collections.singletonList(userId.toString()), content))
+                    .retrieve()
+                    .onStatus(HttpStatusCode::is4xxClientError, clientResponse -> Mono.error(new RuntimeException("Errore durante la chiamata HTTP")))
+                    .bodyToMono(String.class);
     }
 
     private ResponseEntity<Object> checkRequest(PermissionRequest request) {

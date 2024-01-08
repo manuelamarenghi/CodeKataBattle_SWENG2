@@ -41,8 +41,8 @@ public class NewTournamentController extends Controller{
         return new ResponseEntity<>("Tournament created", getHeaders(), HttpStatus.CREATED);
     }
 
-    private Mono<String> sendRequest(String s, String content) {
-        return WebClient.create()
+    private void sendRequest(String s, String content) {
+        Mono<String> c = WebClient.create()
                 .post()
                 .uri(s)
                 .bodyValue(new AllStudentsMailRequest(content))

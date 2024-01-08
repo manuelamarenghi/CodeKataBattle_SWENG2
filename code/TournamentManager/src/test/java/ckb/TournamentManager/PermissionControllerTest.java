@@ -96,10 +96,15 @@ public class PermissionControllerTest {
         mockServermail
                 .when(request().withMethod("POST").withPath("/api/mail/direct"))
                 .respond(response().withStatusCode(200).withBody("OK"));
-        Long tournamentID = 98L;
+        Tournament t = new Tournament();
+        t.setRegdeadline(new Date((2024-1900),07,20));
+        t.setStatus(true);
+        tournamentRepo.save(t);
+        Long tournamentID = t.getTournamentID();
         PermissionRequest request = new PermissionRequest(tournamentID, 1L);
         ResponseEntity<Object> response = permissionController.permission(request);
         assertTrue(response.getBody().equals("Invalid Request"));
+        tournamentRepo.deleteById(tournamentID);
     }
 
     @Test
@@ -115,9 +120,16 @@ public class PermissionControllerTest {
         mockServermail
                 .when(request().withMethod("POST").withPath("/api/mail/direct"))
                 .respond(response().withStatusCode(200).withBody("OK"));
-        Long tournamentID = 98L;
+        Tournament t = new Tournament();
+        t.setRegdeadline(new Date((2024-1900),07,20));
+        t.setStatus(true);
+        tournamentRepo.save(t);
+        Long tournamentID = t.getTournamentID();
         PermissionRequest request = new PermissionRequest(tournamentID, 1L);
         ResponseEntity<Object> response = permissionController.permission(request);
         assertTrue(response.getBody().equals("Permission inserted"));
+        tournamentRepo.deleteById(tournamentID);
+        Permission p = new Permission(tournamentID, 1L);
+        permissionRepo.delete(p);
     }
 }

@@ -33,4 +33,10 @@ public class GetAllTournamentsTest {
         ResponseEntity<Object> response =getTournamentsController.getTournaments(request);
         System.out.println(response.getBody());
     }
+    @Test
+    public void noTournamentTest() {
+        GetAllTournamentsRequest request = new GetAllTournamentsRequest("tournament");
+        ResponseEntity<Object> response =getTournamentsController.getTournaments(request);
+        System.out.println(response.getBody());
+    }
 }
