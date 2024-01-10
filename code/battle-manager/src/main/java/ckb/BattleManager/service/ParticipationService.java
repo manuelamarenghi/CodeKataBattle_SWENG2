@@ -5,6 +5,7 @@ import ckb.BattleManager.model.ParticipationId;
 import ckb.BattleManager.model.Team;
 import ckb.BattleManager.repository.ParticipationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -15,7 +16,7 @@ public class ParticipationService {
     private final TeamService teamService;
 
     @Autowired
-    public ParticipationService(ParticipationRepository participationRepository, TeamService teamService) {
+    public ParticipationService(ParticipationRepository participationRepository, @Lazy TeamService teamService) {
         this.participationRepository = participationRepository;
         this.teamService = teamService;
     }
