@@ -4,6 +4,7 @@ import ckb.BattleManager.model.Team;
 import ckb.BattleManager.repository.TeamRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,7 +18,7 @@ public class TeamService {
     private final ParticipationService participationService;
 
     @Autowired
-    public TeamService(TeamRepository teamRepository, BattleService battleService, ParticipationService participationService) {
+    public TeamService(TeamRepository teamRepository, @Lazy BattleService battleService, ParticipationService participationService) {
         this.teamRepository = teamRepository;
         this.battleService = battleService;
         this.participationService = participationService;

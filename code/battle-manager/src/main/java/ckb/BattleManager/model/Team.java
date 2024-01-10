@@ -12,20 +12,16 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class Team {
     @Id
-    @Column(name = "teamId")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long teamId;
 
     @ManyToOne
     @JoinColumn(name = "battleId")
     private Battle battle;
 
-    @Column(name = "repositoryLink")
     private String repositoryLink;
 
-    @Column(name = "score")
     private Integer score;
 
-    @Column(name = "eduEvaluated")
     private boolean eduEvaluated;
-
 }
