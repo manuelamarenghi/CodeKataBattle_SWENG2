@@ -5,6 +5,7 @@ version: "3.8"
 
 services:
   mysql-account-manager:
+    container_name: mysql-account-manager
     image: mysql
     environment:
       MYSQL_ROOT_USER: root
@@ -18,15 +19,18 @@ services:
     restart: always
 
   account-manager:
+    container_name: account-manager
     image: ${ID:-codekatabattle}/account-manager
+    depends_on:
+      - mysql-account-manager
     environment:
       - SPRING_PROFILES_ACTIVE=docker
       - SPRING_DATASOURCE_URL=jdbc:mysql://mysql-account-manager:3306/account_schema
     ports:
       - "8086:8086"
-    restart: always
 
   mail-service:
+    container_name: mail-service
     image: ${ID:-codekatabattle}/mail-service
     ports:
       - "8085:8085"
