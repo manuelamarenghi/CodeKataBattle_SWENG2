@@ -31,16 +31,16 @@ public class AllStudentsEmailSender extends EmailSender {
             addresses = getEmailAddresses();
         } catch (Exception e) {
             log.error("Error while retrieving email address for students\n");
-            return new ResponseEntity<>(getHeaders(), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("cannot find email address(es)", getHeaders(), HttpStatus.BAD_REQUEST);
         }
 
         if (mailService.sendEmail(addresses, request.getContent())) {
             log.info("Email sent to {}\n", addresses);
-            return new ResponseEntity<>(getHeaders(), HttpStatus.OK);
+            return new ResponseEntity<>("OK", getHeaders(), HttpStatus.OK);
         }
 
         log.error("No valid address found students\n");
-        return new ResponseEntity<>(getHeaders(), HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>("no valid address found", getHeaders(), HttpStatus.BAD_REQUEST);
     }
 
     private List<String> getEmailAddresses() {

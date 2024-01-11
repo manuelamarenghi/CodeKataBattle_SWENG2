@@ -24,7 +24,7 @@ public class SignInController extends Controller {
             return new ResponseEntity<>("Credentials not valid", getHeaders(), HttpStatus.BAD_REQUEST);
         }
 
-        String userID = userService.getUserByEmail(request.getEmail()).toString();
+        String userID = userService.getUserIDByEmail(request.getEmail()).toString();
         return new ResponseEntity<>(userID, getHeaders(), HttpStatus.OK);
     }
 

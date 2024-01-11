@@ -35,7 +35,10 @@ public class SignUpController extends Controller {
         userService.createUser(request);
         log.info("Account created for email {}", request.getEmail());
 
-        return new ResponseEntity<>("Account created", getHeaders(), HttpStatus.CREATED);
+        Long userID = userService.getUserIDByEmail(request.getEmail());
+        if (userID == null) return new ResponseEntity<>("Error creating account", getHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);
+
+        return new ResponseEntity<>(userID, getHeaders(), HttpStatus.CREATED);
     }
 
 
@@ -60,7 +63,7 @@ public class SignUpController extends Controller {
 
         // check if the email is valid
         Matcher matcher = pattern.matcher(email);
-        if(!matcher.matches()) {
+        if (!matcher.matches()) {
             log.error("Email {} is not valid", email);
             return true;
         }
