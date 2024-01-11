@@ -21,7 +21,7 @@ import static org.junit.jupiter.api.Assertions.*;
 public class DockerizedIntegrationTest {
 
     private final WebClient webClient = WebClient.create();
-    private static final String path = getScriptsPath();
+    private static final String SCRIPTS_PATH = getScriptsPath();
     private static final int NUM_OF_CONTAINERS = 2;
     private final int GENERATE_EMAIL_LENGTH = 20;
 
@@ -31,7 +31,7 @@ public class DockerizedIntegrationTest {
     @BeforeAll
     public static void setUp() {
         // Start the containers
-        ProcessBuilder processBuilder = new ProcessBuilder(path + "src/test/scripts/start-containers.sh").redirectErrorStream(true);
+        ProcessBuilder processBuilder = new ProcessBuilder(SCRIPTS_PATH + "start-containers.sh").redirectErrorStream(true);
         Process process = runProcessBuilder(processBuilder);
 
         // Read the output of the process and check for services started
@@ -49,7 +49,7 @@ public class DockerizedIntegrationTest {
 
     @AfterAll
     public static void tearDown() throws IOException {
-        new ProcessBuilder(path + "src/test/scripts/stop-containers.sh").start();
+        new ProcessBuilder(SCRIPTS_PATH + "stop-containers.sh").start();
         System.out.println("Containers stopped");
     }
 
