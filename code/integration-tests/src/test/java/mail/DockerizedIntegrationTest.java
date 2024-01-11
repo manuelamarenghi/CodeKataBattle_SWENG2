@@ -1,3 +1,5 @@
+package mail;
+
 import ckb.dto.account.Role;
 import ckb.dto.account.SignUpRequest;
 import ckb.dto.mail.AllStudentsMailRequest;
@@ -19,7 +21,7 @@ import static org.junit.jupiter.api.Assertions.*;
 public class DockerizedIntegrationTest {
 
     private final WebClient webClient = WebClient.create();
-    private static final String path = getClassPath();
+    private static final String path = getScriptsPath();
     private static final int NUM_OF_CONTAINERS = 2;
     private final int GENERATE_EMAIL_LENGTH = 20;
 
@@ -29,7 +31,7 @@ public class DockerizedIntegrationTest {
     @BeforeAll
     public static void setUp() {
         // Start the containers
-        ProcessBuilder processBuilder = new ProcessBuilder(path + "start-containers").redirectErrorStream(true);
+        ProcessBuilder processBuilder = new ProcessBuilder(path + "src/test/scripts/start-containers.sh").redirectErrorStream(true);
         Process process = runProcessBuilder(processBuilder);
 
         // Read the output of the process and check for services started
@@ -47,7 +49,7 @@ public class DockerizedIntegrationTest {
 
     @AfterAll
     public static void tearDown() throws IOException {
-        new ProcessBuilder(path + "stop-containers").start();
+        new ProcessBuilder(path + "src/test/scripts/stop-containers.sh").start();
         System.out.println("Containers stopped");
     }
 
@@ -107,9 +109,9 @@ public class DockerizedIntegrationTest {
         return String.valueOf(userID);
     }
 
-    private static String getClassPath() {
+    private static String getScriptsPath() {
         String path = DockerizedIntegrationTest.class.getProtectionDomain().getCodeSource().getLocation().getPath();
-        return path.substring(0, path.indexOf("/target/test-classes")) + "/src/test/java/";
+        return path.substring(0, path.indexOf("/target/test-classes")) + "/src/test/scripts/";
     }
 
     private static Process runProcessBuilder(ProcessBuilder processBuilder) {

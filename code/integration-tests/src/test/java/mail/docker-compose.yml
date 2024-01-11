@@ -1,7 +1,7 @@
 version: "3.8"
 
 # use 'docker compose up' to run with "production" images
-# use 'ID=your_id docker compose up' to run with local images aka when testing (obviusly must build local images first)
+# use 'ID=your_id docker compose up' to run with local images aka when testing (obviously must build local images first)
 
 services:
   mysql-account-manager:
