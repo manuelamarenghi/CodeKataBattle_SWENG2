@@ -44,6 +44,19 @@ public class GitHubService {
         repo.getRef("refs/heads/" + repo.getDefaultBranch()).updateTo(newCommitSHA, true);
     }
 
+    public GHContent fetchSources(GHRepository repo, String filePath) throws IOException {
+        GHRef ref = repo.getRef("heads/main");
+        System.out.println("Ref: " + ref.getRef());
+        GHCommit commit = repo.getCommit(ref.getObject().getSha());
+        System.out.println("Commit: " + commit.getSHA1());
+        try{
+            return repo.getFileContent(filePath, commit.getSHA1());
+        } catch (GHFileNotFoundException e){
+            log.error("file not found for path: {}", filePath);
+            return null;
+        }
+    }
+
     private String getLastCommitSHA(GHRepository repo) throws IOException {
         return repo.getRef("refs/heads/" + repo.getDefaultBranch())
                 .getObject()
