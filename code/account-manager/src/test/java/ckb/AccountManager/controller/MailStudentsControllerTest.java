@@ -28,12 +28,12 @@ public class MailStudentsControllerTest {
     @BeforeEach
     public void createMockUser() {
         deleteMockUser();
-
-        User user = new User();
-        user.setFullName("Test User");
-        user.setEmail("ckb.test.user@mail.ckb");
-        user.setPassword("password");
-        user.setRole(Role.STUDENT);
+        User user = User.builder()
+                .fullName("Test User")
+                .email("ckb.test.user@mail.ckb")
+                .password("password")
+                .role(Role.STUDENT)
+                .build();
         userRepository.save(user);
     }
 

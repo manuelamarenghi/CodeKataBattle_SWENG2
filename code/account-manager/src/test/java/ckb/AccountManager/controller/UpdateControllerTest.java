@@ -7,7 +7,6 @@ import ckb.AccountManager.repository.UserRepository;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -26,46 +25,41 @@ public class UpdateControllerTest {
 
     @BeforeAll
     public void setUp() {
-        try {
-            User user1 = new User();
-            user1.setFullName("Catta");
-            user1.setEmail("catta@mail.com");
-            user1.setPassword("password");
-            user1.setRole(Role.EDUCATOR);
-            userRepository.save(user1);
-        } catch (DataIntegrityViolationException ignored) {
-        }
-        try {
-            User user2 = new User();
-            user2.setFullName("Tommy");
-            user2.setEmail("tommy@mail.com");
-            user2.setPassword("password");
-            user2.setRole(Role.EDUCATOR);
-            userRepository.save(user2);
-        } catch (DataIntegrityViolationException ignored) {
-        }
-        try {
-            User user3 = new User();
-            user3.setFullName("Manu");
-            user3.setEmail("manu@mail.com");
-            user3.setPassword("password");
-            user3.setRole(Role.EDUCATOR);
-            userRepository.save(user3);
-        } catch (DataIntegrityViolationException ignored) {
-        }
+        User user1 = User.builder()
+                .fullName("Catta")
+                .email("catta@mail.com")
+                .password("password")
+                .role(Role.EDUCATOR)
+                .build();
+        userRepository.save(user1);
+
+        User user2 = User.builder()
+                .fullName("Tommy")
+                .email("tommy@mail.com")
+                .password("password")
+                .role(Role.EDUCATOR)
+                .build();
+        userRepository.save(user2);
+
+        User user3 = User.builder()
+                .fullName("Manu")
+                .email("manu@mail.com")
+                .password("password")
+                .role(Role.EDUCATOR)
+                .build();
+        userRepository.save(user3);
     }
 
     @BeforeEach
     public void createTestUser() {
         deleteTestUser();
-
-        User user = new User();
-        user.setFullName("Test User");
-        user.setEmail("ckb.test.user@mail.ckb");
-        user.setPassword("password");
-        user.setRole(Role.STUDENT);
+        User user = User.builder()
+                .fullName("Test User")
+                .email("ckb.test.user@mail.ckb")
+                .password("password")
+                .role(Role.STUDENT)
+                .build();
         userRepository.save(user);
-
 
         user = userRepository.findUserByEmail("ckb.test.user@mail.ckb").orElse(null);
         assert user != null; // should never happen
