@@ -31,8 +31,14 @@ public class DockerizedIntegrationTest {
     @BeforeAll
     public static void setUp() {
         // Start the containers
-        ProcessBuilder processBuilder = new ProcessBuilder(SCRIPTS_PATH + "start-containers.sh").redirectErrorStream(true);
-        Process process = runProcessBuilder(processBuilder);
+        Process process;
+        try{
+            ProcessBuilder processBuilder = new ProcessBuilder(SCRIPTS_PATH + "unix-start-containers.sh").redirectErrorStream(true);
+            process = runProcessBuilder(processBuilder);
+        } catch (Exception e) {
+            ProcessBuilder processBuilder = new ProcessBuilder(SCRIPTS_PATH + "win-start-containers").redirectErrorStream(true);
+            process = runProcessBuilder(processBuilder);
+        }
 
         // Read the output of the process and check for services started
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
