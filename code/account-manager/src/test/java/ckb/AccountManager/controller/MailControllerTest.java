@@ -31,6 +31,7 @@ public class MailControllerTest {
 
     @BeforeAll
     public void setUp() {
+        userRepository.deleteAll();
         User user1 = User.builder()
                 .fullName("Catta")
                 .email("catta@mail.com")

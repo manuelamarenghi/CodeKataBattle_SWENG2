@@ -26,6 +26,7 @@ services:
       - SPRING_DATASOURCE_URL=jdbc:mysql://mysql-account-manager:3306/account_schema
     ports:
       - "8086:8086"
+    restart: always
 
   mail-service:
     container_name: mail-service

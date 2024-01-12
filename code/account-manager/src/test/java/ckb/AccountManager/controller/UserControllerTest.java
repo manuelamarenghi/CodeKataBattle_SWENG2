@@ -23,6 +23,7 @@ public class UserControllerTest {
 
     @BeforeAll
     public void setUp() {
+        userRepository.deleteAll();
         User user1 = User.builder()
                 .fullName("Catta")
                 .email("catta@mail.com")
@@ -44,7 +45,7 @@ public class UserControllerTest {
                 .email("manu@mail.com")
                 .password("password")
                 .role(Role.EDUCATOR)
-                .build();;
+                .build();
         userRepository.save(user3);
     }
 

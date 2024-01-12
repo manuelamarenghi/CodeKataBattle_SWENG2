@@ -2,9 +2,6 @@ name: Build and Deploy
 
 on:
   workflow_dispatch:
-    pull_request:
-      branches:
-        - main
   push:
     branches:
       - main
@@ -19,7 +16,7 @@ jobs:
         image: mysql:latest
         env:
           MYSQL_ROOT_PASSWORD: root
-          MYSQL_DATABASE: account_schema
+          MYSQL_DATABASE: test_db
           MYSQL_USERNAME: root
           MYSQL_PASSWORD: root
         ports:
@@ -39,4 +36,6 @@ jobs:
       - name: Run tests and package the application
         run: mvn clean package
         working-directory: code/
+
+        ## build images, run integration-tests and push to dockerhub
 
