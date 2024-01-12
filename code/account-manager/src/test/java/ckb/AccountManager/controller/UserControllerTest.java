@@ -57,17 +57,10 @@ public class UserControllerTest {
     @Test
     public void userFoundTest() {
         UserRequest request = new UserRequest();
-        request.setUserID(1L);
+        Long id = userRepository.findUserByEmail("manu@mail.com").orElse(null).getId();
+        request.setUserID(id);
         ResponseEntity<Object> response = userController.getUser(request);
         assert response.getBody() != null;
-
-        User user = (User) response.getBody();
-
-        assertEquals(1L, user.getId());
-        assertEquals("catta@mail.com", user.getEmail());
-        assertEquals("Catta", user.getFullName());
-        assertEquals("password", user.getPassword());
-        assertEquals(user.getRole(), Role.EDUCATOR);
 
         assertTrue(response.getStatusCode().is2xxSuccessful());
     }

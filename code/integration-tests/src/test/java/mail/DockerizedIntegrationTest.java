@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.List;
@@ -36,7 +37,10 @@ public class DockerizedIntegrationTest {
             ProcessBuilder processBuilder = new ProcessBuilder(SCRIPTS_PATH + "unix-start-containers.sh").redirectErrorStream(true);
             process = runProcessBuilder(processBuilder);
         } catch (Exception e) {
-            ProcessBuilder processBuilder = new ProcessBuilder(SCRIPTS_PATH + "win-start-containers").redirectErrorStream(true);
+            ProcessBuilder processBuilder = new ProcessBuilder()
+                    .command("powershell", "-Command", "$env:ID='ckb-test'; docker compose up")
+                    .redirectErrorStream(true)
+                    .directory(new File(SCRIPTS_PATH));
             process = runProcessBuilder(processBuilder);
         }
 
@@ -55,7 +59,13 @@ public class DockerizedIntegrationTest {
 
     @AfterAll
     public static void tearDown() throws IOException {
+        try{
         new ProcessBuilder(SCRIPTS_PATH + "stop-containers.sh").start();
+    }catch (Exception e){
+        new ProcessBuilder()
+                .command("powershell", "-Command", "docker compose stop")
+                .start();
+        }
         System.out.println("Containers stopped");
     }
 
