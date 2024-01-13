@@ -1,8 +1,8 @@
-name: Build and deploy
+name: Run integration tests
 
 on:
   workflow_dispatch:
-  push:
+  pull_request:
     branches:
       - main
 
@@ -22,6 +22,7 @@ jobs:
         ports:
           - 3306:3306
         options: --health-cmd "mysqladmin ping" --health-interval 10s --health-timeout 5s --health-retries 5
+
 
     steps:
       - uses: actions/checkout@v3
@@ -44,7 +45,3 @@ jobs:
       - name: Run all integration tests
         run: mvn clean verify
         working-directory: code/integration-tests
-
-      - name: Build and push
-        run: ./docker-build-push.sh
-        working-directory: code/

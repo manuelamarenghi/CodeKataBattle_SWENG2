@@ -1,10 +1,13 @@
-name: Build and deploy
+name: Run unit tests
 
 on:
   workflow_dispatch:
   push:
     branches:
-      - main
+      - integration-tests
+  pull_request:
+    branches:
+      - integration_tests
 
 jobs:
   build:
@@ -33,18 +36,6 @@ jobs:
           distribution: 'temurin'
           cache: maven
 
-      - name: Run all unit tests and package all services
-        run: mvn clean package
-        working-directory: code/
-
-      - name: Build all docker images (for testing)
-        run: ./docker-build.sh ckb-test
-        working-directory: code/
-
-      - name: Run all integration tests
-        run: mvn clean verify
-        working-directory: code/integration-tests
-
-      - name: Build and push
-        run: ./docker-build-push.sh
+      - name: Run all unit tests
+        run: mvn verify
         working-directory: code/

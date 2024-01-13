@@ -2,9 +2,9 @@
 
 # <(command) is provides a pipe (file-like object)
 # -t trims the strings
-readarray -t locations < <(find . -type f -name "Dockerfile" | grep "Dockerfile")
+readarray -t locations < <(find . -type f -name "Dockerfile")
 
-# delete everything before the last '/', i.e., delete "/Dockerfile"
+# delete everything after the last '/', i.e., delete "/Dockerfile"
 for ((i=0; i<${#locations[@]}; i++)); do
     locations[$i]=${locations[$i]%/*}
 done
@@ -15,7 +15,7 @@ if [ ${#locations[@]} -eq 0 ]; then
 	exit 1
 fi
 
-#exit if user did not provide an image id
+# exit if user did not provide an ID ~ should not be codekatabattle if the image is for testing
 if [ "$#" -eq 0 ]; then
     echo "No arguments provided. Usage: $0 <image_id>"
     exit 1
