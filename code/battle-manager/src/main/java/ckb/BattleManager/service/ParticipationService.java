@@ -37,18 +37,23 @@ public class ParticipationService {
         );
     }
 
-    public void deleteParticipationHavingIdBattle(Long idStudent, Long idBattle) {
+    // Delete participation and the team if the team has 0 members
+    public void deleteParticipationHavingIdBattle(Long idStudent, Long idBattle) throws Exception {
+        Optional<Team> studentTeam = participationRepository.findTeamByBattleIdAndStudentId(idStudent, idBattle);
+
         // delete the record in participation
         Optional<Participation> participation = participationRepository.findById(
                 new ParticipationId(
-                    idStudent, participationRepository.findTeamByBattleIdAndStudentId(idStudent, idBattle)
+                        idStudent, studentTeam.orElseThrow(
+                        () -> new Exception("Participation not found")
+                )
                 )
         );
 
         if(participation.isPresent()) {
             participationRepository.delete(participation.get());
-            if (participationRepository.existsParticipationByParticipationId_TeamId(participation.get().getParticipationId().getTeamId())) {
-                teamService.deleteTeam(participation.get().getParticipationId().getTeamId());
+            if (participationRepository.existsParticipationByParticipationId_TeamId(studentTeam.get())) {
+                teamService.deleteTeam(studentTeam.get().getTeamId());
             }
         }
     }

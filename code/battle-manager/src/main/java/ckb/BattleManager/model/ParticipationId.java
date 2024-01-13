@@ -1,10 +1,11 @@
 package ckb.BattleManager.model;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 
@@ -13,10 +14,9 @@ import java.io.Serializable;
 @AllArgsConstructor
 @Embeddable
 public class ParticipationId implements Serializable {
-    @Column(insertable = false, updatable = false)
-    private Long teamId;
+    private Long studentId;
 
     @ManyToOne
     @JoinColumn(name = "teamId")
-    private Team studentId;
+    private Team teamId;
 }
