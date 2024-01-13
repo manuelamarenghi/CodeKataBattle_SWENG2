@@ -1,0 +1,50 @@
+name: Build and deploy
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    services:
+      mysql:
+        image: mysql:latest
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: test_db
+          MYSQL_USERNAME: root
+          MYSQL_PASSWORD: root
+        ports:
+          - 3306:3306
+        options: --health-cmd "mysqladmin ping" --health-interval 10s --health-timeout 5s --health-retries 5
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+          cache: maven
+
+      - name: Run all unit tests and package all services
+        run: mvn clean package
+        working-directory: code/
+
+      - name: Build all docker images (for testing)
+        run: ./docker-build.sh ckb-test
+        working-directory: code/
+
+      - name: Run all integration tests
+        run: mvn clean verify
+        working-directory: code/integration-tests
+
+      - name: Build and push
+        run: ./docker-build-push.sh
+        working-directory: code/

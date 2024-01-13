@@ -1,0 +1,35 @@
+version: "3.8"
+
+# use 'docker compose up' to run with "production" images
+# use 'ID=your_id docker compose up' to run with local images aka when testing (obviously must build local images first...)
+
+services:
+  mysql-account-manager:
+    container_name: mysql-account-manager
+    image: mysql
+    environment:
+      MYSQL_ROOT_USER: root
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: account_schema
+    volumes:
+      - ./db-dump:/docker-entrypoint-initdb.d
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+
+  account-manager:
+    container_name: account-manager
+    image: ${ID:-codekatabattle}/account-manager
+    depends_on:
+      - mysql-account-manager
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql-account-manager:3306/account_schema
+    ports:
+      - "8086:8086"
+    restart: always
+
+  mail-service:
+    container_name: mail-service
+    image: ${ID:-codekatabattle}/mail-service
+    ports:
+      - "8085:8085"
