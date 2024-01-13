@@ -46,5 +46,5 @@ jobs:
         working-directory: code/integration-tests
 
       - name: Build and push
-        run: ./docker-build-push.sh
+        run: ./docker-build-push.sh ${{ secrets.DOCKERHUB_USERNAME }} ${{ secrets.DOCKERHUB_TOKEN }}
         working-directory: code/
