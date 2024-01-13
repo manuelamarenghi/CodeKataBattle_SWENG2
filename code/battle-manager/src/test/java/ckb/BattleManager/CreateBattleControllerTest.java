@@ -1,7 +1,6 @@
 package ckb.BattleManager;
 
 import ckb.BattleManager.controller.CreateBattleController;
-import ckb.BattleManager.controller.GetBattleController;
 import ckb.BattleManager.model.Battle;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,8 +16,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class CreateBattleControllerTest {
     @Autowired
     private CreateBattleController createBattleController;
-    @Autowired
-    private GetBattleController getBattleController;
 
     @Test
     public void createBattle() {

@@ -23,5 +23,5 @@ public class Team {
 
     private Integer score;
 
-    private boolean eduEvaluated;
+    private Boolean eduEvaluated;
 }

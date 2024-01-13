@@ -5,7 +5,6 @@ import ckb.BattleManager.model.Battle;
 import ckb.BattleManager.repository.BattleRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.Comparator;
@@ -53,7 +52,7 @@ public class BattleService {
         teamService.createTeam(idStudent, idBattle);
     }
 
-    public void leaveBattle(Long idStudent, Long idBattle) {
+    public void leaveBattle(Long idStudent, Long idBattle) throws Exception {
         teamService.deleteParticipation(idStudent, idBattle);
     }
 

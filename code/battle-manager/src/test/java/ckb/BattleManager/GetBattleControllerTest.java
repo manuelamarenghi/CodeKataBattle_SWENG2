@@ -69,7 +69,7 @@ public class GetBattleControllerTest {
     public void getBattle() {
         ResponseEntity<Battle> battle = getBattleController.getBattle(new IdLong(1L));
 
-        if (battleRepository.findById(1L).isPresent()) {
+        if (battleRepository.existsById(1L)) {
             assertTrue(battle.getStatusCode().is2xxSuccessful());
             assertNotNull(battle.getBody());
             assertEquals(1L, (long) battle.getBody().getBattleId());

@@ -55,7 +55,7 @@ public class TeamService {
         participationService.createParticipation(studentId, team);
     }
 
-    public void deleteParticipation(Long idStudent, Long idBattle) {
+    public void deleteParticipation(Long idStudent, Long idBattle) throws Exception {
         participationService.deleteParticipationHavingIdBattle(idStudent, idBattle);
     }
 
