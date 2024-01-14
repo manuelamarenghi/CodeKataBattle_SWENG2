@@ -4,10 +4,10 @@ on:
   workflow_dispatch:
   push:
     branches:
-      - integration-tests
+      - 'INT_**'
   pull_request:
     branches:
-      - integration_tests
+      - 'INT_**'
 
 jobs:
   build:
