@@ -19,6 +19,7 @@
     <modules>
         <module>account-manager</module>
         <module>mail-service</module>
+        <module>github-manager</module>
     </modules>
 
     <properties>
