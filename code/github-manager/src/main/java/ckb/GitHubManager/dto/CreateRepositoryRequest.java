@@ -18,13 +18,12 @@ public class CreateRepositoryRequest {
     /*
     content in the list should be in the following format:
 
-    [
-        {
-            "path/to/file": "some example text content"
-        },
-        {
-            "path/to/file2": "some other file content"
-        }
-    ]
+    {
+        "repoName": "test",
+        "files": [
+            {"path": "some/path", "content": "some content"},
+            {"path": "some/other/path", "content": "some other content"}
+        ]
+    }
     */
 }

@@ -33,3 +33,9 @@ services:
     image: ${ID:-codekatabattle}/mail-service
     ports:
       - "8085:8085"
+
+  github-manager:
+    container_name: github-manager
+    image: ${ID:-codekatabattle}/github-manager
+    ports:
+      - "8083:8083"
