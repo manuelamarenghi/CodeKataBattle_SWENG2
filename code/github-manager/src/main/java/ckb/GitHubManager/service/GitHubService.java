@@ -16,29 +16,27 @@ public class GitHubService {
 
     private final String token = "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";
 
-    public GHRepository createRepository(String repoName) throws IOException {
-        GitHub github = new GitHubBuilder().withOAuthToken(token).build();
-        return new GHCreateRepositoryBuilder(repoName, github, "/user/repos")
-                .autoInit(true) // creates a README.md as a first commit
-                .allowForking(true)
-                .defaultBranch("main")
-                .private_(false)
-                .create();
+    public GHRepository createRepository(String repoName) {
+        try {
+            GitHub github = new GitHubBuilder().withOAuthToken(token).build();
+            return new GHCreateRepositoryBuilder(repoName, github, "/user/repos")
+                    .autoInit(true) // creates a README.md as a first commit
+                    .allowForking(true)
+                    .defaultBranch("main")
+                    .private_(false)
+                    .create();
+        } catch (Exception e){
+            log.error("Error while creating repository {}\n", repoName);
+            return null;
+        }
     }
 
     public void commitAndPush(GHRepository repo, List<ImmutablePair<String, String>> files) throws IOException {
 
         String lastCommitSHA = getLastCommitSHA(repo);
-        System.out.println("Last commit SHA: " + lastCommitSHA);
-
         String baseTreeSHA = getBaseTreeSHA(repo, lastCommitSHA);
-        System.out.println("Base tree SHA: " + baseTreeSHA);
-
         String newTreeSHA = createNewTree(repo, baseTreeSHA, files);
-        System.out.println("New tree SHA: " + newTreeSHA);
-
         String newCommitSHA = createNewCommit(repo, lastCommitSHA, newTreeSHA);
-        System.out.println("New commit SHA: " + newCommitSHA);
 
         // forcefully push the new commit to the default branch
         repo.getRef("refs/heads/" + repo.getDefaultBranch()).updateTo(newCommitSHA, true);
@@ -46,9 +44,7 @@ public class GitHubService {
 
     public GHContent fetchSources(GHRepository repo, String filePath) throws IOException {
         GHRef ref = repo.getRef("heads/main");
-        System.out.println("Ref: " + ref.getRef());
         GHCommit commit = repo.getCommit(ref.getObject().getSha());
-        System.out.println("Commit: " + commit.getSHA1());
         try{
             return repo.getFileContent(filePath, commit.getSHA1());
         } catch (GHFileNotFoundException e){
