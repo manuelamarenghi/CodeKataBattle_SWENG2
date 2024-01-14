@@ -21,12 +21,6 @@ public class ParticipationService {
         this.teamService = teamService;
     }
 
-    public void registerStudentToTeam(Long idTeam, Long idStudent) {
-        // delete the record in participation and if the team has 0 members
-        // delete the team, also insert a new line in participation
-
-    }
-
     public void createParticipation(Long studentId, Team team) {
         participationRepository.save(
                 new Participation(
@@ -41,7 +35,7 @@ public class ParticipationService {
     public void deleteParticipationHavingIdBattle(Long idStudent, Long idBattle) throws Exception {
         Optional<Team> studentTeam = participationRepository.findTeamByBattleIdAndStudentId(idStudent, idBattle);
 
-        // delete the record in participation
+        // Search the participation
         Optional<Participation> participation = participationRepository.findById(
                 new ParticipationId(
                         idStudent, studentTeam.orElseThrow(
@@ -50,8 +44,11 @@ public class ParticipationService {
                 )
         );
 
-        if(participation.isPresent()) {
+        // if the participation exists
+        if (participation.isPresent()) {
+            // delete the participation
             participationRepository.delete(participation.get());
+            // if the team has 0 members delete the team
             if (participationRepository.existsParticipationByParticipationId_TeamId(studentTeam.get())) {
                 teamService.deleteTeam(studentTeam.get().getTeamId());
             }

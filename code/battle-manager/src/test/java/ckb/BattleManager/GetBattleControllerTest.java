@@ -60,11 +60,6 @@ public class GetBattleControllerTest {
         battleRepository.save(battle3);
     }
 
-    @AfterAll
-    public void tearDown() {
-        battleRepository.deleteAll();
-    }
-
     @Test
     public void getBattle() {
         ResponseEntity<Battle> battle = getBattleController.getBattle(new IdLong(1L));
@@ -85,5 +80,10 @@ public class GetBattleControllerTest {
         assertTrue(result.getStatusCode().is2xxSuccessful());
         assertNotNull(result.getBody());
         assertEquals(2, result.getBody().size());
+    }
+
+    @AfterAll
+    public void tearDown() {
+        battleRepository.deleteAll();
     }
 }

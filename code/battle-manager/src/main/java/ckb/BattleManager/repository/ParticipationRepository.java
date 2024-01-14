@@ -12,8 +12,8 @@ import java.util.Optional;
 public interface ParticipationRepository extends JpaRepository<Participation, ParticipationId> {
     // get the team of a student with his/her id and the battle_id
     @Query("SELECT t FROM Participation p JOIN Team t ON p.participationId.teamId = t" +
-            " WHERE p.participationId.studentId = :studentId AND t.battle.battleId = :battleId")
+            " WHERE p.participationId.studentId = :idStudent AND t.battle.battleId = :idBattle")
     Optional<Team> findTeamByBattleIdAndStudentId(@Param("idStudent") Long idStudent, @Param("idBattle") Long idBattle);
 
-    boolean existsParticipationByParticipationId_TeamId(Team idTeam);
+    boolean existsParticipationByParticipationId_TeamId(Team team);
 }

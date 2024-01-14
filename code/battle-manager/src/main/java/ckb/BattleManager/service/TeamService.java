@@ -1,5 +1,6 @@
 package ckb.BattleManager.service;
 
+import ckb.BattleManager.model.Battle;
 import ckb.BattleManager.model.Team;
 import ckb.BattleManager.repository.TeamRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -93,15 +94,30 @@ public class TeamService {
         log.info("Team deleted with id: {}", teamId);
     }
 
-    public void registerStudentToTeam(Long idStudent, Long idTeam) {
-        // delete the record in participation and if the team has 0 members
-        // delete the team, also insert a new line in participation
-        participationService.deleteParticipationHavingIdTeam(idStudent,
-                teamRepository.getReferenceById(idTeam));
-        
+    public void registerStudentToTeam(Long idStudent, Long idNewTeam) throws Exception {
+        // Get the battle in which the student is enrolled
+        Optional<Battle> optionalBattleRegistered = teamRepository.findBattleByTeamId(idNewTeam);
+        Battle battleRegistered = optionalBattleRegistered.orElseThrow(
+                () -> new Exception("The team " + idNewTeam + " is not subscribed to any battle")
+        );
+
+        // retrieve the team of the student in the same battle
+        Optional<Team> optionalTeam = teamRepository.findTeamByBattleAndParticipationId_TeamId(
+                battleRegistered, idStudent
+        );
+
+        // delete the participation of the student in the team
+        optionalTeam.ifPresent(
+                team -> participationService.deleteParticipationHavingIdTeam(idStudent, team)
+        );
+
+        // create a new participation
+        participationService.createParticipation(idStudent,
+                teamRepository.findById(idNewTeam).orElseThrow(
+                        () -> new Exception("Team not found with id: " + idNewTeam)
+                )
+        );
+        log.info("Student {} registered to team {}", idStudent, idNewTeam);
     }
 
-    public void inviteStudentToTeam(Long idStudent, Long idTeam) {
-        //TODO
-    }
 }
