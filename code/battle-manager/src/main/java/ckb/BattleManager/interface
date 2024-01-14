@@ -22,9 +22,6 @@ Team getTeam(Integer id_team)
 // get the list of teams that participate to a battle
 List<Team> getTeams(Integer id_battle)
 
-// get the list of user and points of a battle
-List<Pair<User, Integer>> getAllTeamPoints(Integer id_tournament)
-
 // register the user id_user in team id_team
 void registerTeam(Integer id_team, Integer id_user)
 
