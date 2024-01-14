@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -54,4 +55,14 @@ public class BattleService {
         teamService.deleteParticipation(idStudent, idBattle);
     }
 
+    public boolean canCloseTournament(Long idTournament) {
+        List<Battle> battles = battleRepository.findBattlesByTournamentId(idTournament);
+        boolean canClose = true;
+        for (Battle battle : battles) {
+            if (battle.getSubDeadline().isAfter(LocalDateTime.now())) {
+                canClose = false;
+            }
+        }
+        return canClose;
+    }
 }

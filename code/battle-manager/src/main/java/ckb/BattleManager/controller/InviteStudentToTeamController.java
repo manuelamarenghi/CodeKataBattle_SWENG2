@@ -2,9 +2,7 @@ package ckb.BattleManager.controller;
 
 import ckb.BattleManager.dto.input.StudentTeam;
 import ckb.BattleManager.dto.output.DirectMailRequest;
-import ckb.BattleManager.service.TeamService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -40,6 +38,7 @@ public class InviteStudentToTeamController {
                 .post()
                 .uri(mailServiceUrl + serviceDirectMailUrl)
                 .bodyValue(
+                        // TODO: change the link
                         new DirectMailRequest(List.of(request.getIdStudent().toString()),
                                 "You have been invited to join the team: " + request.getIdTeam()
                                         + ". Please join the team by clicking on the link below:\n" +
@@ -49,7 +48,7 @@ public class InviteStudentToTeamController {
                 .retrieve()
                 .bodyToMono(String.class)
                 .block();
-        System.out.println(response);
+        log.info("Response: {}", response);
         return ResponseEntity.ok().build();
     }
 }
