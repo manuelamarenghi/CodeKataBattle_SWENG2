@@ -18,14 +18,11 @@ import java.util.List;
 @RequestMapping("/api/battle")
 @Slf4j
 public class InviteStudentToTeamController {
-    private final TeamService teamService;
     private final WebClient.Builder webClientBuilder;
     private final String mailServiceUrl = "http://mail-service:8085";
     private final String serviceDirectMailUrl = "/api/mail/direct";
 
-    @Autowired
-    public InviteStudentToTeamController(TeamService teamService) {
-        this.teamService = teamService;
+    public InviteStudentToTeamController() {
         this.webClientBuilder = WebClient.builder();
     }
 
