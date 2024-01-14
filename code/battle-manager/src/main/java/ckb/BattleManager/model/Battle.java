@@ -32,4 +32,6 @@ public class Battle {
 
     private Boolean battleToEval;
 
+    private Long authorId;
+
 }
