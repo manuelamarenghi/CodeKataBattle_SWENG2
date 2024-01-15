@@ -49,7 +49,7 @@ public class ParticipationService {
             // delete the participation
             participationRepository.delete(participation.get());
             // if the team has 0 members delete the team
-            if (participationRepository.existsParticipationByParticipationId_TeamId(studentTeam.get())) {
+            if (participationRepository.existsParticipationByParticipationId_Team(studentTeam.get())) {
                 teamService.deleteTeam(studentTeam.get().getTeamId());
             }
         }

@@ -18,5 +18,5 @@ public class ParticipationId implements Serializable {
 
     @ManyToOne
     @JoinColumn(name = "teamId")
-    private Team teamId;
+    private Team team;
 }

@@ -1,5 +1,6 @@
 package ckb.BattleManager.service;
 
+import ckb.BattleManager.controller.StartBattleController;
 import ckb.BattleManager.model.Battle;
 import ckb.BattleManager.repository.BattleRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -15,11 +16,14 @@ import java.util.Optional;
 public class BattleService {
     private final BattleRepository battleRepository;
     private final TeamService teamService;
+    private final StartBattleController startBattleController;
 
     @Autowired
-    public BattleService(BattleRepository battleRepository, TeamService teamService) {
+
+    public BattleService(BattleRepository battleRepository, TeamService teamService, StartBattleController startBattleController) {
         this.battleRepository = battleRepository;
         this.teamService = teamService;
+        this.startBattleController = startBattleController;
     }
 
     public Battle getBattle(Long id) throws Exception {

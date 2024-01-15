@@ -34,4 +34,7 @@ public class Battle {
 
     private Long authorId;
 
+    private Boolean hasStarted;
+
+    private Boolean hasEnded;
 }
