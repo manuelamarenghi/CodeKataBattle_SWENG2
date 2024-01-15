@@ -4,6 +4,7 @@ import ckb.BattleManager.model.Battle;
 import ckb.BattleManager.model.Team;
 import ckb.BattleManager.repository.TeamRepository;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
@@ -120,4 +121,7 @@ public class TeamService {
         log.info("Student {} registered to team {}", idStudent, idNewTeam);
     }
 
+    public List<Pair<Long, Long>> getListPairIdUserPoints(Battle battle) {
+        return teamRepository.findPairsIdUserPointsByBattleId(battle);
+    }
 }
