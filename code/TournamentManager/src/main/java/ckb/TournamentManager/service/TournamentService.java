@@ -12,6 +12,7 @@ import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -25,6 +26,7 @@ public class TournamentService {
         Tournament tournament = new Tournament();
         tournament.setRegdeadline(request.getRegdeadline());
         tournament.setStatus(true);
+        tournament.setCreatorID(request.getCreatorID());
         tournamentRepo.save(tournament);
         String tournamentUrl = "http://tournament-service/tournaments/" + tournament.getTournamentID();
         return tournamentUrl;
@@ -53,9 +55,13 @@ public class TournamentService {
 
     public String addPermission(PermissionRequest request) {
         Permission p = new Permission(request.getTournamentID(), request.getUserID());
+        Tournament t = tournamentRepo.findByTournamentID(request.getTournamentID()).orElse(null);
+        if(t.getCreatorID() == request.getCreatorID()){
         permissionRepo.save(p);
         String tournamentUrl = "http://tournament-service/tournaments/" + request.getTournamentID();
         return tournamentUrl;
+        }
+        else return null;
     }
 
     public List<TournamentRanking> getTournamentPage(GetTournamentPageRequest request) {
@@ -66,14 +72,18 @@ public class TournamentService {
         return tournamentRepo.findAll();
     }
 
-    public void closeTournament(Long tournamentId) {
-        Tournament tournament = tournamentRepo.findByTournamentID(tournamentId).orElse(null);
-        tournament.setStatus(false);
-        tournamentRepo.save(tournament);
-        List<Permission> p = permissionRepo.findAllByTournamentID(tournamentId);
-        for (Permission permission : p) {
-            permissionRepo.delete(permission);
+    public boolean closeTournament(CloseTournamentRequest request) {
+        Tournament tournament = tournamentRepo.findByTournamentID(request.getTournamentID()).orElse(null);
+        if(tournament.getCreatorID() == request.getCreatorID()){
+            tournament.setStatus(false);
+            tournamentRepo.save(tournament);
+            List<Permission> p = permissionRepo.findAllByTournamentID(request.getTournamentID());
+            for (Permission permission : p) {
+                permissionRepo.delete(permission);
+            }
+            return true;
         }
+        else return false;
     }
     public boolean PermissionAlreadyIn(Long tournamentID, Long userID){
         return permissionRepo.findByTournamentIDAndUserID(tournamentID,userID).isPresent();

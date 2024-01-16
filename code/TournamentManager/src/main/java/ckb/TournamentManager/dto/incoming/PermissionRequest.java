@@ -11,4 +11,5 @@ import lombok.Data;
 public class PermissionRequest {
     private Long tournamentID;
     private Long userID;
+    private Long creatorID;
 }
