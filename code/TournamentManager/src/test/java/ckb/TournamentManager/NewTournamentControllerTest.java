@@ -40,7 +40,8 @@ public class NewTournamentControllerTest {
                 .when(request().withMethod("POST").withPath("/api/mail/all-students"))
                 .respond(response().withStatusCode(200).withBody("ok!"));
         Date d = new Date((2024-1900),01,20);
-        NewTournamentRequest request = new NewTournamentRequest(d);
+        Long creatorID = 1L;
+        NewTournamentRequest request = new NewTournamentRequest(d,creatorID);
         ResponseEntity<Object> response = newTournamentController.newTournament(request);
         assertTrue(response.getBody().equals("Tournament created"));
     }
@@ -48,14 +49,16 @@ public class NewTournamentControllerTest {
     @Test
     public void invalidDeadlineTest() {
          Date d = new Date((2020-1900),01,20);
-         NewTournamentRequest request = new NewTournamentRequest(d);
+        Long creatorID = 1L;
+        NewTournamentRequest request = new NewTournamentRequest(d,creatorID);
          ResponseEntity<Object> response = newTournamentController.newTournament(request);
          assertTrue(response.getBody().equals("Invalid data request"));
     }
     @Test
     public void nullDeadlineTest() {
         Date d = null;
-        NewTournamentRequest request = new NewTournamentRequest(d);
+        Long creatorID = 1L;
+        NewTournamentRequest request = new NewTournamentRequest(d,creatorID);
         ResponseEntity<Object> response = newTournamentController.newTournament(request);
         assertTrue(response.getBody().equals("Invalid data request"));
     }
@@ -65,8 +68,18 @@ public class NewTournamentControllerTest {
                 .when(request().withMethod("POST").withPath("/api/mail/all-students"))
                 .respond(response().withStatusCode(200).withBody("ok!"));
         Date d = new Date((2024-1900),11,20);
-        NewTournamentRequest request = new NewTournamentRequest(d);
+        Long creatorID = 1L;
+        NewTournamentRequest request = new NewTournamentRequest(d,creatorID);
         ResponseEntity<Object> response = newTournamentController.newTournament(request);
         assertTrue(response.getBody().equals("Tournament created"));
+    }
+
+    @Test
+    public void incorrectCreatorID(){
+        Date d = new Date((2025-1900),01,20);
+        Long creatorID = null;
+        NewTournamentRequest request = new NewTournamentRequest(d,creatorID);
+        ResponseEntity<Object> response = newTournamentController.newTournament(request);
+        assertTrue(response.getBody().equals("Invalid data request"));
     }
 }

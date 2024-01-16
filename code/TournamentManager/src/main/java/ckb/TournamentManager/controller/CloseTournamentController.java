@@ -27,8 +27,10 @@ public class CloseTournamentController extends Controller{
         ResponseEntity<Object> response = checkRequest(request);
         if (response.getStatusCode().is4xxClientError()) return response;
         if(contactBattleManager(request)){
-            tournamentService.closeTournament(request.getTournamentID());
-            return new ResponseEntity<>("Tournament closed", getHeaders(), HttpStatus.CREATED);
+            if(tournamentService.closeTournament(request)){
+                return new ResponseEntity<>("Tournament closed", getHeaders(), HttpStatus.CREATED);
+            }
+            else return new ResponseEntity<>("Not allowed to close tournament", getHeaders(), HttpStatus.BAD_REQUEST);
         }else{
             return new ResponseEntity<>("Not possible to close", getHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -51,7 +53,7 @@ public class CloseTournamentController extends Controller{
     }
 
     private ResponseEntity<Object> checkRequest(CloseTournamentRequest request) {
-        if(request.getTournamentID() == null){
+        if(request.getTournamentID() == null || request.getCreatorID() == null){
             log.error("Invalid tournament id request");
             return new ResponseEntity<>("Invalid tournament id request", getHeaders(), HttpStatus.BAD_REQUEST);
         }

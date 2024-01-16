@@ -12,12 +12,5 @@ import java.util.Date;
 
 public class NewTournamentRequest {
     private Date regdeadline;
-
-    @Data
-    @Builder
-    @AllArgsConstructor
-
-    public static class GetTournamentPageRequest {
-        private Long tournamentID;
-    }
+    private Long creatorID;
 }
