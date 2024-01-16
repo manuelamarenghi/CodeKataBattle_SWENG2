@@ -53,9 +53,11 @@ public class CloseTournamentTest {
         Tournament t = new Tournament();
         t.setRegdeadline(d);
         t.setStatus(true);
+        t.setCreatorID(7L);
         tournamentRepo.save(t);
         tournamentID = t.getTournamentID();
-        request = new CloseTournamentRequest(tournamentID);
+        Long creatorID = 7L;
+        request = new CloseTournamentRequest(tournamentID,creatorID);
         ResponseEntity<Object> response = closetController.CloseTournament(request);
         assertTrue(response.getBody().equals("Tournament closed"));
         tournamentRepo.deleteById(tournamentID);
@@ -75,9 +77,11 @@ public class CloseTournamentTest {
         Tournament t = new Tournament();
         t.setRegdeadline(d);
         t.setStatus(true);
+        t.setCreatorID(7L);
         tournamentRepo.save(t);
         tournamentID = t.getTournamentID();
-        request = new CloseTournamentRequest(tournamentID);
+        Long creatorID = 7L;
+        request = new CloseTournamentRequest(tournamentID,creatorID);
         ResponseEntity<Object> response = closetController.CloseTournament(request);
         assertTrue(response.getBody().equals("Not possible to close"));
         tournamentRepo.deleteById(tournamentID);
@@ -88,9 +92,11 @@ public class CloseTournamentTest {
         Tournament t = new Tournament();
         t.setRegdeadline(d);
         t.setStatus(false);
+        t.setCreatorID(7L);
         tournamentRepo.save(t);
         Long tournamentID = null;
-        CloseTournamentRequest request = new CloseTournamentRequest(tournamentID);
+        Long creatorID = 7L;
+        CloseTournamentRequest request = new CloseTournamentRequest(tournamentID,creatorID);
         ResponseEntity<Object> response = closetController.CloseTournament(request);
         assertTrue(response.getBody().equals("Invalid tournament id request"));
     }
@@ -100,11 +106,36 @@ public class CloseTournamentTest {
         Tournament t = new Tournament();
         t.setRegdeadline(d);
         t.setStatus(false);
+        t.setCreatorID(7L);
         tournamentRepo.save(t);
         Long tournamentID = 4L;
-        CloseTournamentRequest request = new CloseTournamentRequest(tournamentID);
+        Long creatorID = 7L;
+        CloseTournamentRequest request = new CloseTournamentRequest(tournamentID,creatorID);
         ResponseEntity<Object> response = closetController.CloseTournament(request);
         assertTrue(response.getBody().equals("Invalid tournament id request"));
     }
-
+    @Test
+    public void WronIDCreator(){
+        boolean b = true;
+        CloseTournamentRequest request;
+        mockServer.when(request()
+                        .withMethod("POST")
+                        .withPath("/api/battle/servizio"))
+                .respond(response()
+                        .withStatusCode(200)
+                        .withBody(String.valueOf(b)));
+        Long tournamentID = null;
+        Date d = new Date((2024 - 1900), 01, 20);
+        Tournament t = new Tournament();
+        t.setRegdeadline(d);
+        t.setStatus(true);
+        t.setCreatorID(8L);
+        tournamentRepo.save(t);
+        tournamentID = t.getTournamentID();
+        Long creatorID = 7L;
+        request = new CloseTournamentRequest(tournamentID,creatorID);
+        ResponseEntity<Object> response = closetController.CloseTournament(request);
+        assertTrue(response.getBody().equals("Not allowed to close tournament"));
+        tournamentRepo.deleteById(tournamentID);
+    }
 }

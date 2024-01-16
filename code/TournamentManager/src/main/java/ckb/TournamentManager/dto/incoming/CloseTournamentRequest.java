@@ -9,4 +9,5 @@ import lombok.Data;
 @AllArgsConstructor
 public class CloseTournamentRequest {
     private Long tournamentID;
+    private Long creatorID;
 }

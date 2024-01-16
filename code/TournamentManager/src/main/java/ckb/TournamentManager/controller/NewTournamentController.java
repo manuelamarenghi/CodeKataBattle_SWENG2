@@ -57,6 +57,10 @@ public class NewTournamentController extends Controller{
             log.error("Invalid request");
             return new ResponseEntity<>("Invalid data request", getHeaders(), HttpStatus.BAD_REQUEST);
         }
+        if (request.getCreatorID() == null) {
+            log.error("Invalid request");
+            return new ResponseEntity<>("Invalid data request", getHeaders(), HttpStatus.BAD_REQUEST);
+        }
         if(request.getRegdeadline().before(new java.util.Date())){
             log.error("Invalid request");
             return new ResponseEntity<>("Invalid data request", getHeaders(), HttpStatus.BAD_REQUEST);

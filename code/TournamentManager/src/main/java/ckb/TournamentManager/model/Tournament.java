@@ -24,6 +24,9 @@ public class Tournament {
 
     @Column(name= "status")
     private Boolean status;
+
+    @Column(name = "creatorID")
+    private Long creatorID;
     public Tournament() {
 
     }

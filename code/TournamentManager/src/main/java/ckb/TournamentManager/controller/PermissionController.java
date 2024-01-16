@@ -42,7 +42,12 @@ public class PermissionController extends Controller{
             return new ResponseEntity<>("Invalid Request", getHeaders(), HttpStatus.BAD_REQUEST);
         }
         else{
-        String content = "You've gained permission to create battles in tournament: "+tournamentService.addPermission(request);
+        String x = tournamentService.addPermission(request);
+        if(x == null ){
+            log.error("Illegal request to give permission");
+            return new ResponseEntity<>("Illegal request to give permission", getHeaders(), HttpStatus.BAD_REQUEST);
+        }
+        String content = "You've gained permission to create battles in tournament: "+x;
         log.info("Permission inserted");
         try {
             sendRequest("http://localhost:8085/api/mail/direct", content, request.getUserID());
@@ -83,7 +88,7 @@ public class PermissionController extends Controller{
     }
 
     private ResponseEntity<Object> checkRequest(PermissionRequest request) {
-        if(request.getUserID() == null || request.getTournamentID() == null){
+        if(request.getUserID() == null || request.getTournamentID() == null  || request.getCreatorID() == null){
             log.error("Invalid user or tournament id request");
             return new ResponseEntity<>("Invalid user or tournament id request", getHeaders(), HttpStatus.BAD_REQUEST);
         }
