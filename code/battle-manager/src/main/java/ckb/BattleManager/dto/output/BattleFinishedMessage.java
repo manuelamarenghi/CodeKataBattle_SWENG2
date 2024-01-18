@@ -10,5 +10,5 @@ import java.util.List;
 @AllArgsConstructor
 public class BattleFinishedMessage {
     private Long idTournament;
-    private List<Pair<Long, Long>> pairsIdUserPoints;
+    private List<Pair<Long, Integer>> pairsIdUserPoints;
 }

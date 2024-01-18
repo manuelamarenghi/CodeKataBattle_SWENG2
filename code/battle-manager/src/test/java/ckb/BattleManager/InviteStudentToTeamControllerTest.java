@@ -3,6 +3,7 @@ package ckb.BattleManager;
 import ckb.BattleManager.controller.InviteStudentToTeamController;
 import ckb.BattleManager.dto.input.StudentTeam;
 import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.mockserver.integration.ClientAndServer;
@@ -18,11 +19,15 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class InviteStudentToTeamControllerTest {
     private final InviteStudentToTeamController inviteStudentToTeamController;
-    private final ClientAndServer mockServer;
+    private ClientAndServer mockServer;
 
     @Autowired
     public InviteStudentToTeamControllerTest(InviteStudentToTeamController inviteStudentToTeamController) {
         this.inviteStudentToTeamController = inviteStudentToTeamController;
+    }
+
+    @BeforeAll
+    public void setUp() {
         mockServer = ClientAndServer.startClientAndServer(8085);
     }
 

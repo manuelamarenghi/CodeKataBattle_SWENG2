@@ -2,7 +2,6 @@ package ckb.BattleManager.repository;
 
 import ckb.BattleManager.model.Battle;
 import ckb.BattleManager.model.Team;
-import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -28,6 +27,6 @@ public interface TeamRepository extends JpaRepository<Team, Long> {
     @Query("select p.participationId.studentId, t.score " +
             "from Team t join Participation p on t.teamId = p.participationId.team.teamId " +
             "where t.battle = :battle")
-    List<Pair<Long, Long>> findPairsIdUserPointsByBattleId(@Param("battle") Battle battle);
+    List<Object[]> findPairsIdUserPointsByBattleId(@Param("battle") Battle battle);
 
 }

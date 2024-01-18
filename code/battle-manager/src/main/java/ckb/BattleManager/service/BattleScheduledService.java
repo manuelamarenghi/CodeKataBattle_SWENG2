@@ -28,9 +28,10 @@ public class BattleScheduledService {
         this.sendTeamsPointsFinishedBattleController = sendTeamsPointsFinishedBattleController;
     }
 
-    @Scheduled(fixedRate = 60000) // 1 Minute
+    @Scheduled(fixedRate = 3000) // 1 Minute
     public void startBattles() {
         List<Battle> battlesToStart = battleRepository.findBattlesByHasStartedIsFalse();
+        //log.info("Found {} battles to start", battlesToStart.size());
         battlesToStart.forEach(battle -> {
             if (battle.getRegDeadline().isBefore(LocalDateTime.now())) {
                 battle.setHasStarted(true);
@@ -42,7 +43,7 @@ public class BattleScheduledService {
         });
     }
 
-    @Scheduled(fixedRate = 60000) // 1 Minute
+    @Scheduled(fixedRate = 3000) // 1 Minute
     public void closeBattles() {
         List<Battle> battlesToStart = battleRepository.
                 findBattlesByHasEndedIsFalseAndSubDeadlineBefore(LocalDateTime.now());
@@ -53,8 +54,8 @@ public class BattleScheduledService {
             // Get the teams and the points of each battle
             // send the a class containing tournament_id, List<Team> and List<Integer>
             // to the Tournament manager
-            sendTeamsPointsFinishedBattleController.sendTeamsPointsFinishedBattle(
-                    battle.getTournamentId(),
+            sendTeamsPointsFinishedBattleController.sendIdUsersPointsFinishedBattle(
+                    battle,
                     teamService.getListPairIdUserPoints(battle)
             );
         });

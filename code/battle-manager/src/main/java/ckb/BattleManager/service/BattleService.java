@@ -52,7 +52,13 @@ public class BattleService {
     }
 
     public void joinBattle(Long idStudent, Long idBattle) throws Exception {
-        teamService.createTeam(idStudent, idBattle);
+        Optional<Battle> optionalBattle = battleRepository.findById(idBattle);
+        if (optionalBattle.isPresent()) {
+            teamService.createTeam(idStudent, optionalBattle.get());
+        } else {
+            log.info("Battle not found with id: {}", idBattle);
+            throw new Exception();
+        }
     }
 
     public void leaveBattle(Long idStudent, Long idBattle) throws Exception {

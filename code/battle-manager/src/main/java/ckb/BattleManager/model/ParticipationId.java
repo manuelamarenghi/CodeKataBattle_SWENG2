@@ -1,7 +1,6 @@
 package ckb.BattleManager.model;
 
 import jakarta.persistence.Embeddable;
-import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -17,6 +16,5 @@ public class ParticipationId implements Serializable {
     private Long studentId;
 
     @ManyToOne
-    @JoinColumn(name = "teamId")
     private Team team;
 }
