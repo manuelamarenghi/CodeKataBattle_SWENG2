@@ -1,6 +1,5 @@
 package ckb.BattleManager.model;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
@@ -16,6 +15,6 @@ import lombok.NoArgsConstructor;
 public class Participation {
 
     @EmbeddedId
-    @Column(nullable = false, updatable = false)
     private ParticipationId participationId;
+
 }

@@ -42,16 +42,14 @@ public class TeamService {
         );
     }
 
-    public void createTeam(Long studentId, Long battleId) throws Exception {
-        Team team = new Team(studentId,
-                battleService.findBattleById(battleId).orElseThrow(() -> {
-                    log.info("Battle not found with id: {}", battleId);
-                    return new Exception("");
-                }),
-                "" ,
-                0,
-                false
-        );
+    public void createTeam(Long studentId, Battle battle) {
+        Team team = new Team();
+        team.setBattle(battle);
+        team.setParticipation(null);
+        // TODO: how to set the repository link?
+        team.setRepositoryLink("");
+        team.setEduEvaluated(false);
+        team.setScore(0);
 
         teamRepository.save(team);
         participationService.createParticipation(studentId, team);
@@ -121,7 +119,10 @@ public class TeamService {
         log.info("Student {} registered to team {}", idStudent, idNewTeam);
     }
 
-    public List<Pair<Long, Long>> getListPairIdUserPoints(Battle battle) {
-        return teamRepository.findPairsIdUserPointsByBattleId(battle);
+    public List<Pair<Long, Integer>> getListPairIdUserPoints(Battle battle) {
+        List<Object[]> listArrayObjects = teamRepository.findPairsIdUserPointsByBattleId(battle);
+        return listArrayObjects.stream()
+                .map(arrayObject -> Pair.of((Long) arrayObject[0], (Integer) arrayObject[1]))
+                .toList();
     }
 }

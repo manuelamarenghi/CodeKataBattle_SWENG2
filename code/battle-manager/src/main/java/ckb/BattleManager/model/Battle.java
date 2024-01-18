@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.Collection;
 
 @Entity(name = "Battle")
 @Table(name = "Battles")
@@ -21,6 +22,9 @@ public class Battle {
 
     @Column(unique = true)
     private String repositoryLink;
+
+    @OneToMany(mappedBy = "battle")
+    private Collection<Team> teamsRegistered;
 
     private int minStudents;
 
