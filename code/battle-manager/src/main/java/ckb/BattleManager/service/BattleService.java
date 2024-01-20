@@ -16,14 +16,12 @@ import java.util.Optional;
 public class BattleService {
     private final BattleRepository battleRepository;
     private final TeamService teamService;
-    private final StartBattleController startBattleController;
 
     @Autowired
 
     public BattleService(BattleRepository battleRepository, TeamService teamService, StartBattleController startBattleController) {
         this.battleRepository = battleRepository;
         this.teamService = teamService;
-        this.startBattleController = startBattleController;
     }
 
     public Battle getBattle(Long id) throws Exception {
@@ -71,6 +69,7 @@ public class BattleService {
         for (Battle battle : battles) {
             if (battle.getSubDeadline().isAfter(LocalDateTime.now())) {
                 canClose = false;
+                break;
             }
         }
         return canClose;

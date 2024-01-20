@@ -14,6 +14,7 @@ import java.util.List;
 @Slf4j
 public class SendTeamsPointsFinishedBattleController {
     private final WebClient.Builder webClientBuilder;
+    private String url = "http://tournament-manager:8084/api/tournament/UpdateScore";
 
     public SendTeamsPointsFinishedBattleController() {
         this.webClientBuilder = WebClient.builder();
@@ -22,8 +23,7 @@ public class SendTeamsPointsFinishedBattleController {
     public void sendIdUsersPointsFinishedBattle(Battle battle, List<Pair<Long, Integer>> pairsIdUserPoints) {
         ResponseEntity<Object> response = webClientBuilder.build()
                 .post()
-                .uri("http://tournament-manager:8084/api/" +
-                        "tournament/UpdateScore")
+                .uri(url)
                 .bodyValue(
                         new BattleFinishedMessage(
                                 battle.getTournamentId(),
@@ -45,5 +45,9 @@ public class SendTeamsPointsFinishedBattleController {
         }
 
         log.info("Successfully sent IdUsers and points of the finished battle with id: {}", battle.getBattleId());
+    }
+
+    public void initDebug() {
+        url = "http://localhost:8084/api/tournament/UpdateScore";
     }
 }

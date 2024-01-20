@@ -17,8 +17,7 @@ import java.util.List;
 @Slf4j
 public class InviteStudentToTeamController {
     private final WebClient.Builder webClientBuilder;
-    private final String mailServiceUrl = "http://mail-service:8085";
-    private final String serviceDirectMailUrl = "/api/mail/direct";
+    private String url = "http://mail-service:8085/api/mail/direct";
 
     public InviteStudentToTeamController() {
         this.webClientBuilder = WebClient.builder();
@@ -36,7 +35,7 @@ public class InviteStudentToTeamController {
         log.info("[API REQUEST] Invite student to team request with id_team: {}, id_student: {}", request.getIdTeam(), request.getIdStudent());
         String response = webClientBuilder.build()
                 .post()
-                .uri(mailServiceUrl + serviceDirectMailUrl)
+                .uri(url)
                 .bodyValue(
                         // TODO: change the link
                         new DirectMailRequest(List.of(request.getIdStudent().toString()),
@@ -50,5 +49,9 @@ public class InviteStudentToTeamController {
                 .block();
         log.info("Response: {}", response);
         return ResponseEntity.ok().build();
+    }
+
+    public void initDebug() {
+        url = "http://localhost:8085/api/mail/direct";
     }
 }
