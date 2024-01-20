@@ -1,6 +1,7 @@
 package ckb.BattleManager;
 
-import ckb.BattleManager.dto.output.BattleFinishedMessage;
+import ckb.BattleManager.controller.SendTeamsPointsFinishedBattleController;
+import ckb.BattleManager.controller.StartBattleController;
 import ckb.BattleManager.model.Battle;
 import ckb.BattleManager.model.Participation;
 import ckb.BattleManager.model.ParticipationId;
@@ -8,9 +9,8 @@ import ckb.BattleManager.model.Team;
 import ckb.BattleManager.repository.BattleRepository;
 import ckb.BattleManager.repository.ParticipationRepository;
 import ckb.BattleManager.repository.TeamRepository;
-import ckb.BattleManager.service.TeamService;
 import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.Order;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.mockserver.integration.ClientAndServer;
@@ -28,27 +28,37 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @SpringBootTest
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class BattleScheduledServiceTest {
-    private final TeamService teamService;
     private final BattleRepository battleRepository;
     private final TeamRepository teamRepository;
     private final ParticipationRepository participationRepository;
-    private ClientAndServer mockServerGithubManager;
-    private ClientAndServer mockServerTournamentManager;
+    private final SendTeamsPointsFinishedBattleController sendTeamsPointsFinishedBattleController;
+    private final StartBattleController startBattleController;
+    private ClientAndServer mockServer;
 
     @Autowired
-    public BattleScheduledServiceTest(TeamService teamService,
-                                      BattleRepository battleRepository,
+    public BattleScheduledServiceTest(BattleRepository battleRepository,
                                       TeamRepository teamRepository,
-                                      ParticipationRepository participationRepository) {
-        this.teamService = teamService;
+                                      ParticipationRepository participationRepository,
+                                      SendTeamsPointsFinishedBattleController sendTeamsPointsFinishedBattleController,
+                                      StartBattleController startBattleController) {
         this.battleRepository = battleRepository;
         this.teamRepository = teamRepository;
         this.participationRepository = participationRepository;
+        this.sendTeamsPointsFinishedBattleController = sendTeamsPointsFinishedBattleController;
+        this.startBattleController = startBattleController;
     }
 
     @Test
-    @Order(1)
     void startBattles() throws InterruptedException {
+        startBattleController.initDebug();
+        mockServer = ClientAndServer.startClientAndServer(8083);
+        mockServer
+                .when(HttpRequest.request()
+                        .withMethod("POST")
+                        .withPath("/api/github/create-repo"))
+                .respond(HttpResponse.response()
+                        .withStatusCode(200));
+
         Battle battleToStart = new Battle();
         battleToStart.setTournamentId(1L);
         battleToStart.setRegDeadline(LocalDateTime.now().plusSeconds(3));
@@ -57,14 +67,6 @@ class BattleScheduledServiceTest {
         battleToStart.setHasStarted(false);
         battleToStart.setHasEnded(false);
         battleRepository.save(battleToStart);
-
-        mockServerGithubManager = new ClientAndServer(8083);
-        mockServerGithubManager
-                .when(HttpRequest.request()
-                        .withMethod("POST")
-                        .withPath("/api/github/create-repo"))
-                .respond(HttpResponse.response()
-                        .withStatusCode(200));
 
         Optional<Battle> optionalRetrievedBattle = battleRepository.findById(battleToStart.getBattleId());
         assertTrue(optionalRetrievedBattle.isPresent());
@@ -80,8 +82,8 @@ class BattleScheduledServiceTest {
     }
 
     @Test
-    @Order(2)
     void closeBattles() throws InterruptedException {
+        sendTeamsPointsFinishedBattleController.initDebug();
         Battle battleToClose = new Battle();
         battleToClose.setTournamentId(1L);
         battleToClose.setRegDeadline(LocalDateTime.now());
@@ -105,18 +107,12 @@ class BattleScheduledServiceTest {
                 )
         );
 
-        mockServerTournamentManager = new ClientAndServer(8084);
-        String answer;
-        mockServerTournamentManager
+        mockServer = ClientAndServer.startClientAndServer(8084);
+        mockServer
                 .when(HttpRequest.request()
                         .withMethod("POST")
-                        .withPath("api/tournament/UpdateScore")
-                        .withBody(
-                                new BattleFinishedMessage(
-                                        battleToClose.getTournamentId(),
-                                        teamService.getListPairIdUserPoints(battleToClose)
-                                ).toString()
-                        ))
+                        .withPath("/api/tournament/UpdateScore")
+                )
                 .respond(HttpResponse.response()
                         .withStatusCode(200));
 
@@ -133,12 +129,15 @@ class BattleScheduledServiceTest {
         assertTrue(retrievedBattle.getHasEnded());
     }
 
+    @AfterEach
+    void tearDownEach() {
+        mockServer.stop();
+    }
+
     @AfterAll
     void tearDown() {
         participationRepository.deleteAll();
         teamRepository.deleteAll();
         battleRepository.deleteAll();
-        mockServerGithubManager.stop();
-        mockServerTournamentManager.stop();
     }
 }

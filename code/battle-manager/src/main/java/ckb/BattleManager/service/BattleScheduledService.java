@@ -28,7 +28,7 @@ public class BattleScheduledService {
         this.sendTeamsPointsFinishedBattleController = sendTeamsPointsFinishedBattleController;
     }
 
-    @Scheduled(fixedRate = 3000) // 1 Minute
+    @Scheduled(fixedRate = 3000) // 3 Seconds
     public void startBattles() {
         List<Battle> battlesToStart = battleRepository.findBattlesByHasStartedIsFalse();
         //log.info("Found {} battles to start", battlesToStart.size());
@@ -43,7 +43,7 @@ public class BattleScheduledService {
         });
     }
 
-    @Scheduled(fixedRate = 3000) // 1 Minute
+    @Scheduled(fixedRate = 3000) // 3 Seconds
     public void closeBattles() {
         List<Battle> battlesToStart = battleRepository.
                 findBattlesByHasEndedIsFalseAndSubDeadlineBefore(LocalDateTime.now());

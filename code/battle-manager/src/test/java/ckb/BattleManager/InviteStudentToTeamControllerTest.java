@@ -29,17 +29,20 @@ class InviteStudentToTeamControllerTest {
     @BeforeAll
     public void setUp() {
         mockServer = ClientAndServer.startClientAndServer(8085);
+        mockServer
+                .when(HttpRequest.request()
+                        .withMethod("POST")
+                        .withPath("/api/mail/direct"))
+                .respond(HttpResponse.response().withStatusCode(200));
     }
 
     @Test
     public void inviteStudentToTeam() {
-        mockServer
-                .when(HttpRequest.request().withMethod("POST").withPath("/api/mail/direct"))
-                .respond(HttpResponse.response().withStatusCode(200));
-
-        ResponseEntity<Object> response = inviteStudentToTeamController.inviteStudentToTeam(new StudentTeam(
-                1L, 1L
-        ));
+        inviteStudentToTeamController.initDebug();
+        ResponseEntity<Object> response = inviteStudentToTeamController
+                .inviteStudentToTeam(
+                        new StudentTeam(1L, 1L)
+                );
 
         assertTrue(response.getStatusCode().is2xxSuccessful());
     }
