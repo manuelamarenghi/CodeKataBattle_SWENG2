@@ -1,6 +1,8 @@
 package ckb.AccountManager.controller;
 
 import ckb.AccountManager.dto.SignInRequest;
+import ckb.AccountManager.dto.answers.SignInAnswer;
+import ckb.AccountManager.model.User;
 import ckb.AccountManager.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,8 +26,14 @@ public class SignInController extends Controller {
             return new ResponseEntity<>("Credentials not valid", getHeaders(), HttpStatus.BAD_REQUEST);
         }
 
-        String userID = userService.getUserIDByEmail(request.getEmail()).toString();
-        return new ResponseEntity<>(userID, getHeaders(), HttpStatus.OK);
+        Long userID = userService.getUserIDByEmail(request.getEmail());
+        User user = userService.getUserById(userID);
+        SignInAnswer answer = SignInAnswer.builder()
+                .userID(userID.toString())
+                .email(user.getEmail())
+                .role(user.getRole())
+                .build();
+        return new ResponseEntity<>(answer, getHeaders(), HttpStatus.OK);
     }
 
     private boolean credentialsNotValid(String email, String password) {
