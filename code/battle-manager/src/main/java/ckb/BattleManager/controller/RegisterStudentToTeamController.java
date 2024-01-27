@@ -29,6 +29,7 @@ public class RegisterStudentToTeamController {
             teamService.registerStudentToTeam(request.getIdStudent(), request.getIdTeam());
             return ResponseEntity.ok().build();
         } catch (Exception e) {
+            log.info("[EXCEPTION] {}", e.getMessage());
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }

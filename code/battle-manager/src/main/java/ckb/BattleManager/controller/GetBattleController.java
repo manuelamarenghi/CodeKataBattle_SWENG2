@@ -25,17 +25,32 @@ public class GetBattleController {
         this.battleService = battleService;
     }
 
+    /**
+     * Method to get a battle
+     *
+     * @param idBattle id of the battle
+     * @return a ResponseEntity with the battle or a not found status
+     */
     @GetMapping("/getBattle")
     public ResponseEntity<Battle> getBattle(@RequestBody IdLong idBattle) {
         log.info("[API REQUEST] Get battle request with id: {}", idBattle.getId());
 
         try {
+            // TODO: dto with manu?
             return ResponseEntity.ok(battleService.getBattle(idBattle.getId()));
         } catch (Exception e) {
+            log.info("[EXCEPTION] {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
     }
 
+    /**
+     * Method to get all the battles of a tournament
+     * ATTENTION: I cannot control the id of the tournament
+     *
+     * @param idTournament id of the tournament
+     * @return a ResponseEntity with the list of ids of the battles
+     */
     @GetMapping("/getBattlesOfTournament")
     public ResponseEntity<List<Long>> getBattlesOfTournament(@RequestBody IdLong idTournament) {
         log.info("[API REQUEST] Get battles of tournament request with id: {}", idTournament.getId());

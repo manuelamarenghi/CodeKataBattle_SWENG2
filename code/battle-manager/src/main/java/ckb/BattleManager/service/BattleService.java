@@ -1,7 +1,7 @@
 package ckb.BattleManager.service;
 
-import ckb.BattleManager.controller.StartBattleController;
 import ckb.BattleManager.model.Battle;
+import ckb.BattleManager.model.Team;
 import ckb.BattleManager.repository.BattleRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @Slf4j
@@ -19,7 +18,7 @@ public class BattleService {
 
     @Autowired
 
-    public BattleService(BattleRepository battleRepository, TeamService teamService, StartBattleController startBattleController) {
+    public BattleService(BattleRepository battleRepository, TeamService teamService) {
         this.battleRepository = battleRepository;
         this.teamService = teamService;
     }
@@ -27,7 +26,7 @@ public class BattleService {
     public Battle getBattle(Long id) throws Exception {
         return battleRepository.findById(id).orElseThrow(() -> {
             log.info("Battle not found with id: {}", id);
-            return new Exception("");
+            return new Exception("Battle not found with id: " + id);
         });
     }
 
@@ -44,23 +43,24 @@ public class BattleService {
                 .toList();
     }
 
-    public Optional<Battle> findBattleById(Long id) {
-        return battleRepository
-                .findById(id);
-    }
-
     public void joinBattle(Long idStudent, Long idBattle) throws Exception {
-        Optional<Battle> optionalBattle = battleRepository.findById(idBattle);
-        if (optionalBattle.isPresent()) {
-            teamService.createTeam(idStudent, optionalBattle.get());
-        } else {
-            log.info("Battle not found with id: {}", idBattle);
-            throw new Exception();
-        }
+        Battle battle = battleRepository.findById(idBattle).orElseThrow(
+                () -> {
+                    log.info("Battle not found with id: {}", idBattle);
+                    return new Exception("Battle not found with id: " + idBattle);
+                }
+        );
+        teamService.createTeam(idStudent, battle);
     }
 
     public void leaveBattle(Long idStudent, Long idBattle) throws Exception {
-        teamService.deleteParticipation(idStudent, idBattle);
+        Battle battle = battleRepository.findById(idBattle).orElseThrow(
+                () -> {
+                    log.info("Battle not found with id: {}", idBattle);
+                    return new Exception("Battle not found with id: " + idBattle);
+                }
+        );
+        teamService.deleteParticipation(idStudent, battle);
     }
 
     public boolean canCloseTournament(Long idTournament) {
@@ -73,5 +73,13 @@ public class BattleService {
             }
         }
         return canClose;
+    }
+
+    public List<Team> getAllTeamsOfBattle(Long idBattle) throws Exception {
+        Battle battle = battleRepository.findById(idBattle).orElseThrow(() -> {
+            log.info("Battle not found with id: {}", idBattle);
+            return new Exception("Battle not found with id: " + idBattle);
+        });
+        return battle.getTeamsRegistered();
     }
 }

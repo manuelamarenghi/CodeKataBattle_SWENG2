@@ -52,7 +52,7 @@ class JoinLeaveBattleControllerTest {
         ResponseEntity<Object> response = joinLeaveBattleController.joinBattle(new StudentBattle(idStudent, battle.getBattleId()));
         assertTrue(response.getStatusCode().is2xxSuccessful());
 
-        Optional<Team> optionalTeam = participationRepository.findTeamByBattleIdAndStudentId(idStudent, battle.getBattleId());
+        Optional<Team> optionalTeam = teamRepository.findTeamByStudentIdAndBattle(idStudent, battle);
 
         assertTrue(optionalTeam.isPresent());
         assertTrue(teamRepository.existsById(optionalTeam.get().getTeamId()));
@@ -63,7 +63,7 @@ class JoinLeaveBattleControllerTest {
 
         Optional<Participation> participation = participationRepository.findById(new ParticipationId(idStudent, optionalTeam.get()));
         assertTrue(participation.isEmpty());
-        optionalTeam = participationRepository.findTeamByBattleIdAndStudentId(idStudent, battle.getBattleId());
+        optionalTeam = teamRepository.findTeamByStudentIdAndBattle(idStudent, battle);
         assertTrue(optionalTeam.isEmpty());
     }
 

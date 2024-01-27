@@ -5,10 +5,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Collection;
+import java.util.List;
 
-@Entity(name = "Team")
-@Table(name = "Teams")
+@Entity
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -20,8 +19,9 @@ public class Team {
     @ManyToOne
     private Battle battle;
 
-    @OneToMany(mappedBy = "participationId.team")
-    private Collection<Participation> participation;
+    @OneToMany(mappedBy = "participationId.team", fetch = FetchType.EAGER,
+            cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+    private List<Participation> participation;
 
     private String repositoryLink;
 

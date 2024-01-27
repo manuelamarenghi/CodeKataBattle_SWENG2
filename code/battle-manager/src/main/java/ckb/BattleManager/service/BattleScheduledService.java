@@ -51,6 +51,10 @@ public class BattleScheduledService {
             battle.setHasEnded(true);
             battleRepository.save(battle);
 
+            if (battle.getBattleToEval()) {
+                battle.setIsClosed(true);
+            }
+
             // Get the teams and the points of each battle
             // send the a class containing tournament_id, List<Team> and List<Integer>
             // to the Tournament manager

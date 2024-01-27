@@ -6,10 +6,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
-import java.util.Collection;
+import java.util.List;
 
-@Entity(name = "Battle")
-@Table(name = "Battles")
+@Entity
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -24,7 +23,7 @@ public class Battle {
     private String repositoryLink;
 
     @OneToMany(mappedBy = "battle")
-    private Collection<Team> teamsRegistered;
+    private List<Team> teamsRegistered;
 
     private int minStudents;
 
@@ -41,4 +40,6 @@ public class Battle {
     private Boolean hasStarted;
 
     private Boolean hasEnded;
+
+    private Boolean isClosed;
 }
