@@ -91,6 +91,7 @@ class BattleScheduledServiceTest {
         battleToClose.setRepositoryLink("link2");
         battleToClose.setHasStarted(true);
         battleToClose.setHasEnded(false);
+        battleToClose.setBattleToEval(false);
         battleRepository.save(battleToClose);
 
         Team team = new Team();

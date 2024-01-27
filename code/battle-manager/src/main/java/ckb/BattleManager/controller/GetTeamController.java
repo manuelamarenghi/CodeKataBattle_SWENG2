@@ -1,10 +1,12 @@
 package ckb.BattleManager.controller;
 
 import ckb.BattleManager.dto.input.IdLong;
+import ckb.BattleManager.dto.output.TeamInfoMessage;
 import ckb.BattleManager.model.Team;
 import ckb.BattleManager.service.BattleService;
 import ckb.BattleManager.service.TeamService;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,6 +14,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.reactive.function.client.WebClient;
 
 import java.util.List;
 
@@ -19,13 +22,16 @@ import java.util.List;
 @RequestMapping("/api/battle")
 @Slf4j
 public class GetTeamController {
+    private final WebClient.Builder webClientBuilder;
     private final BattleService battleService;
     private final TeamService teamService;
+    private String url = "http://TournamentManager:8083/api/github/create-repo";
 
     @Autowired
     public GetTeamController(BattleService battleService, TeamService teamService) {
         this.battleService = battleService;
         this.teamService = teamService;
+        this.webClientBuilder = WebClient.builder();
     }
 
     /**
@@ -35,10 +41,25 @@ public class GetTeamController {
      * @return a ResponseEntity with the team or a not found status
      */
     @GetMapping("/getTeam")
-    public ResponseEntity<Team> getTeam(@RequestBody IdLong idTeam) {
+    public ResponseEntity<TeamInfoMessage> getTeam(@RequestBody IdLong idTeam) {
         log.info("[API REQUEST] Get team request with id: {}", idTeam.getId());
         try {
-            return ResponseEntity.ok(teamService.getTeam(idTeam.getId()));
+            Team team = teamService.getTeam(idTeam.getId());
+            Hibernate.initialize(team.getParticipation());
+            List<String> participationName = team.getParticipation()
+                    .stream()
+                    .map(
+                            participation -> webClientBuilder.build()
+                                    .post()
+                                    .uri(url)
+                                    .bodyValue(
+                                            participation.getParticipationId().getStudentId()
+                                    )
+                                    .retrieve()
+                                    .bodyToMono(String.class)
+                                    .block()
+                    ).toList();
+            return ResponseEntity.ok(new TeamInfoMessage(participationName, team.getTeamId(), team.getScore()));
         } catch (Exception e) {
             log.info("[EXCEPTION] {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();

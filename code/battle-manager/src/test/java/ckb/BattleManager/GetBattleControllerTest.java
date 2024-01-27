@@ -2,8 +2,11 @@ package ckb.BattleManager;
 
 import ckb.BattleManager.controller.GetBattleController;
 import ckb.BattleManager.dto.input.IdLong;
+import ckb.BattleManager.dto.output.BattleInfoMessage;
 import ckb.BattleManager.model.Battle;
+import ckb.BattleManager.model.Team;
 import ckb.BattleManager.repository.BattleRepository;
+import org.apache.commons.lang3.tuple.Pair;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -27,9 +30,12 @@ public class GetBattleControllerTest {
     @Autowired
     private BattleRepository battleRepository;
 
+    private Battle battle1, battle2, battle3;
+    private Team team1, team2, team3;
+
     @BeforeAll
     public void setUp() {
-        Battle battle1 = new Battle();
+        battle1 = new Battle();
         battle1.setTournamentId(1L);
         battle1.setRepositoryLink("link1");
         battle1.setMinStudents(1);
@@ -37,9 +43,26 @@ public class GetBattleControllerTest {
         battle1.setRegDeadline(LocalDateTime.of(2024, Month.JANUARY, 1, 10, 0));
         battle1.setSubDeadline(LocalDateTime.of(2024, Month.FEBRUARY, 10, 12, 0));
         battle1.setBattleToEval(true);
+
+        team1 = new Team();
+        team1.setBattle(battle1);
+        team1.setScore(10);
+
+        team2 = new Team();
+        team2.setBattle(battle1);
+        team2.setScore(20);
+
+        team3 = new Team();
+        team3.setBattle(battle1);
+        team3.setScore(50);
+        battle1.setTeamsRegistered(
+                List.of(
+                        team1, team2, team3
+                )
+        );
         battleRepository.save(battle1);
 
-        Battle battle2 = new Battle();
+        battle2 = new Battle();
         battle2.setTournamentId(1L);
         battle2.setRepositoryLink("link2");
         battle2.setMinStudents(1);
@@ -49,7 +72,7 @@ public class GetBattleControllerTest {
         battle2.setBattleToEval(true);
         battleRepository.save(battle2);
 
-        Battle battle3 = new Battle();
+        battle3 = new Battle();
         battle3.setTournamentId(2L);
         battle3.setRepositoryLink("link3");
         battle3.setMinStudents(1);
@@ -62,14 +85,19 @@ public class GetBattleControllerTest {
 
     @Test
     public void getBattle() {
-        ResponseEntity<Battle> battle = getBattleController.getBattle(new IdLong(1L));
+        ResponseEntity<BattleInfoMessage> battleResponse = getBattleController.getBattle(new IdLong(battle1.getBattleId()));
 
-        if (battleRepository.existsById(1L)) {
-            assertTrue(battle.getStatusCode().is2xxSuccessful());
-            assertNotNull(battle.getBody());
-            assertEquals(1L, (long) battle.getBody().getBattleId());
+        if (battleResponse.getStatusCode().is2xxSuccessful()) {
+            assertTrue(battleResponse.getStatusCode().is2xxSuccessful());
+            assertNotNull(battleResponse.getBody());
+            BattleInfoMessage battleInfoMessage = battleResponse.getBody();
+            List<Pair<Long, Integer>> pairsIdTeamPoints = battleInfoMessage.getPairsIdTeamPoints();
+            assertEquals(3, pairsIdTeamPoints.size());
+            assertEquals(team3.getTeamId(), pairsIdTeamPoints.get(0).getLeft());
+            assertEquals(team2.getTeamId(), pairsIdTeamPoints.get(1).getLeft());
+            assertEquals(team1.getTeamId(), pairsIdTeamPoints.get(2).getLeft());
         } else {
-            assertTrue(battle.getStatusCode().is4xxClientError());
+            assertTrue(battleResponse.getStatusCode().is4xxClientError());
         }
     }
 
