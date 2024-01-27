@@ -1,0 +1,175 @@
+<?php
+    if (session_status() == PHP_SESSION_NONE) {
+        session_start();
+    }
+?>
+
+<script>
+    var GetAllTournamentsRequest = {
+            request : "tournaments"
+        };
+    $.ajax({
+  		 type: "POST",
+ 		 url: "http://localhost:8080/server",
+         contentType: "application/json",
+  		 data: JSON.stringify({ request: GetAllTournamentsRequest }),
+   		 dataType: "json", 
+     	       success: function (response) {
+                if (response.status === "success") {
+            // Converte la stringa JSON in un array JavaScript
+            var arrayLong = JSON.parse(response.data);
+            var table = document.querySelector('.table-container table');
+        var tableBody = table.querySelector('tbody');
+
+        // Pulisci il corpo della tabella
+        tableBody.innerHTML = '';
+
+        // Itera sull'array e crea una nuova riga per ogni elemento
+        arrayLong.forEach(function (element, index) {
+            var newRow = tableBody.insertRow();
+
+            // Inserisci il numero della riga
+            var cell1 = newRow.insertCell(0);
+            cell1.textContent = index + 1;
+
+            // Inserisci il link con l'elemento dell'array come testo
+            var cell2 = newRow.insertCell(1);
+            var link = document.createElement('a');
+            link.href = "http://localhost/codekatabattle/tournaments/tournament?id=" + (index + 1);
+            link.textContent = element;
+            cell2.appendChild(link);
+        });
+        } else {
+            alert("Errore durante la richiesta AJAX.");
+        }
+            },
+            error: function () {
+                // Errore durante la richiesta AJAX
+                alert("Errore durante la richiesta AJAX.");
+            }
+        });
+</script>
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Tournaments | CodeKataBattle</title>
+    <link rel="icon" href="public\images\iconCKB.png" type="image/x-icon">
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Jura', sans-serif;
+        }
+        
+    </style>
+    <link rel="stylesheet" href="public\css\navbar.css" type="text/css">
+    <link rel="stylesheet" href="public\css\header.css" type="text/css">
+    <link rel="stylesheet" href="public\css\table.css" type="text/css">
+    <link rel="stylesheet" href="public\css\modalT.css" type="text/css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Jura&display=swap">
+</head>
+
+<body>
+
+    <div class="top-header">
+        <div class="left-content">
+            <img src="public\images\iconCKB.png" class="sw-image">
+            <div class="sw-title"> CodeKataBattle </div>
+        </div>
+        <div class="right-content">
+            <div class="user-buttons">
+                <button class="button-28" onclick="window.location.href='login.php'">Enter</button>
+                <button class="button-28" onclick="window.location.href='signin.php'">Register</button>
+            </div>
+        </div>
+    </div>
+    <div class="navbar-container">
+        <!-- Contenitore visibile per la navbar -->
+        <nav class="navbar">
+            <a onclick="window.location.href='index.php'" >Home</a>
+            <a onclick="window.location.href='tournaments.php'" class="active">Tournaments</a>
+            <a onclick="window.location.href='users.php'">Users</a>
+            <a  onclick="redirectToAccount()" id="account_page" >Account</a>
+        </nav>
+    </div>
+    <script src="utility/app.js"></script>
+    <script>
+        var isUserLoggedIn = localStorage.getItem("logged_in");
+        
+        function redirectToAccount() {
+            if (isUserLoggedIn && isUserLoggedIn.toLowerCase() === "true") {
+                window.location.href = "account.php";
+            }
+            else{window.location.href = "login.php"; }
+        }
+    </script> 
+    <div class="page-container">
+        <div class="table-container">
+            <div class="tb-title">Tournaments List</div>
+            <table>
+                <!-- Aggiungi più righe secondo le tue esigenze -->
+                <tr>
+                    <th>#</th>
+                    <th class="large-column">Tournaments</th>
+                </tr>
+                <tr>
+                    <td><a href="/pagina1">Clicca qui</a></td>
+                    <td class="large-column">Contenuto della colonna grande</td>
+                </tr>
+                
+                <!-- Fine delle righe aggiuntive -->
+            </table>
+        </div>
+    </div>
+    <div class="right">
+    <div class="user-buttons" id="session_button">
+        <button class="button-28" onclick="openModal('PermissionModal')">Grant Permission</button>
+        <button class="button-28" onclick="openModal('createTournamentModal')">Create Tournament</button>
+    </div>
+     <!-- Finestra modale -->
+     <div id="createTournamentModal" class="modal">
+        <h2>Enjoy creating your tournament!</h2>
+        
+        <label for="deadline">Registration Deadline:</label>
+        <input type="date" id="deadline">
+
+        <button onclick="closeModal('createTournamentModal')">Submit</button>
+    </div>
+
+    <!-- Overlay per la finestra modale -->
+    <div id="modalOverlay" class="overlay" onclick="closeModal('createTournamentModal')"></div>
+
+    <script>
+        function openModal(modalId) {
+            document.getElementById(modalId).style.display = 'block';
+            document.getElementById('modalOverlay').style.display = 'block';
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+            document.getElementById('modalOverlay').style.display = 'none';
+        }
+    </script>
+    </div>
+
+    <div id="PermissionModal" class="modal">
+        <div class="form-container">
+            <label for="educatorRole">Educator Role:</label>
+            <input type="text" id="educatorRole" placeholder="Enter educator role">
+    
+            <label >Grant Permission:</label>
+            <div class="radio-group">
+                <label for="yes">Yes</label>
+                <input type="radio" id="yes" name="permission" value="yes">
+    
+                <label for="no">No</label>
+                <input type="radio" id="no" name="permission" value="no">
+            </div>
+    
+            <button type="button"onclick="closeModal('PermissionModal')">Submit</button>
+        </div>
+    </div>
+</body>
+
+</html>

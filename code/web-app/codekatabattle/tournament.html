@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Tournament | CodeKataBattle</title>
+    <link rel="icon" href="public\images\iconCKB.png" type="image/x-icon">
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Jura', sans-serif;
+        }
+        .right{
+            display: flex;
+            align-items: right;
+            float: right;
+            margin-right: 50px;
+            margin-top: 120px;
+        } 
+        .button-container{
+            margin-bottom: 20px;
+        }
+    </style>
+    <link rel="stylesheet" href="public\css\navbar.css" type="text/css">
+    <link rel="stylesheet" href="public\css\header.css" type="text/css">
+    <link rel="stylesheet" href="public\css\tournament.css" type="text/css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Jura&display=swap">
+</head>
+
+<body>
+
+    <div class="top-header">
+        <div class="left-content">
+            <img src="public\images\iconCKB.png" class="sw-image">
+            <div class="sw-title"> CodeKataBattle </div>
+        </div>
+        <div class="right-content">
+            <div class="user-buttons">
+                <button class="button-28" onclick="window.location.href='login.html'">Enter</button>
+                <button class="button-28" onclick="window.location.href='signin.html'">Register</button>
+            </div>
+        </div>
+    </div>
+    <div class="navbar-container">
+        <!-- Contenitore visibile per la navbar -->
+        <nav class="navbar">
+            <a onclick="window.location.href='index.html'" >Home</a>
+            <a onclick="window.location.href='tournaments.html'" class="active">Tournaments</a>
+            <a onclick="window.location.href='users.html'">Users</a>
+            <a  onclick="redirectToAccount()" id="account_page" >Account</a>
+        </nav>
+    </div>
+    <script>
+        var isUserLoggedIn = localStorage.getItem("logged_in");
+        
+        function redirectToAccount() {
+            if (isUserLoggedIn && isUserLoggedIn.toLowerCase() === "true") {
+                window.location.href = "account.html";
+            }
+            else{window.location.href = "login.html"; }
+        }
+    </script> 
+    <div class="page-container">
+        <div class="table-container">
+            <div class="tb-title">Tournament Ranking</div>
+            <table>
+                <!-- Aggiungi più righe secondo le tue esigenze -->
+                <tr>
+                    <th>#</th>
+                    <th class="large-column">User</th>
+                    <!-- Aggiunta di una nuova colonna -->
+                    <th>Rating</th>
+                </tr>
+                <tr>
+                    <td>#</td>
+                    <td class="large-column">User</td>
+                    <!-- Aggiunta di una nuova colonna -->
+                    <td>Rating</td>
+                </tr>
+                <tr>
+                    <td>#</td>
+                    <td class="large-column">User</td>
+                    <!-- Aggiunta di una nuova colonna -->
+                    <td>Rating</td>
+                </tr>
+                <tr>
+                    <td>#</td>
+                    <td class="large-column">User</td>
+                    <!-- Aggiunta di una nuova colonna -->
+                    <td>Rating</td>
+                </tr>
+                
+                <!-- Fine delle righe aggiuntive -->
+            </table>
+        </div>
+    </div>
+    <div class="tb-title">Battles</div>
+
+    <div class="battle-container">
+        <div class="tb-title">Battles</div>
+        <table>
+            <tr>
+                <td><a href="/pagina1">Clicca qui</a></td>
+            </tr>
+            <tr>
+                <td><a href="/pagina1">Clicca qui</a></td>
+            </tr>
+            <tr>
+                <td><a href="/pagina1">Clicca qui</a></td>
+            </tr>
+            <tr>
+                <td><a href="/pagina1">Clicca qui</a></td>
+            </tr>
+            <tr>
+                <td><a href="/pagina1">Clicca qui</a></td>
+            </tr>
+            <tr>
+                <td><a href="/pagina1">Clicca qui</a></td>
+            </tr>
+            <tr>
+                <td><a href="/pagina1">Clicca qui</a></td>
+            </tr>
+
+        </table>
+    </div>
+    <div class="right">
+    <div class="button-container">
+        <div class="user-buttons" id="session_button">
+            <button class="button-28" >GET IN</button>
+        </div>
+    </div>    
+</body>
+
+</html>

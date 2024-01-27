@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Home Page | CodeKataBattle</title>
+    <link rel="icon" href="public\images\iconCKB.png" type="image/x-icon">
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Jura', sans-serif;
+
+        }
+    </style>
+    <link rel="stylesheet" href="public\css\navbar.css" type="text/css">
+    <link rel="stylesheet" href="public\css\header.css" type="text/css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Jura&display=swap">
+</head>
+
+<body>
+
+    <div class="top-header">
+
+        <div class="left-content">
+            <img src="public\images\iconCKB.png" class="sw-image">
+            <div class="sw-title"> CodeKataBattle </div>
+        </div>
+        <div class="right-content">
+         <?php if (isset($_SESSION["logged_in"]) && $_SESSION["logged_in"] === true) { ?>
+        <div class="user-buttons" id="session_button">
+            <button class="button-28" onclick="logout()">Logout</button>
+        </div>
+            <?php } else { ?>
+        <div class="user-buttons" id="session_button">
+            <button class="button-28" onclick="window.location.href='login.php'">Enter</button>
+            <button class="button-28" onclick="window.location.href='signin.php'">Register</button>
+        </div>
+    <?php } ?>
+</div>
+    </div>
+    <div class="navbar-container">
+        <!-- Contenitore visibile per la navbar -->
+        <nav class="navbar">
+            <a onclick="window.location.href='index.html'" class="active">Home</a>
+            <a onclick="window.location.href='tournaments.html'">Tournaments</a>
+            <a onclick="window.location.href='users.html'">Users</a>
+            <a  onclick="redirectToAccount()" id="account_page" >Account</a>
+        </nav>
+    </div>
+    <div class="contenuto">
+        <div class="center-container">
+            <div class="intro-text">
+                Improve your development skills by training with your peers on code kata
+                that continuously challenge and push your coding practice.
+            </div>
+        </div>
+        <div class="center-container">
+            <button onclick="window.location.href='tournaments.php'" class="get-start"><span class="start-text">START!</span></button>
+        </div>
+        <div style="justify-content: space-between; display: flex;">
+            <div class="quarter-circle">
+                <p style="font-size: 20px; padding-right: 100px; color: #fff; text-align: center;">Challenge yourself on
+                    small
+                    coding exercises called 'kata'.
+                    Each kata is crafted by the community to help you strengthen different coding techniques.</p>
+            </div>
+            <img src="public\images\teamworking.png" style="float: right; width: 300px; height: 220px; margin-right: 200px;margin-top: -20px;">
+        </div>
+    </div>
+    <footer></footer>
+    <script>
+        var isUserLoggedIn = localStorage.getItem("logged_in");
+        
+        function redirectToAccount() {
+            if (isUserLoggedIn && isUserLoggedIn.toLowerCase() === "true") {
+                window.location.href = "account.html";
+            }
+            else{ window.location.href = "login.html"; }
+        }
+        function logout() {
+            window.location.href = 'utility/logout.php'; 
+        }
+    </script>    
+</body>
+
+</html>

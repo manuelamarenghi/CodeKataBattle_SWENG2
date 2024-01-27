@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Battle | CodeKataBattle</title>
+    <link rel="icon" href="public\images\iconCKB.png" type="image/x-icon">
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Jura', sans-serif;
+        }
+        
+    </style>
+    <link rel="stylesheet" href="public\css\navbar.css" type="text/css">
+    <link rel="stylesheet" href="public\css\header.css" type="text/css">
+    <link rel="stylesheet" href="public\css\tournament.css" type="text/css">
+    <link rel="stylesheet" href="public\css\team.css" type="text/css">
+    <link rel="stylesheet" href="public\css\createBattle.css" type="text/css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Jura&display=swap">
+</head>
+
+<body>
+
+    <div class="top-header">
+        <div class="left-content">
+            <img src="public\images\iconCKB.png" class="sw-image">
+            <div class="sw-title"> CodeKataBattle </div>
+        </div>
+        <div class="right-content">
+            <div class="user-buttons">
+                <button class="button-28" onclick="window.location.href='login.html'">Enter</button>
+                <button class="button-28" onclick="window.location.href='signin.html'">Register</button>
+            </div>
+        </div>
+    </div>
+    <div class="navbar-container">
+        <!-- Contenitore visibile per la navbar -->
+        <nav class="navbar">
+            <a onclick="window.location.href='index.html'" >Home</a>
+            <a onclick="window.location.href='tournaments.html'" class="active">Tournaments</a>
+            <a onclick="window.location.href='users.html'">Users</a>
+            <a  onclick="redirectToAccount()" id="account_page" >Account</a>
+        </nav>
+    </div>
+    <script>
+        var isUserLoggedIn = localStorage.getItem("logged_in");
+        
+        function redirectToAccount() {
+            if (isUserLoggedIn && isUserLoggedIn.toLowerCase() === "true") {
+                window.location.href = "account.html";
+            }
+            else{window.location.href = "login.html"; }
+        }
+    </script> 
+    <div class="page-container">
+        <div class="table-container">
+            <div class="tb-title">Battle Ranking</div>
+            <table>
+                <!-- Aggiungi più righe secondo le tue esigenze -->
+                <tr>
+                    <th>#</th>
+                    <th class="large-column">Team ID</th>
+                    <!-- Aggiunta di una nuova colonna -->
+                    <th>Rating</th>
+                </tr>
+                <tr>
+                    <td>1</td>
+                    <td><a>Clicca qui</a></td>
+                    <!-- Aggiunta di un dato per la nuova colonna -->
+                    <td>Dato Colonna 2</td>
+                </tr>
+                
+                <!-- Fine delle righe aggiuntive -->
+            </table>
+        </div>
+    </div>
+    <div class="battle-container2">
+        <div class="user-buttons" id="session_button">
+            <button class="button-28" onclick="openModal('CreateBattleModal')">Create Battle</button>
+            <button class="button-28" >Join Battle</button>
+            <button class="button-28" onclick="openModal('TeamModal')">My team</button>
+            <button class="button-28" >Invites</button>
+        </div>
+    </div>
+    <div id="TeamModal" class="modal">
+        <div class="team-section">
+            <div class="team-member">
+                <div>ID Team: 123</div>
+                <div>Score: 500</div>
+                <div>GitHub Repository URL: <a href="https://github.com/team-repo">https://github.com/team-repo</a></div>
+            </div>
+            <div class="overlay" onclick="closeModal('TeamModal')"></div>
+
+            <div class="team-member">
+                <div class="member-name">Team Member 1</div>
+                <div>Name: Team Member 1</div>
+            </div>
+            <div class="team-member">
+                <div class="member-name">Team Member 2</div>
+                <div>Name: Team Member 2</div>
+            </div>
+            <div class="team-member">
+                <div class="member-name">Team Member 3</div>
+                <div>Name: Team Member 3</div>
+            </div>
+        </div>
+        
+        <script>
+            function openModal(modalId) {
+                var modal = document.getElementById(modalId);
+                var overlay = document.querySelector('.overlay');
+                modal.style.display = 'block';
+                overlay.style.display = 'block';
+            }
+        
+            function closeModal(modalId) {
+                var modal = document.getElementById(modalId);
+                var overlay = document.querySelector('.overlay');
+                modal.style.display = 'none';
+                overlay.style.display = 'none';
+            }
+        </script>   
+    </div>
+
+    <div id="CreateBattleModal" class="modal">
+        <div class="team-section">
+            <label for="teamParticipant">Insert participant for team:</label>
+            <input type="text" id="teamParticipant" placeholder="Team participant">
+    
+            <label for="evaluation">Add person evaluation:</label>
+            <div>
+                <input type="radio" id="evaluationYes" name="evaluation" value="yes">
+                <label for="evaluationYes">Yes</label>
+    
+                <input type="radio" id="evaluationNo" name="evaluation" value="no">
+                <label for="evaluationNo">No</label>
+            </div>
+    
+            <label for="deadlineSubmission">Add deadline submission:</label>
+            <input type="date" id="deadlineSubmission">
+    
+            <label for="registrationSubmission">Add registration submission:</label>
+            <input type="date" id="registrationSubmission">
+    
+            <label for="codeKataUpload">Upload CodeKata (ZIP file):</label>
+            <input type="file" id="codeKataUpload" accept=".zip">
+    
+            <button onclick="submitCreateBattle()">Create Battle</button>
+            <button onclick="closeModal('CreateBattleModal')">Cancel</button>
+        </div>
+    </div>
+    
+    <script>
+        function submitCreateBattle() {
+            // Retrieve values from the modal fields
+            var teamParticipant = document.getElementById('teamParticipant').value;
+            var evaluation = document.querySelector('input[name="evaluation"]:checked').value;
+            var deadlineSubmission = document.getElementById('deadlineSubmission').value;
+            var registrationSubmission = document.getElementById('registrationSubmission').value;
+            var codeKataUpload = document.getElementById('codeKataUpload').files[0];
+    
+            // Perform actions with the retrieved values (e.g., send to server)
+    
+            // Close the modal after submission
+            closeModal('CreateBattleModal');
+        }
+    </script>
+    
+</body>
+
+</html>

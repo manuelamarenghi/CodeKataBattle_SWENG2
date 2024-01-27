@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Users | CodeKataBattle</title>
+    <link rel="icon" href="public\images\iconCKB.png" type="image/x-icon">
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Jura', sans-serif;
+        }
+
+    </style>
+    <link rel="stylesheet" href="public\css\navbar.css" type="text/css">
+    <link rel="stylesheet" href="public\css\header.css" type="text/css">
+    <link rel="stylesheet" href="public\css\users.css" type="text/css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Jura&display=swap">
+</head>
+
+<body>
+
+    <div class="top-header">
+        <div class="left-content">
+            <img src="public\images\iconCKB.png" class="sw-image">
+            <div class="sw-title"> CodeKataBattle </div>
+        </div>
+        <div class="right-content">
+            <div class="user-buttons" id="session_button">
+                <button class="button-28" onclick="window.location.href='login.html'">Enter</button>
+                <button class="button-28" onclick="window.location.href='signin.html'">Register</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="navbar-container">
+        <!-- Contenitore visibile per la navbar -->
+        <nav class="navbar">
+            <a onclick="window.location.href='index.html'">Home</a>
+            <a onclick="window.location.href='tournaments.html'">Tournaments</a>
+            <a onclick="window.location.href='users.html'" class="active">Users</a>
+            <a  onclick="redirectToAccount()" id="account_page" >Account</a>
+        </nav>
+    </div>
+    <div class="search-bar">
+        <input type="text" class="search-input" placeholder="Search...">
+        <button class="search-button">Search</button>
+    </div>
+    <div class="account-container">
+        <div class="user-info">
+            <img src="public\images\user.png">
+            <div class="user-details">
+                <div>Name: John Doe</div>
+                <div>ID: 123456</div>
+                <div>Email: john.doe@example.com</div>
+            </div>
+        </div>
+        <div class="user-score">
+            <p>Score: 500</p>
+            <!-- Aggiungi ulteriori informazioni sul punteggio dell'utente o altri dettagli qui -->
+        </div>
+    </div>
+    <script>
+        var isUserLoggedIn = localStorage.getItem("logged_in");
+        
+        function redirectToAccount() {
+            if (isUserLoggedIn && isUserLoggedIn.toLowerCase() === "true") {
+                window.location.href = "account.html";
+            }
+            else{window.location.href = "login.html"; }
+        }
+    </script> 
+</body>
+
+</html>
