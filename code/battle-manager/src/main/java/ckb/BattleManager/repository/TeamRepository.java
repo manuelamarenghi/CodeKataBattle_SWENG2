@@ -12,21 +12,16 @@ import java.util.Optional;
 
 @Repository
 public interface TeamRepository extends JpaRepository<Team, Long> {
-    List<Team> findTeamsByBattle(Battle battle);
-
     boolean existsByBattle(Battle battle);
-
-    @Query("select t.battle from Team t where t.teamId = :idTeam")
-    Optional<Battle> findBattleByTeamId(@Param("idTeam") Long idTeam);
-
-    @Query("select t from Team t join Participation p on t.teamId = p.participationId.team.teamId " +
-            "where t.battle = :battle and p.participationId.studentId = :idStudent")
-    Optional<Team> findTeamByBattleAndParticipationId_TeamId(@Param("battle") Battle battle,
-                                                             @Param("idStudent") Long idStudent);
 
     @Query("select p.participationId.studentId, t.score " +
             "from Team t join Participation p on t.teamId = p.participationId.team.teamId " +
             "where t.battle = :battle")
     List<Object[]> findPairsIdUserPointsByBattleId(@Param("battle") Battle battle);
+
+    // get the team of a student with his/her id and the battle_id
+    @Query("SELECT t FROM Participation p JOIN Team t ON p.participationId.team = t" +
+            " WHERE p.participationId.studentId = :idStudent AND t.battle = :battle")
+    Optional<Team> findTeamByStudentIdAndBattle(@Param("idStudent") Long idStudent, @Param("battle") Battle battle);
 
 }

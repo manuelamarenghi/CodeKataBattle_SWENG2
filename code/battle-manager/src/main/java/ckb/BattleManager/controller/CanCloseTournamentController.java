@@ -21,8 +21,15 @@ public class CanCloseTournamentController {
         this.battleService = battleService;
     }
 
+    /**
+     * Method used to check if the battles of a tournament are finished
+     * in order to determine if a tournament can be closed
+     * ATTENTION: I cannot control the id of the tournament
+     *
+     * @param idTournament id of the tournament
+     * @return a ResponseEntity with a true if the tournament can be close, false otherwise
+     */
     @PostMapping("/battleFinished")
-
     public ResponseEntity<Boolean> canCloseTournament(@RequestBody IdLong idTournament) {
         log.info("[API REQUEST] Battle finished request with id tournament: {}", idTournament.getId());
 

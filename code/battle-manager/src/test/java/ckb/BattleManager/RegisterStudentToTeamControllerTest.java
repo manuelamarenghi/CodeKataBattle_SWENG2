@@ -3,6 +3,7 @@ package ckb.BattleManager;
 import ckb.BattleManager.controller.RegisterStudentToTeamController;
 import ckb.BattleManager.dto.input.StudentTeam;
 import ckb.BattleManager.model.Battle;
+import ckb.BattleManager.model.Participation;
 import ckb.BattleManager.model.ParticipationId;
 import ckb.BattleManager.model.Team;
 import ckb.BattleManager.repository.BattleRepository;
@@ -16,6 +17,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.ResponseEntity;
 
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest
@@ -25,7 +28,7 @@ class RegisterStudentToTeamControllerTest {
     private final BattleRepository battleRepository;
     private final TeamRepository teamRepository;
     private final ParticipationRepository participationRepository;
-    private Team team;
+    private Team newTeam;
 
     @Autowired
     public RegisterStudentToTeamControllerTest(RegisterStudentToTeamController registerStudentToTeamController,
@@ -42,19 +45,34 @@ class RegisterStudentToTeamControllerTest {
     void setUp() {
         Battle battle = new Battle();
         battleRepository.save(battle);
-        team = new Team();
-        team.setBattle(battle);
-        teamRepository.save(team);
+
+        Team oldTeam = new Team();
+        oldTeam.setBattle(battle);
+        oldTeam.setParticipation(
+                List.of(
+                        new Participation(
+                                new ParticipationId(
+                                        1L,
+                                        oldTeam
+                                )
+                        )
+                )
+        );
+        teamRepository.save(oldTeam);
+
+        newTeam = new Team();
+        newTeam.setBattle(battle);
+        teamRepository.save(newTeam);
     }
 
     @Test
     void registerStudentToTeam() {
         ResponseEntity<Object> response = registerStudentToTeamController.registerStudentToTeam(
-                new StudentTeam(1L, team.getTeamId())
+                new StudentTeam(1L, newTeam.getTeamId())
         );
 
         assertTrue(response.getStatusCode().is2xxSuccessful());
-        assertTrue(participationRepository.existsById(new ParticipationId(1L, team)));
+        assertTrue(participationRepository.existsById(new ParticipationId(1L, newTeam)));
     }
 
     @AfterEach

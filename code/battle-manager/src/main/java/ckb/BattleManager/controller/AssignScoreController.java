@@ -4,6 +4,7 @@ import ckb.BattleManager.dto.input.PairTeamScore;
 import ckb.BattleManager.service.TeamService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -21,6 +22,12 @@ public class AssignScoreController {
         this.teamService = teamService;
     }
 
+    /**
+     * Method used to assign a score to a team
+     *
+     * @param request a pair team and score
+     * @return a ResponseEntity
+     */
     @PostMapping("/assignScore")
     public ResponseEntity<Object> assignScore(@RequestBody PairTeamScore request) {
         log.info("[API REQUEST] Assign score request with id_team: {}, score: {}", request.getIdTeam(), request.getScore());
@@ -28,7 +35,8 @@ public class AssignScoreController {
             teamService.assignScore(request.getIdTeam(), request.getScore());
             return ResponseEntity.ok().build();
         } catch (Exception e) {
-            return ResponseEntity.badRequest().build();
+            log.info("[EXCEPTION] {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
 
@@ -39,7 +47,8 @@ public class AssignScoreController {
             teamService.assignPersonalScore(request.getIdTeam(), request.getScore());
             return ResponseEntity.ok().build();
         } catch (Exception e) {
-            return ResponseEntity.badRequest().build();
+            log.info("[EXCEPTION] {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
 }

@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.ResponseEntity;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -38,6 +39,11 @@ class AssignScoreControllerTest {
         Battle battle = new Battle();
         battle.setTournamentId(1L);
         battle.setRepositoryLink("link");
+        battle.setRegDeadline(LocalDateTime.now().minusMinutes(10));
+        battle.setSubDeadline(LocalDateTime.now().plusMinutes(1));
+        battle.setHasStarted(true);
+        battle.setHasEnded(false);
+        battle.setIsClosed(false);
 
         team = new Team();
         team.setBattle(battle);

@@ -24,7 +24,13 @@ public class CreateBattleController {
     public ResponseEntity<Object> createBattle(@RequestBody Battle battle) {
         log.info("[API REQUEST] Create battle request with id: {}", battle.getBattleId());
         log.debug("Battle: {}", battle);
-        battleService.createBattle(battle);
-        return ResponseEntity.ok().build();
+        try {
+            // TODO have a dto with manu and make some tests on the battle
+            battleService.createBattle(battle);
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            log.info("[EXCEPTION] {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
     }
 }

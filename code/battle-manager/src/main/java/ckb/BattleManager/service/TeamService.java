@@ -1,45 +1,35 @@
 package ckb.BattleManager.service;
 
 import ckb.BattleManager.model.Battle;
+import ckb.BattleManager.model.Participation;
+import ckb.BattleManager.model.ParticipationId;
 import ckb.BattleManager.model.Team;
 import ckb.BattleManager.repository.TeamRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @Slf4j
 public class TeamService {
     private final TeamRepository teamRepository;
-    private final BattleService battleService;
     private final ParticipationService participationService;
 
     @Autowired
-    public TeamService(TeamRepository teamRepository, @Lazy BattleService battleService, ParticipationService participationService) {
+    public TeamService(TeamRepository teamRepository, ParticipationService participationService) {
         this.teamRepository = teamRepository;
-        this.battleService = battleService;
         this.participationService = participationService;
     }
 
     public Team getTeam(Long idTeam) throws Exception {
         return teamRepository.findById(idTeam).orElseThrow(() -> {
             log.info("Team not found with id: {}", idTeam);
-            return new Exception();
+            return new Exception("Team not found with id: " + idTeam);
         });
-    }
-
-    public List<Team> getListTeam(Long idBattle) throws Exception {
-        return teamRepository.findTeamsByBattle(
-                battleService.findBattleById(idBattle).orElseThrow(() -> {
-                    log.info("Battle not found with id: {}", idBattle);
-                    return new Exception();
-                })
-        );
     }
 
     public void createTeam(Long studentId, Battle battle) {
@@ -50,72 +40,123 @@ public class TeamService {
         team.setRepositoryLink("");
         team.setEduEvaluated(false);
         team.setScore(0);
+        team.setParticipation(List.of(
+                new Participation(
+                        new ParticipationId(
+                                studentId,
+                                team
+                        )
+                )
+        ));
 
         teamRepository.save(team);
-        participationService.createParticipation(studentId, team);
     }
 
-    public void deleteParticipation(Long idStudent, Long idBattle) throws Exception {
-        participationService.deleteParticipationHavingIdBattle(idStudent, idBattle);
+    public void deleteParticipation(Long idStudent, Battle battle) throws Exception {
+        Team studentTeam = teamRepository.findTeamByStudentIdAndBattle(idStudent, battle).orElseThrow(
+                () -> {
+                    log.info("Team not found with id student {} and id battle {}", idStudent, battle.getBattleId());
+                    return new Exception("Team not found with id student " + idStudent +
+                            " and id battle: " + battle.getBattleId());
+                }
+        );
+        participationService.deleteParticipationHavingIdBattle(idStudent, studentTeam);
+
+        if (studentTeam.getParticipation().isEmpty()) {
+            teamRepository.delete(studentTeam);
+            log.info("Team deleted with id: {}", studentTeam.getTeamId());
+        }
     }
 
     public void assignScore(Long idTeam, Integer score) throws Exception {
-        Optional<Team> optionalTeam = teamRepository.findById(idTeam);
-
-        if (optionalTeam.isPresent()) {
-            Team team = optionalTeam.get();
-            team.setScore(score);
-            teamRepository.save(team);
-            log.info("Team score updated with id {} and score: {}", idTeam, score);
-        } else {
-            log.info("Team not found with id: {}", idTeam);
-            throw new Exception();
+        if (score < 0) {
+            log.info("Score cannot be negative");
+            throw new Exception("Score cannot be negative");
         }
+
+        Team team = teamRepository.findById(idTeam).orElseThrow(
+                () -> {
+                    log.info("Team not found with id: {}", idTeam);
+                    return new Exception("Team not found with id: " + idTeam);
+                }
+        );
+
+        Battle battleOfTeam = team.getBattle();
+
+        if (battleOfTeam.getSubDeadline().isBefore(LocalDateTime.now())) {
+            log.info("Team score cannot be updated because the tournament is closed");
+            throw new Exception("Team score cannot be updated because the tournament is closed");
+        }
+
+        team.setScore(score);
+        teamRepository.save(team);
+        log.info("Team score updated with id {} and score: {}", idTeam, score);
     }
 
     public void assignPersonalScore(Long idTeam, Integer score) throws Exception {
-        Optional<Team> optionalTeam = teamRepository.findById(idTeam);
-
-        if (optionalTeam.isPresent()) {
-            Team team = optionalTeam.get();
-            team.setScore(team.getScore() + score);
-            team.setEduEvaluated(true);
-            teamRepository.save(team);
-            log.info("Team personal score updated with id {} and score: {}", idTeam, score);
-        } else {
-            log.info("Team not found with id: {}", idTeam);
-            throw new Exception();
+        if (score < 0) {
+            log.info("Score cannot be negative");
+            throw new Exception("Score cannot be negative");
         }
-    }
 
-    public void deleteTeam(Long teamId) {
-        teamRepository.deleteById(teamId);
-        log.info("Team deleted with id: {}", teamId);
+        Team team = teamRepository.findById(idTeam).orElseThrow(
+                () -> {
+                    log.info("Team not found with id: {}", idTeam);
+                    return new Exception("Team not found with id: " + idTeam);
+                }
+        );
+
+        Battle battleOfTeam = team.getBattle();
+        if (battleOfTeam.getHasEnded()) {
+            log.info("Team score cannot be updated because the battle is closed");
+            throw new Exception("Team score cannot be updated because the battle is closed");
+        }
+
+        team.setScore(team.getScore() + score);
+        team.setEduEvaluated(true);
+        teamRepository.save(team);
+        log.info("Team personal score updated with id {} and score: {}", idTeam, score);
+
     }
 
     public void registerStudentToTeam(Long idStudent, Long idNewTeam) throws Exception {
+        // Check if the student is registered to the battle
+
         // Get the battle in which the student is enrolled
-        Optional<Battle> optionalBattleRegistered = teamRepository.findBattleByTeamId(idNewTeam);
-        Battle battleRegistered = optionalBattleRegistered.orElseThrow(
-                () -> new Exception("The team " + idNewTeam + " is not subscribed to any battle")
+        Team teamToSubscribe = teamRepository.findById(idNewTeam).orElseThrow(
+                () -> {
+                    log.info("Team not found with id: {}", idNewTeam);
+                    return new Exception("Team not found with id: " + idNewTeam);
+                }
         );
 
+        Battle battleRegistered = teamToSubscribe.getBattle();
+
         // retrieve the team of the student in the same battle
-        Optional<Team> optionalTeam = teamRepository.findTeamByBattleAndParticipationId_TeamId(
-                battleRegistered, idStudent
+        Team oldTeam = teamRepository.findTeamByStudentIdAndBattle(
+                idStudent, battleRegistered
+        ).orElseThrow(
+                () -> {
+                    log.info("Team not found with id student {} and id battle {}", idStudent, battleRegistered.getBattleId());
+                    return new Exception("Team not found with id student " + idStudent +
+                            " and id battle: " + battleRegistered.getBattleId());
+                }
         );
 
         // delete the participation of the student in the team
-        optionalTeam.ifPresent(
-                team -> participationService.deleteParticipationHavingIdTeam(idStudent, team)
-        );
+        participationService.deleteParticipationHavingIdTeam(idStudent, oldTeam);
+
+        if (oldTeam.getParticipation().isEmpty()) {
+            teamRepository.delete(oldTeam);
+            log.info("Team deleted with id: {}", oldTeam.getTeamId());
+        }
 
         // create a new participation
-        participationService.createParticipation(idStudent,
-                teamRepository.findById(idNewTeam).orElseThrow(
-                        () -> new Exception("Team not found with id: " + idNewTeam)
-                )
+        participationService.createParticipation(
+                idStudent,
+                teamToSubscribe
         );
+
         log.info("Student {} registered to team {}", idStudent, idNewTeam);
     }
 
