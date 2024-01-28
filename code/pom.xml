@@ -20,6 +20,7 @@
         <module>account-manager</module>
         <module>mail-service</module>
         <module>github-manager</module>
+        <module>solution-evaluation-service</module>
     </modules>
 
     <properties>
