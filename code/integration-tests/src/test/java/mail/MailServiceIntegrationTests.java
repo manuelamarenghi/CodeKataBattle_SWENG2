@@ -1,18 +1,14 @@
 package mail;
 
-import ckb.dto.ContainerHandler;
 import ckb.dto.account.Role;
 import ckb.dto.account.SignUpRequest;
 import ckb.dto.mail.AllStudentsMailRequest;
 import ckb.dto.mail.DirectMailRequest;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.client.WebClient;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Random;
 
@@ -27,16 +23,6 @@ public class MailServiceIntegrationTests {
     private final String accountManagerURI = "http://localhost:8086";
     private final String mailServiceURI = "http://localhost:8085";
     private final WebTestClient webTestClient = WebTestClient.bindToServer().build();
-
-    @BeforeAll
-    public static void setUp() {
-        ContainerHandler.start();
-    }
-
-    @AfterAll
-    public static void tearDown() throws IOException {
-        ContainerHandler.stop();
-    }
 
     @Test
     public void directTestWithCorrectBehaviour() {

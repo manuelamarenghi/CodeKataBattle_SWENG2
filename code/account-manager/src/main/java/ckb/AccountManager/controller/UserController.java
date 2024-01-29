@@ -19,7 +19,7 @@ public class UserController extends Controller {
 
     private final UserService userService;
 
-    @GetMapping
+    @PostMapping
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<Object> getUser(@RequestBody UserRequest request) {
         User user = userService.getUserById(request.getUserID());
