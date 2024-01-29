@@ -5,8 +5,6 @@ import org.springframework.http.ResponseEntity;
 
 public abstract class Controller {
     public abstract ResponseEntity<Object> evaluate(String repoUrl);
-    abstract boolean compile(String path);
-
     HttpHeaders getHeaders() {
         HttpHeaders headers = new HttpHeaders();
         headers.add("Access-Control-Allow-Methods", "POST, GET, OPTIONS, DELETE");
