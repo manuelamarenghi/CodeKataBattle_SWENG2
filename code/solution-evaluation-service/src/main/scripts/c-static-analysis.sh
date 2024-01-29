@@ -1,6 +1,5 @@
 #!/usr/bin/bash
 
-pwd
 cd "$1" || (echo "failed to cd into working directory"; exit)
 
 cppcheck --xml --enable=all *.c &> "error-log"
