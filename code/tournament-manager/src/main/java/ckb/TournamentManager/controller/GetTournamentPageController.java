@@ -1,14 +1,10 @@
 package ckb.TournamentManager.controller;
 
 import ckb.TournamentManager.dto.incoming.GetTournamentPageRequest;
-import ckb.TournamentManager.dto.incoming.NewTournamentRequest;
-import ckb.TournamentManager.dto.outcoming.UserRequest;
 import ckb.TournamentManager.model.TournamentRanking;
-import ckb.TournamentManager.model.User;
 import ckb.TournamentManager.service.TournamentService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
@@ -16,7 +12,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 import reactor.core.publisher.Mono;
-
 
 import java.util.Arrays;
 import java.util.Collections;
