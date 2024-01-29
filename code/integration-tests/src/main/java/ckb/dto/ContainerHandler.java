@@ -7,7 +7,7 @@ import java.io.InputStreamReader;
 
 public class ContainerHandler {
     private static final String SCRIPTS_PATH = getScriptsPath();
-    private static final int NUM_OF_CONTAINERS = 2;
+    private static final int NUM_OF_CONTAINERS = 3;
 
 
     public static void start() {
@@ -28,9 +28,12 @@ public class ContainerHandler {
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
             String line;
             int startedContainers = 0;
-            while ((line = reader.readLine()) != null && startedContainers < NUM_OF_CONTAINERS) {
+            while (startedContainers < NUM_OF_CONTAINERS && (line = reader.readLine()) != null) {
                 System.out.println(line);
-                if (line.contains("on port")) startedContainers++;
+                if (line.contains("Started AccountManagerApplication")) startedContainers++;
+                if (line.contains("Started MailServiceApplication")) startedContainers++;
+                if (line.contains("Started GitHubManagerApplication")) startedContainers++;
+
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
