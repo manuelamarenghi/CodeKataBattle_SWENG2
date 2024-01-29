@@ -18,7 +18,7 @@ public class CEvaluationController extends Controller {
     @PostMapping
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<Object> evaluate(@RequestBody String repoUrl) {
-        //pull repo
+        // pull repo
         String path = evaluationService.pullRepo(repoUrl);
         if (!path.equals("ERR")) {
             log.info("Repository at " + repoUrl + " pulled successfully ");
@@ -35,8 +35,28 @@ public class CEvaluationController extends Controller {
             log.info("Compilation successful");
         }
 
-        //TODO: run tests
-        int successfulTests = 0, failedTests = 0;
+        // run tests
+        int testsDeduction;
+        try {
+            testsDeduction = evaluationService.executeTests("c", path);
+        } catch (Exception e) {
+            log.error("Error executing tests");
+            return new ResponseEntity<>("Error executing tests", getHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        if (testsDeduction < 0) {
+            log.error("Error executing tests");
+            return new ResponseEntity<>("Error executing tests", getHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);
+        } else if (testsDeduction == 255) {
+            log.info("test run failed...");
+            return new ResponseEntity<>("Error executing tests", getHeaders(), HttpStatus.BAD_REQUEST);
+        } else {
+            log.info("tests completed, deduction: " + testsDeduction + " points");
+        }
+
+        if (testsDeduction > 0) {
+            log.info("Tests failed, no further evaluation");
+            return new ResponseEntity<>("Tests failed, no further evaluation... you suck", getHeaders(), HttpStatus.OK);
+        }
 
         // run static analysis
         int staticAnalysisDeduction = evaluationService.executeStaticAnalysis("c", path);
@@ -48,9 +68,11 @@ public class CEvaluationController extends Controller {
         }
 
         // calculate score
+        int score = 100 - testsDeduction - staticAnalysisDeduction;
+        log.info("Evaluation completed for " + repoUrl + " score: " + score);
+        if (score < 0) return new ResponseEntity<>("Too many mistakes were made, please get better...", getHeaders(), HttpStatus.BAD_REQUEST);
 
         return new ResponseEntity<>("Evaluation successful", getHeaders(), HttpStatus.OK);
-
     }
 
 }
