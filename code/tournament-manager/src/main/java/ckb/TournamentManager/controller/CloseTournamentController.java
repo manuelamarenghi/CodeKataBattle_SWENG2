@@ -2,6 +2,7 @@ package ckb.TournamentManager.controller;
 
 import ckb.TournamentManager.dto.incoming.CloseTournamentRequest;
 import ckb.TournamentManager.dto.outcoming.AbleToCloseRequest;
+import ckb.TournamentManager.model.Tournament;
 import ckb.TournamentManager.service.TournamentService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,7 +17,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 @RequiredArgsConstructor
 @CrossOrigin(origins = "*")
 
-public class CloseTournamentController extends Controller{
+public class CloseTournamentController extends Controller {
     private final TournamentService tournamentService;
     private final WebClient webClient;
 
@@ -31,7 +32,7 @@ public class CloseTournamentController extends Controller{
                 return new ResponseEntity<>("Tournament closed", getHeaders(), HttpStatus.CREATED);
             }
             else return new ResponseEntity<>("Not allowed to close tournament", getHeaders(), HttpStatus.BAD_REQUEST);
-        }else{
+        } else {
             return new ResponseEntity<>("Not possible to close", getHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -53,14 +54,27 @@ public class CloseTournamentController extends Controller{
     }
 
     private ResponseEntity<Object> checkRequest(CloseTournamentRequest request) {
-        if(request.getTournamentID() == null || request.getCreatorID() == null){
+        if (request.getTournamentID() == null) {
+            log.error("The tournament ID or the creator ID is null");
+            return new ResponseEntity<>("Invalid tournament id", getHeaders(), HttpStatus.BAD_REQUEST);
+        }
+
+        if (request.getCreatorID() == null) {
+            log.error("The creator ID is null");
+            return new ResponseEntity<>("Invalid creator id", getHeaders(), HttpStatus.BAD_REQUEST);
+        }
+
+        Tournament tournament = tournamentService.getTournament(request.getTournamentID());
+        if (tournament == null) {
             log.error("Invalid tournament id request");
             return new ResponseEntity<>("Invalid tournament id request", getHeaders(), HttpStatus.BAD_REQUEST);
         }
-        if(tournamentService.getTournament(request.getTournamentID()) == null){
-            log.error("Invalid tournament id request");
-            return new ResponseEntity<>("Invalid tournament id request", getHeaders(), HttpStatus.BAD_REQUEST);
+
+        if (!tournament.getCreatorID().equals(request.getCreatorID())) {
+            log.error("The creator ID sent is not the creator of the tournament");
+            return new ResponseEntity<>("The creator ID sent is not the creator of the tournament", getHeaders(), HttpStatus.BAD_REQUEST);
         }
+
         return new ResponseEntity<>("Valid request", getHeaders(), HttpStatus.OK);
     }
 

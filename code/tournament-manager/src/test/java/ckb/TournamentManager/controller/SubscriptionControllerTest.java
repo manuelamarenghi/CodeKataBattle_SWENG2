@@ -1,6 +1,5 @@
-package ckb.TournamentManager;
+package ckb.TournamentManager.controller;
 
-import ckb.TournamentManager.controller.SubscriptionController;
 import ckb.TournamentManager.dto.incoming.SubscriptionRequest;
 import ckb.TournamentManager.model.Tournament;
 import ckb.TournamentManager.repo.TournamentRepo;
