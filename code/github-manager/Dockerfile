@@ -1,7 +1,7 @@
 FROM openjdk:21
 
-COPY target/*.jar mail-service-app.jar
+COPY target/*.jar github-manager-app.jar
 
-ENTRYPOINT ["java","-jar","/mail-service-app.jar"]
+ENTRYPOINT ["java","-jar","/github-manager-app.jar"]
 
 EXPOSE 8083

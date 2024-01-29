@@ -1,6 +1,5 @@
-package ckb.TournamentManager;
+package ckb.TournamentManager.controller;
 
-import ckb.TournamentManager.controller.UpdateScoreController;
 import ckb.TournamentManager.dto.incoming.UpdateScoreRequest;
 import ckb.TournamentManager.model.TournamentRanking;
 import ckb.TournamentManager.repo.TournamentRankingRepo;

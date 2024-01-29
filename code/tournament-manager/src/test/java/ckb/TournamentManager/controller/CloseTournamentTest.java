@@ -1,6 +1,5 @@
-package ckb.TournamentManager;
+package ckb.TournamentManager.controller;
 
-import ckb.TournamentManager.controller.CloseTournamentController;
 import ckb.TournamentManager.dto.incoming.CloseTournamentRequest;
 import ckb.TournamentManager.model.Tournament;
 import ckb.TournamentManager.repo.PermissionRepo;
