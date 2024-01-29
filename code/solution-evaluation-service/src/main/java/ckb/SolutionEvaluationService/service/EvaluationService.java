@@ -24,11 +24,24 @@ public class EvaluationService {
         String script = SCRIPTS_PATH + "pull-repo.sh";
 
         try {
-            ProcessBuilder processBuilder = new ProcessBuilder(script, repoUrl).redirectErrorStream(true);
-
-            String path = "";
-            // git clone repoUrl
-            return path;
+            String name = repoUrl.substring(0, repoUrl.lastIndexOf("."))
+                    .replace("https://", "")
+                    .substring(repoUrl.replace("https://", "").indexOf("/") + 1)
+                    .replace("/", "_");
+            ProcessBuilder processBuilder = new ProcessBuilder(script, repoUrl, name).redirectErrorStream(true);
+            List<String> output = new ArrayList<>();
+            try {
+                Process process = processBuilder.start();
+                BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    output.add(line);
+                }
+            } catch (Exception e){
+                log.error("Error pulling repo: " + e.getMessage());
+                return "ERR";
+            }
+            return output.getLast();
         } catch (Exception e) {
             log.error("Error pulling repo: " + e.getMessage());
             return "ERR";

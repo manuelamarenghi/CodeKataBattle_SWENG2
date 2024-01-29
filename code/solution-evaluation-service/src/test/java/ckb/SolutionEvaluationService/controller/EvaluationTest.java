@@ -9,12 +9,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 public class EvaluationTest {
 
     @Autowired
-    private EvaluationService evaluationService;
+    private EvaluateController evaluateController;
 
     @Test
     public void test() {
-        int res = evaluationService.executeStaticAnalysis("c", "/home/luca/Projects/triennale/WordChecker/");
-        System.out.println(res);
+        evaluateController.evaluate("https://github.com/SigCatta/WordChecker.git");
     }
 
 }
