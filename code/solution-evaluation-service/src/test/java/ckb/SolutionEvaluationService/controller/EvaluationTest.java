@@ -1,6 +1,5 @@
 package ckb.SolutionEvaluationService.controller;
 
-import ckb.SolutionEvaluationService.service.EvaluationService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -9,7 +8,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 public class EvaluationTest {
 
     @Autowired
-    private EvaluateController evaluateController;
+    private CEvaluationController evaluateController;
 
     @Test
     public void test() {

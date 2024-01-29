@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 @RequiredArgsConstructor
 @CrossOrigin(origins = "*")
-public class EvaluateController extends Controller {
+public class CEvaluationController extends Controller {
     private final EvaluationService evaluationService;
 
     @PostMapping
@@ -27,8 +27,13 @@ public class EvaluateController extends Controller {
             return new ResponseEntity<>("Error pulling repo", getHeaders(), HttpStatus.BAD_REQUEST);
         }
 
-        //TODO: compile -> if failed 0 points
-        compile(path);
+        // compile -> if failed 0 points
+        if (!evaluationService.compile("c", path)) {
+            log.error("Compilation failed");
+            return new ResponseEntity<>("Compilation failed", getHeaders(), HttpStatus.BAD_REQUEST);
+        } else {
+            log.info("Compilation successful");
+        }
 
         //TODO: run tests
         int successfulTests = 0, failedTests = 0;
@@ -39,7 +44,6 @@ public class EvaluateController extends Controller {
             log.error("Error executing static analysis");
             return new ResponseEntity<>("Error executing static analysis", getHeaders(), HttpStatus.BAD_REQUEST);
         } else {
-            log.info("Static analysis executed successfully");
             log.info("Deduction: " + staticAnalysisDeduction);
         }
 
@@ -49,7 +53,4 @@ public class EvaluateController extends Controller {
 
     }
 
-    boolean compile(String path) {
-        return true;
-    }
 }

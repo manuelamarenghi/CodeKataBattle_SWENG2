@@ -37,7 +37,7 @@ public class EvaluationService {
                 while ((line = reader.readLine()) != null) {
                     output.add(line);
                 }
-            } catch (Exception e){
+            } catch (Exception e) {
                 log.error("Error pulling repo: " + e.getMessage());
                 return "ERR";
             }
@@ -49,8 +49,7 @@ public class EvaluationService {
     }
 
     public int executeStaticAnalysis(String language, String path) {
-        // execute static analysis
-        String script = SCRIPTS_PATH + language + "-static-analysis.sh";
+        String script = SCRIPTS_PATH + "analysis/" + language + "-static-analysis.sh";
         ProcessBuilder processBuilder = new ProcessBuilder(script, path).redirectErrorStream(true);
         Process process;
         List<String> output = new ArrayList<>();
@@ -70,15 +69,23 @@ public class EvaluationService {
         return calculateDeduction(output);
     }
 
+    public boolean compile(String language, String path) {
+        String script = SCRIPTS_PATH + "compilation/" + language + "-compiling.sh";
+        ProcessBuilder processBuilder = new ProcessBuilder(script, path).redirectErrorStream(true);
+        try {
+            return processBuilder.start().waitFor() == 0;
+        } catch (Exception e) {
+            log.error("Internal error occurred during compilation at " + path + ": " + e.getMessage());
+            return false;
+        }
+    }
+
     private int calculateDeduction(List<String> output) {
         int totalDeduction = 0;
         totalDeduction += Integer.valueOf(output.get(output.indexOf("errors") + 1)) * ERROR_DEDUCTION;
         totalDeduction += Integer.valueOf(output.get(output.indexOf("warnings") + 1)) * WARNING_DEDUCTION;
         totalDeduction += Integer.valueOf(output.get(output.indexOf("style") + 1)) * STYLE_DEDUCTION;
         return totalDeduction;
-    }
-
-    public void compile() {
     }
 
     private static String getScriptsPath() {
