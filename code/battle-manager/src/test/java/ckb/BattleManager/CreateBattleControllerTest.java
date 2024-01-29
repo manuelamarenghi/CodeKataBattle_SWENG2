@@ -2,6 +2,7 @@ package ckb.BattleManager;
 
 import ckb.BattleManager.controller.CreateBattleController;
 import ckb.BattleManager.model.Battle;
+import ckb.BattleManager.repository.BattleRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -16,6 +17,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class CreateBattleControllerTest {
     @Autowired
     private CreateBattleController createBattleController;
+    @Autowired
+    private BattleRepository battleRepository;
 
     @Test
     public void createBattle() {
@@ -41,5 +44,6 @@ class CreateBattleControllerTest {
 
         assertTrue(retrievedBattle.getStatusCode().is2xxSuccessful());
         //ResponseEntity<Battle> retrieveBattle = getBattleController.getBattlesOfTournament(new IdLong(1L));
+        battleRepository.deleteAll();
     }
 }

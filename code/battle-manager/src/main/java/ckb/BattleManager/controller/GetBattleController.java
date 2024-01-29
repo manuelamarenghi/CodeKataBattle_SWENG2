@@ -42,10 +42,12 @@ public class GetBattleController {
             // TODO: dto with manu?
             Battle battle = battleService.getBattle(idBattle.getId());
             Hibernate.initialize(battle.getTeamsRegistered());
+
             List<Pair<Long, Integer>> pairsIdTeamPoints = battle.getTeamsRegistered().stream()
                     .map(team -> Pair.of(team.getTeamId(), team.getScore()))
                     .sorted((p1, p2) -> p2.getRight().compareTo(p1.getRight()))
                     .toList();
+
             return ResponseEntity.ok(new BattleInfoMessage(pairsIdTeamPoints));
         } catch (Exception e) {
             log.info("[EXCEPTION] {}", e.getMessage());

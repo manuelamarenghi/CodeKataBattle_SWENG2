@@ -21,6 +21,7 @@
         <module>mail-service</module>
         <module>github-manager</module>
         <module>tournament-manager</module>
+        <module>battle-manager</module>
     </modules>
 
     <properties>

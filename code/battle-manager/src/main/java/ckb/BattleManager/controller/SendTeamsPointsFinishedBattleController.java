@@ -48,6 +48,6 @@ public class SendTeamsPointsFinishedBattleController {
     }
 
     public void initDebug() {
-        url = "http://localhost:8184/api/tournament/UpdateScore";
+        url = "http://localhost:8084/api/tournament/UpdateScore";
     }
 }

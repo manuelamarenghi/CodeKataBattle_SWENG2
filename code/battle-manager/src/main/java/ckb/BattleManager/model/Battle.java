@@ -2,6 +2,7 @@ package ckb.BattleManager.model;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -12,6 +13,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class Battle {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,7 +24,7 @@ public class Battle {
     @Column(unique = true)
     private String repositoryLink;
 
-    @OneToMany(mappedBy = "battle")
+    @OneToMany(mappedBy = "battle", fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     private List<Team> teamsRegistered;
 
     private int minStudents;

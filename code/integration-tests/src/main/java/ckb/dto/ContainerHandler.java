@@ -7,7 +7,7 @@ import java.io.InputStreamReader;
 
 public class ContainerHandler {
     private static final String SCRIPTS_PATH = getScriptsPath();
-    private static final int NUM_OF_CONTAINERS = 4;
+    private static final int NUM_OF_CONTAINERS = 5;
 
 
     public static void start() {
@@ -34,7 +34,7 @@ public class ContainerHandler {
                 if (line.contains("Started MailServiceApplication")) startedContainers++;
                 if (line.contains("Started GitHubManagerApplication")) startedContainers++;
                 if (line.contains("Started TournamentManagerApplication")) startedContainers++;
-
+                if (line.contains("Started BattleManagerApplication")) startedContainers++;
             }
         } catch (IOException e) {
             throw new RuntimeException(e);

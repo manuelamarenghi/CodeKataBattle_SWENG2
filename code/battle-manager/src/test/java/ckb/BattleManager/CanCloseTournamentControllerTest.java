@@ -30,29 +30,29 @@ class CanCloseTournamentControllerTest {
 
     @BeforeAll
     void setUp() {
-        Battle battle = new Battle();
-        battle.setTournamentId(1L);
-        battle.setRepositoryLink("link1");
-        battle.setSubDeadline(LocalDateTime.of(2022, 1, 1, 0, 0));
-        battleRepository.save(battle);
+        Battle battle1 = new Battle();
+        battle1.setTournamentId(1L);
+        battle1.setRepositoryLink("link1");
+        battle1.setSubDeadline(LocalDateTime.of(2022, 1, 1, 0, 0));
+        battleRepository.save(battle1);
 
-        battle = new Battle();
-        battle.setTournamentId(1L);
-        battle.setRepositoryLink("link2");
-        battle.setSubDeadline(LocalDateTime.of(2022, 1, 2, 0, 0));
-        battleRepository.save(battle);
+        Battle battle2 = new Battle();
+        battle2.setTournamentId(1L);
+        battle2.setRepositoryLink("link2");
+        battle2.setSubDeadline(LocalDateTime.of(2022, 1, 2, 0, 0));
+        battleRepository.save(battle2);
 
-        battle = new Battle();
-        battle.setTournamentId(2L);
-        battle.setRepositoryLink("link3");
-        battle.setSubDeadline(LocalDateTime.of(2022, 1, 1, 0, 0));
-        battleRepository.save(battle);
+        Battle battle3 = new Battle();
+        battle3.setTournamentId(2L);
+        battle3.setRepositoryLink("link3");
+        battle3.setSubDeadline(LocalDateTime.of(2022, 1, 1, 0, 0));
+        battleRepository.save(battle3);
 
-        battle = new Battle();
-        battle.setTournamentId(2L);
-        battle.setRepositoryLink("link4");
-        battle.setSubDeadline(LocalDateTime.now().plusDays(1));
-        battleRepository.save(battle);
+        Battle battle4 = new Battle();
+        battle4.setTournamentId(2L);
+        battle4.setRepositoryLink("link4");
+        battle4.setSubDeadline(LocalDateTime.now().plusDays(1));
+        battleRepository.save(battle4);
     }
 
     @Test

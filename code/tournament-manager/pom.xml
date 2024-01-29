@@ -11,12 +11,12 @@
 	<artifactId>tournament-manager</artifactId>
     <version>1</version>
     <name>tournament-manager</name>
-
 	<description>Tournament manager for CodeKataBattle</description>
 	<properties>
 		<java.version>21</java.version>
 	</properties>
-	<dependencies>
+
+    <dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
