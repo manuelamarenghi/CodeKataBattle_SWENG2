@@ -21,7 +21,11 @@ public class EvaluationService {
     private final int STYLE_DEDUCTION = 2;
 
     public String pullRepo(String repoUrl) {
+        String script = SCRIPTS_PATH + "pull-repo.sh";
+
         try {
+            ProcessBuilder processBuilder = new ProcessBuilder(script, repoUrl).redirectErrorStream(true);
+
             String path = "";
             // git clone repoUrl
             return path;
