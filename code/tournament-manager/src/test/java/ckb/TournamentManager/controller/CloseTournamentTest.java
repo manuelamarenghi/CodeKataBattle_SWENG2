@@ -2,7 +2,6 @@ package ckb.TournamentManager.controller;
 
 import ckb.TournamentManager.dto.incoming.CloseTournamentRequest;
 import ckb.TournamentManager.model.Tournament;
-import ckb.TournamentManager.repo.PermissionRepo;
 import ckb.TournamentManager.repo.TournamentRepo;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -12,9 +11,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.ResponseEntity;
 
+import java.util.Calendar;
 import java.util.Date;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockserver.model.HttpRequest.request;
 import static org.mockserver.model.HttpResponse.response;
 
@@ -24,9 +24,8 @@ public class CloseTournamentTest {
     private CloseTournamentController closetController;
     @Autowired
     private TournamentRepo tournamentRepo;
-    @Autowired
-    private PermissionRepo permissionRepo;
     private static ClientAndServer mockServer;
+
     @BeforeEach
     public void startMockServer() {
         mockServer = ClientAndServer.startClientAndServer(8082);
@@ -35,6 +34,7 @@ public class CloseTournamentTest {
     public void stopMockServer() {
         mockServer.stop();
     }
+
     @Test
     public void correctTest() {
         boolean b = true;
@@ -46,7 +46,7 @@ public class CloseTournamentTest {
                         .withStatusCode(200)
                         .withBody(String.valueOf(b)));
         Long tournamentID = null;
-        Date d = new Date((2024 - 1900), 01, 20);
+        Date d = new Date((2024 - 1900), Calendar.FEBRUARY, 20);
         Tournament t = new Tournament();
         t.setRegdeadline(d);
         t.setStatus(true);
@@ -56,9 +56,10 @@ public class CloseTournamentTest {
         Long creatorID = 7L;
         request = new CloseTournamentRequest(tournamentID,creatorID);
         ResponseEntity<Object> response = closetController.CloseTournament(request);
-        assertTrue(response.getBody().equals("Tournament closed"));
+        assertEquals("Tournament closed", response.getBody());
         tournamentRepo.deleteById(tournamentID);
     }
+
     @Test
     public void cannotcloseTest() {
         boolean b = false;
@@ -70,7 +71,7 @@ public class CloseTournamentTest {
                         .withStatusCode(200)
                         .withBody(String.valueOf(b)));
         Long tournamentID = null;
-        Date d = new Date((2024 - 1900), 01, 20);
+        Date d = new Date((2024 - 1900), Calendar.FEBRUARY, 20);
         Tournament t = new Tournament();
         t.setRegdeadline(d);
         t.setStatus(true);
@@ -80,12 +81,14 @@ public class CloseTournamentTest {
         Long creatorID = 7L;
         request = new CloseTournamentRequest(tournamentID,creatorID);
         ResponseEntity<Object> response = closetController.CloseTournament(request);
-        assertTrue(response.getBody().equals("Not possible to close"));
+
+        assertEquals("Not possible to close", response.getBody());
         tournamentRepo.deleteById(tournamentID);
     }
+
     @Test
     public void TournamentNullTest() {
-        Date d = new Date((2024-1900),01,20);
+        Date d = new Date((2024 - 1900), Calendar.FEBRUARY, 20);
         Tournament t = new Tournament();
         t.setRegdeadline(d);
         t.setStatus(false);
@@ -95,11 +98,12 @@ public class CloseTournamentTest {
         Long creatorID = 7L;
         CloseTournamentRequest request = new CloseTournamentRequest(tournamentID,creatorID);
         ResponseEntity<Object> response = closetController.CloseTournament(request);
-        assertTrue(response.getBody().equals("Invalid tournament id request"));
+        assertEquals("Invalid tournament id", response.getBody());
     }
+
     @Test
     public void TournamentNotExistsTest() {
-        Date d = new Date((2024-1900),01,20);
+        Date d = new Date((2024 - 1900), Calendar.FEBRUARY, 20);
         Tournament t = new Tournament();
         t.setRegdeadline(d);
         t.setStatus(false);
@@ -109,10 +113,11 @@ public class CloseTournamentTest {
         Long creatorID = 7L;
         CloseTournamentRequest request = new CloseTournamentRequest(tournamentID,creatorID);
         ResponseEntity<Object> response = closetController.CloseTournament(request);
-        assertTrue(response.getBody().equals("Invalid tournament id request"));
+        assertEquals("Invalid tournament id request", response.getBody());
     }
+
     @Test
-    public void WronIDCreator(){
+    public void WrongIDCreator() {
         boolean b = true;
         CloseTournamentRequest request;
         mockServer.when(request()
@@ -122,7 +127,7 @@ public class CloseTournamentTest {
                         .withStatusCode(200)
                         .withBody(String.valueOf(b)));
         Long tournamentID = null;
-        Date d = new Date((2024 - 1900), 01, 20);
+        Date d = new Date((2024 - 1900), Calendar.FEBRUARY, 20);
         Tournament t = new Tournament();
         t.setRegdeadline(d);
         t.setStatus(true);
@@ -132,7 +137,7 @@ public class CloseTournamentTest {
         Long creatorID = 7L;
         request = new CloseTournamentRequest(tournamentID,creatorID);
         ResponseEntity<Object> response = closetController.CloseTournament(request);
-        assertTrue(response.getBody().equals("Not allowed to close tournament"));
+        assertEquals("The creator ID sent is not the creator of the tournament", response.getBody());
         tournamentRepo.deleteById(tournamentID);
     }
 }
