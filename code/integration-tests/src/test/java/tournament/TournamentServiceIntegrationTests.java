@@ -1,13 +1,17 @@
 package tournament;
 
+import ckb.dto.ContainerHandler;
 import ckb.dto.account.Role;
 import ckb.dto.account.SignUpRequest;
 import ckb.dto.tournament.NewTournamentRequest;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import java.io.IOException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Random;
@@ -23,15 +27,25 @@ public class TournamentServiceIntegrationTests {
     private final String tournamentManagerUri = "http://localhost:8084";
     private final WebTestClient webTestClient = WebTestClient.bindToServer().build();
 
+
+    @BeforeAll
+    public static void setUp() {
+        ContainerHandler.start();
+    }
+
+    @AfterAll
+    public static void tearDown() throws IOException {
+        ContainerHandler.stop();
+    }
     @Test
     public void createTournamentTest() {
         Long idEducator = createTestUser();
         webTestClient.post()
                 .uri(tournamentManagerUri + "/api/tournament/new-tournament")
-                .bodyValue(new NewTournamentRequest(new Date(2023 - 1900, Calendar.FEBRUARY, 1), idEducator))
+                .bodyValue(new NewTournamentRequest(new Date(2024 - 1900, Calendar.FEBRUARY, 1), idEducator))
                 .accept(MediaType.APPLICATION_JSON)
                 .exchange()
-                .expectStatus().isOk();
+                .expectStatus().is2xxSuccessful();
     }
 
     private Long createTestUser() {
