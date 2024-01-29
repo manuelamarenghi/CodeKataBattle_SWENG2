@@ -5,7 +5,7 @@ import org.springframework.http.ResponseEntity;
 
 public abstract class Controller {
     public abstract ResponseEntity<Object> evaluate(String repoUrl);
-    abstract boolean compile();
+    abstract boolean compile(String path);
 
     HttpHeaders getHeaders() {
         HttpHeaders headers = new HttpHeaders();

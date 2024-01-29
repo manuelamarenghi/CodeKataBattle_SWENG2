@@ -18,7 +18,7 @@ public class EvaluateController extends Controller {
     @PostMapping
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<Object> evaluate(@RequestBody String repoUrl) {
-        //TODO: pull repo
+        //pull repo
         String path = evaluationService.pullRepo(repoUrl);
         if (!path.equals("ERR")) {
             log.info("Repository at " + repoUrl + " pulled successfully ");
@@ -28,7 +28,7 @@ public class EvaluateController extends Controller {
         }
 
         //TODO: compile -> if failed 0 points
-        evaluationService.compile();
+        compile(path);
 
         //TODO: run tests
         int successfulTests = 0, failedTests = 0;
@@ -49,7 +49,7 @@ public class EvaluateController extends Controller {
 
     }
 
-    boolean compile() {
+    boolean compile(String path) {
         return true;
     }
 }
