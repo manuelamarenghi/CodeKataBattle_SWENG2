@@ -80,6 +80,24 @@ public class EvaluationService {
         }
     }
 
+    public int executeTests(String language, String path) {
+        String script = SCRIPTS_PATH + "test-execution/" + language + "-test-execution.sh";
+        ProcessBuilder processBuilder = new ProcessBuilder(script, path).redirectErrorStream(true);
+        try {
+            Process process = processBuilder.start();
+            BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+            String line;
+            while ((line = reader.readLine()) != null) {
+                log.info(line);
+            }
+            reader.close();
+            return process.waitFor();
+        } catch (Exception e) {
+            log.error("Error executing tests: " + e.getMessage());
+            return -1;
+        }
+    }
+
     private int calculateDeduction(List<String> output) {
         int totalDeduction = 0;
         totalDeduction += Integer.valueOf(output.get(output.indexOf("errors") + 1)) * ERROR_DEDUCTION;
