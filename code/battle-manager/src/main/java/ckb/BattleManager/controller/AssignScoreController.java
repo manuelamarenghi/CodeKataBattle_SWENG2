@@ -1,6 +1,6 @@
 package ckb.BattleManager.controller;
 
-import ckb.BattleManager.dto.input.PairTeamScore;
+import ckb.BattleManager.dto.input.AssignScoreRequest;
 import ckb.BattleManager.service.TeamService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +29,7 @@ public class AssignScoreController {
      * @return a ResponseEntity
      */
     @PostMapping("/assign-score")
-    public ResponseEntity<Object> assignScore(@RequestBody PairTeamScore request) {
+    public ResponseEntity<Object> assignScore(@RequestBody AssignScoreRequest request) {
         log.info("[API REQUEST] Assign score request with id_team: {}, score: {}", request.getIdTeam(), request.getScore());
         try {
             teamService.assignScore(request.getIdTeam(), request.getScore());
@@ -41,7 +41,7 @@ public class AssignScoreController {
     }
 
     @PostMapping("/assign-personal-score")
-    public ResponseEntity<Object> assignPersonalScore(@RequestBody PairTeamScore request) {
+    public ResponseEntity<Object> assignPersonalScore(@RequestBody AssignScoreRequest request) {
         log.info("[API REQUEST] Assign personal score request with id_team: {}, score: {}", request.getIdTeam(), request.getScore());
         try {
             teamService.assignPersonalScore(request.getIdTeam(), request.getScore());

@@ -1,6 +1,6 @@
 package ckb.BattleManager.controller;
 
-import ckb.BattleManager.dto.input.IdLong;
+import ckb.BattleManager.dto.input.GetBattleRequest;
 import ckb.BattleManager.dto.output.BattleInfoMessage;
 import ckb.BattleManager.model.Battle;
 import ckb.BattleManager.service.BattleService;
@@ -31,16 +31,16 @@ public class GetBattleController {
     /**
      * Method to get a battle
      *
-     * @param idBattle id of the battle
+     * @param request id of the battle
      * @return a ResponseEntity with the battle or a not found status
      */
     @GetMapping("/get-battle")
-    public ResponseEntity<BattleInfoMessage> getBattle(@RequestBody IdLong idBattle) {
-        log.info("[API REQUEST] Get battle request with id: {}", idBattle.getId());
+    public ResponseEntity<BattleInfoMessage> getBattle(@RequestBody GetBattleRequest request) {
+        log.info("[API REQUEST] Get battle request with id: {}", request.getBattleId());
 
         try {
             // TODO: dto with manu?
-            Battle battle = battleService.getBattle(idBattle.getId());
+            Battle battle = battleService.getBattle(request.getBattleId());
             Hibernate.initialize(battle.getTeamsRegistered());
 
             List<Pair<Long, Integer>> pairsIdTeamPoints = battle.getTeamsRegistered().stream()
@@ -63,8 +63,8 @@ public class GetBattleController {
      * @return a ResponseEntity with the list of ids of the battles
      */
     @GetMapping("/get-battles-tournament")
-    public ResponseEntity<List<Long>> getBattlesOfTournament(@RequestBody IdLong idTournament) {
-        log.info("[API REQUEST] Get battles of tournament request with id: {}", idTournament.getId());
-        return ResponseEntity.ok(battleService.getBattleOfTournament(idTournament.getId()));
+    public ResponseEntity<List<Long>> getBattlesOfTournament(@RequestBody GetBattleRequest idTournament) {
+        log.info("[API REQUEST] Get battles of tournament request with id: {}", idTournament.getBattleId());
+        return ResponseEntity.ok(battleService.getBattleOfTournament(idTournament.getBattleId()));
     }
 }

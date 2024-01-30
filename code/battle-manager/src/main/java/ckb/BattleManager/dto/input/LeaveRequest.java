@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class IdLong {
-    private Long id;
+public class LeaveRequest {
+    private Long idStudent;
+    private Long idBattle;
 }

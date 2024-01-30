@@ -1,6 +1,6 @@
 package ckb.BattleManager.controller;
 
-import ckb.BattleManager.dto.input.IdLong;
+import ckb.BattleManager.dto.input.CloseTournamentRequest;
 import ckb.BattleManager.service.BattleService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,13 +26,13 @@ public class CanCloseTournamentController {
      * in order to determine if a tournament can be closed
      * ATTENTION: I cannot control the id of the tournament
      *
-     * @param idTournament id of the tournament
+     * @param request id of the tournament
      * @return a ResponseEntity with a true if the tournament can be close, false otherwise
      */
     @PostMapping("/battles-finished")
-    public ResponseEntity<Boolean> canCloseTournament(@RequestBody IdLong idTournament) {
-        log.info("[API REQUEST] Battle finished request with id tournament: {}", idTournament.getId());
+    public ResponseEntity<Boolean> canCloseTournament(@RequestBody CloseTournamentRequest request) {
+        log.info("[API REQUEST] Battle finished request with id tournament: {}", request.getIdTournament());
 
-        return ResponseEntity.ok(battleService.canCloseTournament(idTournament.getId()));
+        return ResponseEntity.ok(battleService.canCloseTournament(request.getIdTournament()));
     }
 }

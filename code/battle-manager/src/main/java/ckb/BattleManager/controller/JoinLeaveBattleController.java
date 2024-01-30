@@ -1,6 +1,7 @@
 package ckb.BattleManager.controller;
 
-import ckb.BattleManager.dto.input.StudentBattle;
+import ckb.BattleManager.dto.input.JoinRequest;
+import ckb.BattleManager.dto.input.LeaveRequest;
 import ckb.BattleManager.service.BattleService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +30,7 @@ public class JoinLeaveBattleController {
      * @return a ResponseEntity with ok status or a bad request
      */
     @PostMapping("/join-battle")
-    public ResponseEntity<Object> joinBattle(@RequestBody StudentBattle request) {
+    public ResponseEntity<Object> joinBattle(@RequestBody JoinRequest request) {
         log.info("[API REQUEST] Join battle request with id_battle: {}, id_student: {}", request.getIdBattle(), request.getIdStudent());
         try {
             battleService.joinBattle(request.getIdStudent(), request.getIdBattle());
@@ -47,7 +48,7 @@ public class JoinLeaveBattleController {
      * @return a ResponseEntity with ok status
      */
     @PostMapping("/leave-battle")
-    public ResponseEntity<Object> leaveBattle(@RequestBody StudentBattle request) {
+    public ResponseEntity<Object> leaveBattle(@RequestBody LeaveRequest request) {
         log.info("[API REQUEST] Leave battle request with id_battle: {}, id_student: {}", request.getIdBattle(), request.getIdStudent());
         try {
             battleService.leaveBattle(request.getIdStudent(), request.getIdBattle());

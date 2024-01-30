@@ -1,7 +1,7 @@
 package ckb.BattleManager;
 
 import ckb.BattleManager.controller.CanCloseTournamentController;
-import ckb.BattleManager.dto.input.IdLong;
+import ckb.BattleManager.dto.input.CloseTournamentRequest;
 import ckb.BattleManager.model.Battle;
 import ckb.BattleManager.repository.BattleRepository;
 import org.junit.jupiter.api.AfterAll;
@@ -57,12 +57,14 @@ class CanCloseTournamentControllerTest {
 
     @Test
     void canCloseTournamentSuccess() {
-        assertEquals(Boolean.TRUE, canCloseTournamentController.canCloseTournament(new IdLong(1L)).getBody());
+        assertEquals(Boolean.TRUE, canCloseTournamentController.canCloseTournament(
+                new CloseTournamentRequest(1L)).getBody());
     }
 
     @Test
     void canCloseTournamentFail() {
-        assertEquals(Boolean.FALSE, canCloseTournamentController.canCloseTournament(new IdLong(2L)).getBody());
+        assertEquals(Boolean.FALSE, canCloseTournamentController.canCloseTournament(
+                new CloseTournamentRequest(2L)).getBody());
     }
 
     @AfterAll

@@ -1,16 +1,15 @@
-package ckb.TournamentManager.model;
+package ckb.BattleManager.model;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-import java.io.Serializable;
-
-
-@Getter
-@Setter
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class User implements Serializable {
+public class User {
     private long id;
     private String email;
     private String fullName;

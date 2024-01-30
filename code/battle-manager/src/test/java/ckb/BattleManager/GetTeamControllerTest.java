@@ -1,7 +1,7 @@
 package ckb.BattleManager;
 
 import ckb.BattleManager.controller.GetTeamController;
-import ckb.BattleManager.dto.input.IdLong;
+import ckb.BattleManager.dto.input.GetBattleRequest;
 import ckb.BattleManager.dto.output.TeamInfoMessage;
 import ckb.BattleManager.model.Battle;
 import ckb.BattleManager.model.Team;
@@ -54,7 +54,7 @@ class GetTeamControllerTest {
     @Test
     public void getTeam() {
         long idTeam = 1L;
-        ResponseEntity<TeamInfoMessage> retrievedTeam = getTeamController.getTeam(new IdLong(idTeam));
+        ResponseEntity<TeamInfoMessage> retrievedTeam = getTeamController.getTeam(new GetBattleRequest(idTeam));
         if (teamRepository.existsById(idTeam)) {
             assertTrue(retrievedTeam.getStatusCode().is2xxSuccessful());
             assertNotNull(retrievedTeam.getBody());
@@ -65,7 +65,7 @@ class GetTeamControllerTest {
 
     @Test
     public void getTeamsOfBattle() {
-        ResponseEntity<List<Team>> retrievedTeams = getTeamController.getTeamsOfBattle(new IdLong(battle.getBattleId()));
+        ResponseEntity<List<Team>> retrievedTeams = getTeamController.getTeamsOfBattle(new GetBattleRequest(battle.getBattleId()));
         if (teamRepository.existsByBattle(battle)) {
             assertTrue(retrievedTeams.getStatusCode().is2xxSuccessful());
             assertNotNull(retrievedTeams.getBody());

@@ -5,9 +5,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
-public class StudentBattle {
+@AllArgsConstructor
+public class AcceptStudentTeamRequest {
     private Long idStudent;
-    private Long idBattle;
+    private Long idTeam;
 }

@@ -1,6 +1,6 @@
 package ckb.BattleManager.controller;
 
-import ckb.BattleManager.dto.input.IdLong;
+import ckb.BattleManager.dto.input.GetBattleRequest;
 import ckb.BattleManager.dto.output.TeamInfoMessage;
 import ckb.BattleManager.model.Team;
 import ckb.BattleManager.service.BattleService;
@@ -41,10 +41,10 @@ public class GetTeamController {
      * @return a ResponseEntity with the team or a not found status
      */
     @GetMapping("/get-team")
-    public ResponseEntity<TeamInfoMessage> getTeam(@RequestBody IdLong idTeam) {
-        log.info("[API REQUEST] Get team request with id: {}", idTeam.getId());
+    public ResponseEntity<TeamInfoMessage> getTeam(@RequestBody GetBattleRequest idTeam) {
+        log.info("[API REQUEST] Get team request with id: {}", idTeam.getBattleId());
         try {
-            Team team = teamService.getTeam(idTeam.getId());
+            Team team = teamService.getTeam(idTeam.getBattleId());
             Hibernate.initialize(team.getParticipation());
             List<String> participationName = team.getParticipation()
                     .stream()
@@ -73,10 +73,10 @@ public class GetTeamController {
      * @return a ResponseEntity with the list of ids of the teams
      */
     @GetMapping("/get-teams-battle")
-    public ResponseEntity<List<Team>> getTeamsOfBattle(@RequestBody IdLong idBattle) {
-        log.info("[API REQUEST] Get teams of battle request with id: {}", idBattle.getId());
+    public ResponseEntity<List<Team>> getTeamsOfBattle(@RequestBody GetBattleRequest idBattle) {
+        log.info("[API REQUEST] Get teams of battle request with id: {}", idBattle.getBattleId());
         try {
-            return ResponseEntity.ok(battleService.getAllTeamsOfBattle(idBattle.getId()));
+            return ResponseEntity.ok(battleService.getAllTeamsOfBattle(idBattle.getBattleId()));
         } catch (Exception e) {
             log.info("[EXCEPTION] {}", e.getMessage());
             return ResponseEntity.badRequest().build();

@@ -1,6 +1,6 @@
 package ckb.BattleManager.controller;
 
-import ckb.BattleManager.dto.input.StudentTeam;
+import ckb.BattleManager.dto.input.AcceptStudentTeamRequest;
 import ckb.BattleManager.service.TeamService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +23,7 @@ public class RegisterStudentToTeamController {
     }
 
     @PostMapping("/register-student-team")
-    public ResponseEntity<Object> registerStudentToTeam(@RequestBody StudentTeam request) {
+    public ResponseEntity<Object> registerStudentToTeam(@RequestBody AcceptStudentTeamRequest request) {
         log.info("[API REQUEST] Register student to team request with id_team: {}, id_student: {}", request.getIdTeam(), request.getIdStudent());
         try {
             teamService.registerStudentToTeam(request.getIdStudent(), request.getIdTeam());

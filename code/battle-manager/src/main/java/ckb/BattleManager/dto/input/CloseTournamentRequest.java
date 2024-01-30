@@ -7,7 +7,6 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class StudentTeam {
-    private Long idStudent;
-    private Long idTeam;
+public class CloseTournamentRequest {
+    private Long idTournament;
 }

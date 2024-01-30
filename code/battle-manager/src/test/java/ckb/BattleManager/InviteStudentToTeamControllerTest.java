@@ -1,7 +1,7 @@
 package ckb.BattleManager;
 
 import ckb.BattleManager.controller.InviteStudentToTeamController;
-import ckb.BattleManager.dto.input.StudentTeam;
+import ckb.BattleManager.dto.input.InviteStudentTeamRequest;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -41,7 +41,7 @@ class InviteStudentToTeamControllerTest {
         inviteStudentToTeamController.initDebug();
         ResponseEntity<Object> response = inviteStudentToTeamController
                 .inviteStudentToTeam(
-                        new StudentTeam(1L, 1L)
+                        new InviteStudentTeamRequest(1L, 1L)
                 );
 
         assertTrue(response.getStatusCode().is2xxSuccessful());

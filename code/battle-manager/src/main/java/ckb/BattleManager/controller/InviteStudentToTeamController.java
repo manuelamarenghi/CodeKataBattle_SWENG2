@@ -1,6 +1,6 @@
 package ckb.BattleManager.controller;
 
-import ckb.BattleManager.dto.input.StudentTeam;
+import ckb.BattleManager.dto.input.InviteStudentTeamRequest;
 import ckb.BattleManager.dto.output.DirectMailRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -31,7 +31,7 @@ public class InviteStudentToTeamController {
      * @return
      */
     @PostMapping("/invite-student-to-team")
-    public ResponseEntity<Object> inviteStudentToTeam(@RequestBody StudentTeam request) {
+    public ResponseEntity<Object> inviteStudentToTeam(@RequestBody InviteStudentTeamRequest request) {
         log.info("[API REQUEST] Invite student to team request with id_team: {}, id_student: {}", request.getIdTeam(), request.getIdStudent());
         String response = webClientBuilder.build()
                 .post()

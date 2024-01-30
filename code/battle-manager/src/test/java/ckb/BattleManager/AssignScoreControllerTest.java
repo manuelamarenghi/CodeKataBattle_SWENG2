@@ -1,7 +1,7 @@
 package ckb.BattleManager;
 
 import ckb.BattleManager.controller.AssignScoreController;
-import ckb.BattleManager.dto.input.PairTeamScore;
+import ckb.BattleManager.dto.input.AssignScoreRequest;
 import ckb.BattleManager.model.Battle;
 import ckb.BattleManager.model.Team;
 import ckb.BattleManager.repository.BattleRepository;
@@ -58,7 +58,7 @@ class AssignScoreControllerTest {
     @Test
     public void assignScore() {
         ResponseEntity<Object> response = assignScoreController.assignScore(
-                new PairTeamScore(team.getTeamId(), 100));
+                new AssignScoreRequest(team.getTeamId(), 100));
 
         Optional<Team> teamRetrieved = teamRepository.findById(team.getTeamId());
         if (teamRetrieved.isPresent()) {
@@ -71,7 +71,7 @@ class AssignScoreControllerTest {
     @Test
     public void assignPersonalScore() {
         ResponseEntity<Object> response = assignScoreController.assignPersonalScore(
-                new PairTeamScore(team.getTeamId(), 50));
+                new AssignScoreRequest(team.getTeamId(), 50));
 
         Optional<Team> teamRetrieved = teamRepository.findById(team.getTeamId());
         if (teamRetrieved.isPresent()) {
@@ -86,9 +86,9 @@ class AssignScoreControllerTest {
     public void assignScoreAndPersonalScore() {
         int scoreSubmission = 60, scorePersonal = 110;
         ResponseEntity<Object> response1 = assignScoreController.assignScore(
-                new PairTeamScore(team.getTeamId(), scoreSubmission));
+                new AssignScoreRequest(team.getTeamId(), scoreSubmission));
         ResponseEntity<Object> response2 = assignScoreController.assignPersonalScore(
-                new PairTeamScore(team.getTeamId(), scorePersonal));
+                new AssignScoreRequest(team.getTeamId(), scorePersonal));
 
         Optional<Team> teamRetrieved = teamRepository.findById(team.getTeamId());
         if (teamRetrieved.isPresent()) {

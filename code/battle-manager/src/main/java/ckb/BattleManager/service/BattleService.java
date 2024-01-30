@@ -1,5 +1,6 @@
 package ckb.BattleManager.service;
 
+import ckb.BattleManager.dto.input.CreateBattleRequest;
 import ckb.BattleManager.model.Battle;
 import ckb.BattleManager.model.Team;
 import ckb.BattleManager.repository.BattleRepository;
@@ -30,8 +31,21 @@ public class BattleService {
         });
     }
 
-    public void createBattle(Battle battle) {
+    public void createBattle(CreateBattleRequest battleRequest) {
+        Battle battle = Battle.builder()
+                .tournamentId(battleRequest.getTournamentId())
+                .authorId(battleRequest.getAuthorId())
+                .minStudents(battleRequest.getMinStudents())
+                .maxStudents(battleRequest.getMaxStudents())
+                .battleToEval(battleRequest.getBattleToEval())
+                .regDeadline(battleRequest.getRegDeadline())
+                .subDeadline(battleRequest.getSubDeadline())
+                .hasStarted(false)
+                .hasEnded(false)
+                .isClosed(false)
+                .build();
         battleRepository.save(battle);
+        battle.setRepositoryLink("Code-Kata-Battle/" + battle.getBattleId());
         log.info("Battle created with id: {}", battle.getBattleId());
     }
 

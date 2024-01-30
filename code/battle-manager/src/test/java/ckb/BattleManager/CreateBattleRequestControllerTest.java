@@ -1,7 +1,7 @@
 package ckb.BattleManager;
 
 import ckb.BattleManager.controller.CreateBattleController;
-import ckb.BattleManager.model.Battle;
+import ckb.BattleManager.dto.input.CreateBattleRequest;
 import ckb.BattleManager.repository.BattleRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +14,7 @@ import java.time.Month;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest
-class CreateBattleControllerTest {
+class CreateBattleRequestControllerTest {
     @Autowired
     private CreateBattleController createBattleController;
     @Autowired
@@ -23,17 +23,16 @@ class CreateBattleControllerTest {
     @Test
     public void createBattle() {
         long idTournament = 1L;
-        String repositoryLink = "link4";
         int minStudents = 1;
         int maxStudents = 2;
         LocalDateTime regDeadline = LocalDateTime.of(2024, Month.JANUARY, 2, 10, 0);
         LocalDateTime subDeadline = LocalDateTime.of(2024, Month.JANUARY, 10, 12, 0);
         boolean battleToEval = true;
 
-        Battle battle = new Battle();
+        CreateBattleRequest battle = new CreateBattleRequest();
 
         battle.setTournamentId(idTournament);
-        battle.setRepositoryLink(repositoryLink);
+        battle.setAuthorId(1L);
         battle.setMinStudents(minStudents);
         battle.setMaxStudents(maxStudents);
         battle.setRegDeadline(regDeadline);

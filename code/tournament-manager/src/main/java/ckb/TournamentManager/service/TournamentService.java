@@ -84,9 +84,11 @@ public class TournamentService {
         }
         else return false;
     }
-    public boolean PermissionAlreadyIn(Long tournamentID, Long userID){
+
+    public boolean permissionExists(Long tournamentID, Long userID) {
         return permissionRepo.findByTournamentIDAndUserID(tournamentID,userID).isPresent();
     }
+
     public boolean updateScore(UpdateScoreRequest request){
         List<TournamentRanking> records = tournamentRankingRepo.findAllByTournamentID(request.getTournamentID());
         System.out.println("before: "+records);

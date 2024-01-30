@@ -1,7 +1,7 @@
 package ckb.BattleManager;
 
 import ckb.BattleManager.controller.RegisterStudentToTeamController;
-import ckb.BattleManager.dto.input.StudentTeam;
+import ckb.BattleManager.dto.input.AcceptStudentTeamRequest;
 import ckb.BattleManager.model.Battle;
 import ckb.BattleManager.model.Participation;
 import ckb.BattleManager.model.ParticipationId;
@@ -68,7 +68,7 @@ class RegisterStudentToTeamControllerTest {
     @Test
     void registerStudentToTeam() {
         ResponseEntity<Object> response = registerStudentToTeamController.registerStudentToTeam(
-                new StudentTeam(1L, newTeam.getTeamId())
+                new AcceptStudentTeamRequest(1L, newTeam.getTeamId())
         );
 
         assertTrue(response.getStatusCode().is2xxSuccessful());

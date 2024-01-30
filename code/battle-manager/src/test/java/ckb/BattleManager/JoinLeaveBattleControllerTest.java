@@ -1,7 +1,8 @@
 package ckb.BattleManager;
 
 import ckb.BattleManager.controller.JoinLeaveBattleController;
-import ckb.BattleManager.dto.input.StudentBattle;
+import ckb.BattleManager.dto.input.JoinRequest;
+import ckb.BattleManager.dto.input.LeaveRequest;
 import ckb.BattleManager.model.Battle;
 import ckb.BattleManager.model.Participation;
 import ckb.BattleManager.model.ParticipationId;
@@ -49,7 +50,7 @@ class JoinLeaveBattleControllerTest {
     public void joinBattleLeaveBattle() {
         // Join
         Long idStudent = 1L;
-        ResponseEntity<Object> response = joinLeaveBattleController.joinBattle(new StudentBattle(idStudent, battle.getBattleId()));
+        ResponseEntity<Object> response = joinLeaveBattleController.joinBattle(new JoinRequest(idStudent, battle.getBattleId()));
         assertTrue(response.getStatusCode().is2xxSuccessful());
 
         Optional<Team> optionalTeam = teamRepository.findTeamByStudentIdAndBattle(idStudent, battle);
@@ -58,7 +59,7 @@ class JoinLeaveBattleControllerTest {
         assertTrue(teamRepository.existsById(optionalTeam.get().getTeamId()));
 
         // Leave
-        response = joinLeaveBattleController.leaveBattle(new StudentBattle(idStudent, battle.getBattleId()));
+        response = joinLeaveBattleController.leaveBattle(new LeaveRequest(idStudent, battle.getBattleId()));
         assertTrue(response.getStatusCode().is2xxSuccessful());
 
         Optional<Participation> participation = participationRepository.findById(new ParticipationId(idStudent, optionalTeam.get()));

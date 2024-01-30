@@ -69,17 +69,7 @@ public class TeamService {
     }
 
     public void assignScore(Long idTeam, Integer score) throws Exception {
-        if (score < 0) {
-            log.info("Score cannot be negative");
-            throw new Exception("Score cannot be negative");
-        }
-
-        Team team = teamRepository.findById(idTeam).orElseThrow(
-                () -> {
-                    log.info("Team not found with id: {}", idTeam);
-                    return new Exception("Team not found with id: " + idTeam);
-                }
-        );
+        Team team = checkScoreAndRetrieveTeam(idTeam, score);
 
         Battle battleOfTeam = team.getBattle();
 
@@ -94,17 +84,7 @@ public class TeamService {
     }
 
     public void assignPersonalScore(Long idTeam, Integer score) throws Exception {
-        if (score < 0) {
-            log.info("Score cannot be negative");
-            throw new Exception("Score cannot be negative");
-        }
-
-        Team team = teamRepository.findById(idTeam).orElseThrow(
-                () -> {
-                    log.info("Team not found with id: {}", idTeam);
-                    return new Exception("Team not found with id: " + idTeam);
-                }
-        );
+        Team team = checkScoreAndRetrieveTeam(idTeam, score);
 
         Battle battleOfTeam = team.getBattle();
         if (battleOfTeam.getHasEnded()) {
@@ -117,6 +97,20 @@ public class TeamService {
         teamRepository.save(team);
         log.info("Team personal score updated with id {} and score: {}", idTeam, score);
 
+    }
+
+    private Team checkScoreAndRetrieveTeam(Long idTeam, Integer score) throws Exception {
+        if (score < 0) {
+            log.info("Score cannot be negative");
+            throw new Exception("Score cannot be negative");
+        }
+
+        return teamRepository.findById(idTeam).orElseThrow(
+                () -> {
+                    log.info("Team not found with id: {}", idTeam);
+                    return new Exception("Team not found with id: " + idTeam);
+                }
+        );
     }
 
     public void registerStudentToTeam(Long idStudent, Long idNewTeam) throws Exception {
