@@ -1,6 +1,5 @@
-package ckb.BattleManager;
+package ckb.BattleManager.controller;
 
-import ckb.BattleManager.controller.RegisterStudentToTeamController;
 import ckb.BattleManager.dto.input.AcceptStudentTeamRequest;
 import ckb.BattleManager.model.Battle;
 import ckb.BattleManager.model.Participation;

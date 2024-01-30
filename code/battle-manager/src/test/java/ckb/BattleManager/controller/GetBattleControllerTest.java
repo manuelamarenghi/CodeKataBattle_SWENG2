@@ -1,6 +1,5 @@
-package ckb.BattleManager;
+package ckb.BattleManager.controller;
 
-import ckb.BattleManager.controller.GetBattleController;
 import ckb.BattleManager.dto.input.GetBattleRequest;
 import ckb.BattleManager.dto.output.BattleInfoMessage;
 import ckb.BattleManager.model.Battle;

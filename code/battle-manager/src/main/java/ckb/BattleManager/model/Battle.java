@@ -24,7 +24,6 @@ public class Battle {
 
     private Long tournamentId;
 
-    @Column(unique = true)
     private String repositoryLink;
 
     @OneToMany(mappedBy = "battle", fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.REMOVE})

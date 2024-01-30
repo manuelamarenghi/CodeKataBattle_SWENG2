@@ -36,7 +36,7 @@ public class JoinLeaveBattleController {
             battleService.joinBattle(request.getIdStudent(), request.getIdBattle());
             return ResponseEntity.ok().build();
         } catch (Exception e) {
-            log.info("[EXCEPTION] {}", e.getMessage());
+            log.error("[EXCEPTION] {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
@@ -54,7 +54,7 @@ public class JoinLeaveBattleController {
             battleService.leaveBattle(request.getIdStudent(), request.getIdBattle());
             return ResponseEntity.ok().build();
         } catch (Exception e) {
-            log.info("[EXCEPTION] {}", e.getMessage());
+            log.error("[EXCEPTION] {}", e.getMessage());
             return ResponseEntity.badRequest().build();
         }
     }

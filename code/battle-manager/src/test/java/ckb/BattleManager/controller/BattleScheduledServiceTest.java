@@ -1,7 +1,5 @@
-package ckb.BattleManager;
+package ckb.BattleManager.controller;
 
-import ckb.BattleManager.controller.SendTeamsPointsFinishedBattleController;
-import ckb.BattleManager.controller.StartBattleController;
 import ckb.BattleManager.model.Battle;
 import ckb.BattleManager.model.Participation;
 import ckb.BattleManager.model.ParticipationId;

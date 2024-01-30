@@ -1,5 +1,6 @@
 package ckb.BattleManager.controller;
 
+import ckb.BattleManager.dto.input.AssignPersonalScoreRequest;
 import ckb.BattleManager.dto.input.AssignScoreRequest;
 import ckb.BattleManager.service.TeamService;
 import lombok.extern.slf4j.Slf4j;
@@ -33,6 +34,7 @@ public class AssignScoreController {
         log.info("[API REQUEST] Assign score request with id_team: {}, score: {}", request.getIdTeam(), request.getScore());
         try {
             teamService.assignScore(request.getIdTeam(), request.getScore());
+            log.info("Successfully assigned score {} to team {}", request.getScore(), request.getIdTeam());
             return ResponseEntity.ok().build();
         } catch (Exception e) {
             log.info("[EXCEPTION] {}", e.getMessage());
@@ -41,11 +43,11 @@ public class AssignScoreController {
     }
 
     @PostMapping("/assign-personal-score")
-    public ResponseEntity<Object> assignPersonalScore(@RequestBody AssignScoreRequest request) {
-        //TODO: watch if the educator has permission
-        log.info("[API REQUEST] Assign personal score request with id_team: {}, score: {}", request.getIdTeam(), request.getScore());
+    public ResponseEntity<Object> assignPersonalScore(@RequestBody AssignPersonalScoreRequest request) {
+        log.info("[API REQUEST] Assign personal score request with id_team: {}, score: {} by educator {}", request.getIdTeam(), request.getScore(), request.getIdEducator());
         try {
-            teamService.assignPersonalScore(request.getIdTeam(), request.getScore());
+            teamService.assignPersonalScore(request.getIdTeam(), request.getScore(), request.getIdEducator());
+            log.info("Successfully assigned personal score {} to team {} by educator {}", request.getScore(), request.getIdTeam(), request.getIdEducator());
             return ResponseEntity.ok().build();
         } catch (Exception e) {
             log.info("[EXCEPTION] {}", e.getMessage());

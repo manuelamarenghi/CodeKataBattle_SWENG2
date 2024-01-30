@@ -1,6 +1,5 @@
-package ckb.BattleManager;
+package ckb.BattleManager.controller;
 
-import ckb.BattleManager.controller.CreateBattleController;
 import ckb.BattleManager.dto.input.CreateBattleRequest;
 import ckb.BattleManager.repository.BattleRepository;
 import org.json.JSONException;

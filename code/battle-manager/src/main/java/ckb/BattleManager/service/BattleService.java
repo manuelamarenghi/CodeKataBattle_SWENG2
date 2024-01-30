@@ -5,6 +5,7 @@ import ckb.BattleManager.model.Battle;
 import ckb.BattleManager.model.Team;
 import ckb.BattleManager.repository.BattleRepository;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,7 +27,7 @@ public class BattleService {
 
     public Battle getBattle(Long id) throws Exception {
         return battleRepository.findById(id).orElseThrow(() -> {
-            log.info("Battle not found with id: {}", id);
+            log.error("Battle not found with id: {}", id);
             return new Exception("Battle not found with id: " + id);
         });
     }
@@ -58,22 +59,12 @@ public class BattleService {
     }
 
     public void joinBattle(Long idStudent, Long idBattle) throws Exception {
-        Battle battle = battleRepository.findById(idBattle).orElseThrow(
-                () -> {
-                    log.info("Battle not found with id: {}", idBattle);
-                    return new Exception("Battle not found with id: " + idBattle);
-                }
-        );
+        Battle battle = getBattle(idBattle);
         teamService.createTeam(idStudent, battle);
     }
 
     public void leaveBattle(Long idStudent, Long idBattle) throws Exception {
-        Battle battle = battleRepository.findById(idBattle).orElseThrow(
-                () -> {
-                    log.info("Battle not found with id: {}", idBattle);
-                    return new Exception("Battle not found with id: " + idBattle);
-                }
-        );
+        Battle battle = getBattle(idBattle);
         teamService.deleteParticipation(idStudent, battle);
     }
 
@@ -86,19 +77,27 @@ public class BattleService {
                 break;
             }
         }
+
+        log.info("The tournament {} can be closed? {}", idTournament, canClose);
         return canClose;
     }
 
-    public List<Team> getAllTeamsOfBattle(Long idBattle) throws Exception {
-        Battle battle = battleRepository.findById(idBattle).orElseThrow(() -> {
-            log.info("Battle not found with id: {}", idBattle);
-            return new Exception("Battle not found with id: " + idBattle);
-        });
-        return battle.getTeamsRegistered();
+    public List<Pair<Long, Integer>> getAllTeamsOfBattle(Long idBattle) throws Exception {
+        Battle battle = getBattle(idBattle);
+
+        return battle.getTeamsRegistered().stream()
+                .map(team -> Pair.of(team.getTeamId(), team.getScore()))
+                .sorted((p1, p2) -> p2.getRight().compareTo(p1.getRight()))
+                .toList();
     }
 
     public String getOfficialRepo(Long teamId) throws Exception {
         Team team = teamService.getTeam(teamId);
         return team.getBattle().getRepositoryLink();
+    }
+
+    public Team getListParticipation(Long battleId, Long studentId) throws Exception {
+        Battle battle = getBattle(battleId);
+        return teamService.getTeam(battle, studentId);
     }
 }

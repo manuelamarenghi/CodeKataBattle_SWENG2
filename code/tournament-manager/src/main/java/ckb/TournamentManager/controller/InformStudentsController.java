@@ -4,6 +4,7 @@ import ckb.TournamentManager.dto.incoming.InformStudentsRequest;
 import ckb.TournamentManager.dto.outcoming.DirectMailRequest;
 import ckb.TournamentManager.model.Tournament;
 import ckb.TournamentManager.service.TournamentService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,6 +15,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 
 @RestController
 @RequestMapping("/api/tournament/inform-students")
+@Slf4j
 public class InformStudentsController extends Controller {
     private final WebClient webClient = WebClient.create();
 
@@ -22,6 +24,9 @@ public class InformStudentsController extends Controller {
 
     @PostMapping
     public ResponseEntity<Object> informStudents(@RequestBody InformStudentsRequest request) {
+        log.info("[API REQUEST] Inform students of a tournament: {} for the battle {}",
+                request.getTournamentId(), request.getBattleName());
+
         Tournament tournament = tournamentService.getTournament(request.getTournamentId());
         String content = "A new battle called " + request.getBattleName() + " was created in the" +
                 " tournament " + tournament.getName() + ".";
@@ -41,9 +46,12 @@ public class InformStudentsController extends Controller {
                 .block();
 
         if (response == null || response.getStatusCode().is4xxClientError()) {
+            log.error("[ERROR] Error while informing students of a tournament: {}", request.getTournamentId());
             return ResponseEntity.badRequest().build();
         }
 
+        log.info("Successfully Informed all the students of a tournament: {} for the battle {}",
+                request.getTournamentId(), request.getBattleName());
         return ResponseEntity.ok().build();
     }
 }

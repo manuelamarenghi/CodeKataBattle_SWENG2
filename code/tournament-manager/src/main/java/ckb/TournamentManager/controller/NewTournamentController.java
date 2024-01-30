@@ -19,8 +19,8 @@ import org.springframework.web.reactive.function.client.WebClient;
 @RequiredArgsConstructor
 @CrossOrigin(origins = "*")
 public class NewTournamentController extends Controller {
-     private final TournamentService tournamentService;
-    private final WebClient webClient = WebClient.builder().build();
+    private final TournamentService tournamentService;
+    private final WebClient webClient = WebClient.create();
 
     @PostMapping
     public ResponseEntity<Object> newTournament(@RequestBody NewTournamentRequest request) {
@@ -69,7 +69,7 @@ public class NewTournamentController extends Controller {
             return new ResponseEntity<>("Creator ID is null", getHeaders(), HttpStatus.BAD_REQUEST);
         }
 
-        if(request.getRegdeadline().before(new java.util.Date())){
+        if (request.getRegdeadline().before(new java.util.Date())) {
             log.error("Registration deadline is in the past");
             return new ResponseEntity<>("Registration deadline is in the past", getHeaders(), HttpStatus.BAD_REQUEST);
         }

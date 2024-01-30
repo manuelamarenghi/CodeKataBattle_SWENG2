@@ -6,7 +6,6 @@ import ckb.BattleManager.model.Battle;
 import ckb.BattleManager.service.BattleService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.tuple.Pair;
-import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,6 +27,7 @@ public class GetBattleController {
         this.battleService = battleService;
     }
 
+    //TODO: can it be removed? Equal to get-teams-battle
     /**
      * Method to get a battle
      *
@@ -41,7 +41,6 @@ public class GetBattleController {
         try {
             // TODO: dto with manu?
             Battle battle = battleService.getBattle(request.getBattleId());
-            Hibernate.initialize(battle.getTeamsRegistered());
 
             List<Pair<Long, Integer>> pairsIdTeamPoints = battle.getTeamsRegistered().stream()
                     .map(team -> Pair.of(team.getTeamId(), team.getScore()))
@@ -65,6 +64,8 @@ public class GetBattleController {
     @GetMapping("/get-battles-tournament")
     public ResponseEntity<List<Long>> getBattlesOfTournament(@RequestBody GetBattleRequest idTournament) {
         log.info("[API REQUEST] Get battles of tournament request with id: {}", idTournament.getBattleId());
-        return ResponseEntity.ok(battleService.getBattlesTournament(idTournament.getBattleId()));
+        List<Long> battleIds = battleService.getBattlesTournament(idTournament.getBattleId());
+        log.info("The battles of the tournament {} are: {}", idTournament.getBattleId(), battleIds);
+        return ResponseEntity.ok(battleIds);
     }
 }

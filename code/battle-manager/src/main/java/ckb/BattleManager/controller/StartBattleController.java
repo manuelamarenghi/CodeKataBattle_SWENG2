@@ -10,17 +10,13 @@ import org.springframework.web.reactive.function.client.WebClient;
 @RestController
 @Slf4j
 public class StartBattleController {
-    private final WebClient.Builder webClientBuilder;
-    private String url = "http://github-manager:8083/api/github/create-repo";
+    private final WebClient webClient = WebClient.create();
+    private String githubManagerUri = "http://github-manager:8083";
 
-    public StartBattleController() {
-        this.webClientBuilder = WebClient.builder();
-    }
 
     public String startBattle(Battle battleToStart) throws Exception {
-        ResponseEntity<String> response = webClientBuilder.build()
-                .post()
-                .uri(url)
+        ResponseEntity<String> response = webClient.post()
+                .uri(githubManagerUri + "/api/github/create-repo")
                 .bodyValue(
                         new StartBattleMessage(
                                 battleToStart.getBattleId()
@@ -45,6 +41,6 @@ public class StartBattleController {
     }
 
     public void initDebug() {
-        url = "http://localhost:8083/api/github/create-repo";
+        githubManagerUri = "http://localhost:8083";
     }
 }

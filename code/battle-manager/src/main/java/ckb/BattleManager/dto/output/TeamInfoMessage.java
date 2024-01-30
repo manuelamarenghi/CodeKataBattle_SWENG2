@@ -10,5 +10,4 @@ import java.util.List;
 public class TeamInfoMessage {
     List<String> participantsName;
     private Long teamId;
-    private Integer score;
 }

@@ -28,8 +28,7 @@ public class BattleServiceIntegrationTests {
     private static final WebClient webClient = WebClient.create();
     private final int GENERATE_EMAIL_LENGTH = 20;
     private final WebTestClient webTestClient = WebTestClient.bindToServer()
-            .responseTimeout(Duration.ofSeconds(30)).baseUrl(battleManagerUri).build();
-
+            .responseTimeout(Duration.ofSeconds(30)).build();
 
     @Test
     public void createBattleTest() {

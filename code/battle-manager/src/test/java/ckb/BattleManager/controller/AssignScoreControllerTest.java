@@ -1,6 +1,6 @@
-package ckb.BattleManager;
+package ckb.BattleManager.controller;
 
-import ckb.BattleManager.controller.AssignScoreController;
+import ckb.BattleManager.dto.input.AssignPersonalScoreRequest;
 import ckb.BattleManager.dto.input.AssignScoreRequest;
 import ckb.BattleManager.model.Battle;
 import ckb.BattleManager.model.Team;
@@ -15,6 +15,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.ResponseEntity;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -36,14 +37,17 @@ class AssignScoreControllerTest {
 
     @BeforeEach
     void setUp() {
-        Battle battle = new Battle();
-        battle.setTournamentId(1L);
-        battle.setRepositoryLink("link");
-        battle.setRegDeadline(LocalDateTime.now().minusMinutes(10));
-        battle.setSubDeadline(LocalDateTime.now().plusMinutes(1));
-        battle.setHasStarted(true);
-        battle.setHasEnded(false);
-        battle.setIsClosed(false);
+        Battle battle = Battle.builder()
+                .tournamentId(1L)
+                .repositoryLink("link")
+                .authorId(1L)
+                .regDeadline(LocalDateTime.now().minusMinutes(10))
+                .subDeadline(LocalDateTime.now().plusMinutes(1))
+                .battleToEval(true)
+                .hasStarted(true)
+                .hasEnded(false)
+                .isClosed(false)
+                .build();
 
         team = new Team();
         team.setBattle(battle);
@@ -51,8 +55,9 @@ class AssignScoreControllerTest {
         team.setScore(0);
         team.setEduEvaluated(false);
 
+        battle.setTeamsRegistered(List.of(team));
+
         battleRepository.save(battle);
-        teamRepository.save(team);
     }
 
     @Test
@@ -71,15 +76,15 @@ class AssignScoreControllerTest {
     @Test
     public void assignPersonalScore() {
         ResponseEntity<Object> response = assignScoreController.assignPersonalScore(
-                new AssignScoreRequest(team.getTeamId(), 50));
+                new AssignPersonalScoreRequest(team.getTeamId(), 50, 1L));
 
         Optional<Team> teamRetrieved = teamRepository.findById(team.getTeamId());
-        if (teamRetrieved.isPresent()) {
-            assertNotNull(response);
-            assertTrue(response.getStatusCode().is2xxSuccessful());
-            assertEquals(50, teamRetrieved.get().getScore());
-            assertTrue(teamRetrieved.get().getEduEvaluated());
-        }
+        assertNotNull(response);
+        assertTrue(response.getStatusCode().is2xxSuccessful());
+        assertNotNull(teamRetrieved);
+        assertTrue(teamRetrieved.isPresent());
+        assertEquals(50, teamRetrieved.get().getScore());
+        assertTrue(teamRetrieved.get().getEduEvaluated());
     }
 
     @Test
@@ -88,18 +93,49 @@ class AssignScoreControllerTest {
         ResponseEntity<Object> response1 = assignScoreController.assignScore(
                 new AssignScoreRequest(team.getTeamId(), scoreSubmission));
         ResponseEntity<Object> response2 = assignScoreController.assignPersonalScore(
-                new AssignScoreRequest(team.getTeamId(), scorePersonal));
+                new AssignPersonalScoreRequest(team.getTeamId(), scorePersonal, 1L));
+        ResponseEntity<Object> response3 = assignScoreController.assignPersonalScore(
+                new AssignPersonalScoreRequest(team.getTeamId(), scorePersonal, 1L));
 
         Optional<Team> teamRetrieved = teamRepository.findById(team.getTeamId());
-        if (teamRetrieved.isPresent()) {
-            assertNotNull(response1);
-            assertNotNull(response2);
-            assertTrue(response1.getStatusCode().is2xxSuccessful());
-            assertTrue(response2.getStatusCode().is2xxSuccessful());
 
-            assertEquals(scorePersonal + scoreSubmission, teamRetrieved.get().getScore());
-            assertTrue(teamRetrieved.get().getEduEvaluated());
-        }
+        assertNotNull(response1);
+        assertNotNull(response2);
+        assertTrue(response1.getStatusCode().is2xxSuccessful());
+        assertTrue(response2.getStatusCode().is2xxSuccessful());
+
+        assertTrue(teamRetrieved.isPresent());
+        assertEquals(scorePersonal + scoreSubmission, teamRetrieved.get().getScore());
+        assertTrue(teamRetrieved.get().getEduEvaluated());
+
+        assertTrue(response3.getStatusCode().is4xxClientError());
+    }
+
+    @Test
+    public void assignScoreNegative() {
+        ResponseEntity<Object> response = assignScoreController.assignScore(
+                new AssignScoreRequest(team.getTeamId(), -100));
+
+        assertNotNull(response);
+        assertTrue(response.getStatusCode().is4xxClientError());
+    }
+
+    @Test
+    public void assignPersonalScoreNegative() {
+        ResponseEntity<Object> response = assignScoreController.assignPersonalScore(
+                new AssignPersonalScoreRequest(team.getTeamId(), -100, 1L));
+
+        assertNotNull(response);
+        assertTrue(response.getStatusCode().is4xxClientError());
+    }
+
+    @Test
+    public void assignScoreWrongEducatorId() {
+        ResponseEntity<Object> response = assignScoreController.assignPersonalScore(
+                new AssignPersonalScoreRequest(team.getTeamId(), 100, 2L));
+
+        assertNotNull(response);
+        assertTrue(response.getStatusCode().is4xxClientError());
     }
 
     @AfterEach

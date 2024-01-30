@@ -21,8 +21,7 @@ public class Team {
     @ManyToOne
     private Battle battle;
 
-    @OneToMany(mappedBy = "participationId.team", fetch = FetchType.EAGER,
-            cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+    @OneToMany(mappedBy = "participationId.team", fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     private List<Participation> participation;
 
     private String repositoryLink;

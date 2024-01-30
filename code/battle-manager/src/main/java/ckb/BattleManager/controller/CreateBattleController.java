@@ -37,6 +37,7 @@ public class CreateBattleController {
 
         try {
             checkBattleRequest(request);
+            ;
             battleService.createBattle(request);
             informAllStudentsOfTournament(request.getTournamentId(), request.getName());
             return ResponseEntity.ok().build();
@@ -61,6 +62,8 @@ public class CreateBattleController {
             log.error("[ERROR] Inform students of tournament error");
             throw new Exception("Inform students of tournament error");
         }
+
+        log.info("Successfully informed all students of tournament");
     }
 
     private void checkBattleRequest(CreateBattleRequest request) throws Exception {
@@ -146,6 +149,8 @@ public class CreateBattleController {
             log.error("[ERROR] Permission not found");
             throw new Exception("Permission not found");
         }
+
+        log.info("The request to create a new battle is valid");
     }
 
     public void initTestMode() {

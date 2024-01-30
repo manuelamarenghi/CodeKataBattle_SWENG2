@@ -1,6 +1,5 @@
-package ckb.BattleManager;
+package ckb.BattleManager.controller;
 
-import ckb.BattleManager.controller.JoinLeaveBattleController;
 import ckb.BattleManager.dto.input.JoinRequest;
 import ckb.BattleManager.dto.input.LeaveRequest;
 import ckb.BattleManager.model.Battle;

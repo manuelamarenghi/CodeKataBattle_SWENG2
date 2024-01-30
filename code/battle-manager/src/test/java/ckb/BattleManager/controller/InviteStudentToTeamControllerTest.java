@@ -1,6 +1,5 @@
-package ckb.BattleManager;
+package ckb.BattleManager.controller;
 
-import ckb.BattleManager.controller.InviteStudentToTeamController;
 import ckb.BattleManager.dto.input.InviteStudentTeamRequest;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
