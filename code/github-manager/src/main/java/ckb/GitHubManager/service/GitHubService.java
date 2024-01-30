@@ -23,11 +23,27 @@ public class GitHubService {
                     .autoInit(true) // creates a README.md as a first commit
                     .allowForking(true)
                     .defaultBranch("main")
-                    .private_(false)
+                    .private_(true)
                     .create();
-        } catch (Exception e){
+        } catch (Exception e) {
             log.error("Error while creating repository {}\n", repoName);
             return null;
+        }
+    }
+
+    public GHRepository getRepo(String repoName) {
+        try {
+            return GitHub.connectUsingOAuth(token).getRepository(repoName);
+        } catch (Exception e) {
+            log.error("Error while getting repository {}\n", repoName);
+            throw new RuntimeException("Could not find repository");
+        }
+    }
+    public void makeRepositoryPublic(String repoName) {
+        try {
+            getRepo(repoName).setVisibility(GHRepository.Visibility.PUBLIC);
+        } catch (IOException e) {
+            throw new RuntimeException("Could not connect to GitHub");
         }
     }
 
@@ -45,9 +61,9 @@ public class GitHubService {
     public GHContent fetchSources(GHRepository repo, String filePath) throws IOException {
         GHRef ref = repo.getRef("heads/main");
         GHCommit commit = repo.getCommit(ref.getObject().getSha());
-        try{
+        try {
             return repo.getFileContent(filePath, commit.getSHA1());
-        } catch (GHFileNotFoundException e){
+        } catch (GHFileNotFoundException e) {
             log.error("file not found for path: {}", filePath);
             return null;
         }
