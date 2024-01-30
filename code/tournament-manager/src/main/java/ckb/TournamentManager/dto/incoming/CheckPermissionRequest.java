@@ -8,6 +8,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CheckPermissionRequest {
-    private Long tournamentID;
-    private Long educatorID;
+    private Long tournamentId;
+    private Long educatorId;
 }

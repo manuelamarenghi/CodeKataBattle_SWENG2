@@ -134,6 +134,7 @@ public class CreateBattleController {
             throw new Exception("User is not an educator");
         }
 
+        log.info("TournamentId {} ; AuthorId {}", request.getTournamentId(), request.getAuthorId());
         ResponseEntity<Object> responseEntityPermission = webClient.post()
                 .uri(tournamentManagerUri + "/api/tournament/check-permission")
                 .bodyValue(new CheckPermissionRequest(request.getTournamentId(), request.getAuthorId()))

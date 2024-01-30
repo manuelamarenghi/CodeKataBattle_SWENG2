@@ -20,7 +20,9 @@ public class CheckPermissionController {
 
     @PostMapping
     public ResponseEntity<Object> checkPermission(@RequestBody CheckPermissionRequest request) {
-        if (tournamentService.permissionExists(request.getTournamentID(), request.getEducatorID())) {
+        log.info("Checking permission Tournament: {} ; EducatorId: {}", request.getTournamentId(), request.getEducatorId());
+
+        if (tournamentService.permissionExists(request.getTournamentId(), request.getEducatorId())) {
             return ResponseEntity.ok().build();
         } else {
             return ResponseEntity.notFound().build();

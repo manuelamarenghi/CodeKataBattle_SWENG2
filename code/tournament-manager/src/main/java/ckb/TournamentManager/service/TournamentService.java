@@ -29,12 +29,9 @@ public class TournamentService {
                 .status(true)
                 .build();
 
-        tournament.setRegdeadline(request.getRegdeadline());
-        tournament.setStatus(true);
-        tournament.setCreatorID(request.getCreatorID());
         tournamentRepo.save(tournament);
-
         permissionRepo.save(new Permission(tournament.getTournamentID(), tournament.getCreatorID()));
+
         return tournament;
     }
 
@@ -61,15 +58,13 @@ public class TournamentService {
         Tournament t = tournamentRepo.findByTournamentID(request.getTournamentID()).orElse(null);
         if (t.getCreatorID().equals(request.getCreatorID())) {
             permissionRepo.save(p);
-            String tournamentUrl = "http://tournament-service/tournaments/" + request.getTournamentID();
-            return tournamentUrl;
+            return "http://tournament-service/tournaments/" + request.getTournamentID();
         }
         else return null;
     }
 
     public List<TournamentRanking> getTournamentPage(GetTournamentPageRequest request) {
-        List<TournamentRanking> rankings = tournamentRankingRepo.findAllByTournamentIDOrderByScoreDesc(request.getTournamentID());
-        return rankings;
+        return tournamentRankingRepo.findAllByTournamentIDOrderByScoreDesc(request.getTournamentID());
     }
 
     public List<Tournament> getAllTournaments(){
@@ -91,7 +86,7 @@ public class TournamentService {
     }
 
     public boolean permissionExists(Long tournamentID, Long userID) {
-        return permissionRepo.findByTournamentIDAndUserID(tournamentID,userID).isPresent();
+        return permissionRepo.findByTournamentIDAndUserID(tournamentID, userID).isPresent();
     }
 
     public boolean updateScore(UpdateScoreRequest request){

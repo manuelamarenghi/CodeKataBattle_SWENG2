@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Calendar;
 import java.util.Date;
@@ -26,7 +27,8 @@ public class BattleServiceIntegrationTests {
     private final String tournamentManagerUri = "http://localhost:8087";
     private static final WebClient webClient = WebClient.create();
     private final int GENERATE_EMAIL_LENGTH = 20;
-    private final WebTestClient webTestClient = WebTestClient.bindToServer().build();
+    private final WebTestClient webTestClient = WebTestClient.bindToServer()
+            .responseTimeout(Duration.ofSeconds(30)).baseUrl(battleManagerUri).build();
 
 
     @Test
@@ -51,7 +53,6 @@ public class BattleServiceIntegrationTests {
                 .exchange()
                 .expectStatus().is2xxSuccessful();
 
-        //TODO: test the method
         webTestClient.post()
                 .uri(battleManagerUri + "/api/battle/create-battle")
                 .bodyValue(new CreateBattleRequest(

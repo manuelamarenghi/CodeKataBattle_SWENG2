@@ -14,9 +14,8 @@ import org.springframework.web.reactive.function.client.WebClient;
 
 @RestController
 @RequestMapping("/api/tournament/inform-students")
-public class InformStudentsController {
-    private String mailServiceUri = "http://mail-service:8085";
-    private WebClient webClient = WebClient.create();
+public class InformStudentsController extends Controller {
+    private final WebClient webClient = WebClient.create();
 
     @Autowired
     private TournamentService tournamentService;
@@ -27,8 +26,8 @@ public class InformStudentsController {
         String content = "A new battle called " + request.getBattleName() + " was created in the" +
                 " tournament " + tournament.getName() + ".";
 
-        ResponseEntity<Object> response = webClient.post()
-                .uri(mailServiceUri + "api/mail/direct")
+        ResponseEntity<String> response = webClient.post()
+                .uri(mailServiceUri + "/api/mail/direct")
                 .bodyValue(
                         new DirectMailRequest(
                                 tournamentService.getStudentsSubscribed(request.getTournamentId())
@@ -38,7 +37,7 @@ public class InformStudentsController {
                         )
                 )
                 .retrieve()
-                .toEntity(Object.class)
+                .toEntity(String.class)
                 .block();
 
         if (response == null || response.getStatusCode().is4xxClientError()) {

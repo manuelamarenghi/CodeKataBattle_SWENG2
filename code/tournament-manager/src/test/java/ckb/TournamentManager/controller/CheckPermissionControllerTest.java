@@ -11,6 +11,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import java.util.Calendar;
 import java.util.Date;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 @SpringBootTest
 class CheckPermissionControllerTest {
 
@@ -29,6 +31,10 @@ class CheckPermissionControllerTest {
                 true,
                 1L
         ));
+
+        assertTrue(permissionRepo.findByTournamentIDAndUserID(1L, 1L).isEmpty());
+
         permissionRepo.save(new Permission(1L, 1L));
+        assertTrue(permissionRepo.findByTournamentIDAndUserID(1L, 1L).isPresent());
     }
 }
