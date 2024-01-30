@@ -14,13 +14,20 @@ fi
 cd "$1" || exit 255
 
 # clone the official repo to get the official tests
-rm -rf tests/ # have to remove any tests/directories
+rm -rf tests/ # have to remove any tests/ directories
 
-git clone "$2" "official_repo"
+git clone "$2" "official_repo" || exit 255
+
+readarray -t officialTestDir < <(find . -wholename "./official_repo/tests")
+
+if (( ${#officialTestDir[@]} == 0 )); then
+    echo "No tests found in official repo, exiting..."
+    exit 255
+fi
 
 mv "official_repo/tests" "tests"
 
-# run all tests
+# check number of tests
 readarray -t inputFiles < <(find . -type f -name 'input_*')
 readarray -t outputFiles < <(find . -type f -name 'output_*')
 
@@ -29,6 +36,7 @@ if (( ${#inputFiles[@]} != ${#outputFiles[@]} )); then
     exit 255
 fi
 
+# run all tests and count results
 passedTests=0
 failedTests=0
 for (( i=1; i<=${#inputFiles[@]}; i++ )); do
@@ -43,6 +51,7 @@ for (( i=1; i<=${#inputFiles[@]}; i++ )); do
     fi
 done
 
+# calculate the deduction and return it
 totalDeduction=$((failedTests * DEDUCTION_PER_FAIL))
 
 if (( totalDeduction > 100 )); then
