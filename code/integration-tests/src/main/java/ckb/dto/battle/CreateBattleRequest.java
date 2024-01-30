@@ -11,6 +11,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class CreateBattleRequest {
     private Long tournamentId;
+    private String name;
     private Long authorId;
     private Integer minStudents;
     private Integer maxStudents;

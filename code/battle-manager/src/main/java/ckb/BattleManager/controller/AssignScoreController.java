@@ -42,6 +42,7 @@ public class AssignScoreController {
 
     @PostMapping("/assign-personal-score")
     public ResponseEntity<Object> assignPersonalScore(@RequestBody AssignScoreRequest request) {
+        //TODO: watch if the educator has permission
         log.info("[API REQUEST] Assign personal score request with id_team: {}, score: {}", request.getIdTeam(), request.getScore());
         try {
             teamService.assignPersonalScore(request.getIdTeam(), request.getScore());

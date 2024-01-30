@@ -108,7 +108,6 @@ class BattleScheduledServiceTest {
                 )
         );
 
-        // TODO: port!!!
         mockServer = ClientAndServer.startClientAndServer(8087);
         mockServer
                 .when(HttpRequest.request()

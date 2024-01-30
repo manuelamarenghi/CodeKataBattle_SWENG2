@@ -34,6 +34,7 @@ public class BattleService {
     public void createBattle(CreateBattleRequest battleRequest) {
         Battle battle = Battle.builder()
                 .tournamentId(battleRequest.getTournamentId())
+                .name(battleRequest.getName())
                 .authorId(battleRequest.getAuthorId())
                 .minStudents(battleRequest.getMinStudents())
                 .maxStudents(battleRequest.getMaxStudents())
@@ -45,11 +46,10 @@ public class BattleService {
                 .isClosed(false)
                 .build();
         battleRepository.save(battle);
-        battle.setRepositoryLink("Code-Kata-Battle/" + battle.getBattleId());
         log.info("Battle created with id: {}", battle.getBattleId());
     }
 
-    public List<Long> getBattleOfTournament(Long idTournament) {
+    public List<Long> getBattlesTournament(Long idTournament) {
         return battleRepository
                 .findBattlesByTournamentId(idTournament)
                 .stream()
@@ -95,5 +95,10 @@ public class BattleService {
             return new Exception("Battle not found with id: " + idBattle);
         });
         return battle.getTeamsRegistered();
+    }
+
+    public String getOfficialRepo(Long teamId) throws Exception {
+        Team team = teamService.getTeam(teamId);
+        return team.getBattle().getRepositoryLink();
     }
 }

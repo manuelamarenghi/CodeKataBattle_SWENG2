@@ -65,6 +65,6 @@ public class GetBattleController {
     @GetMapping("/get-battles-tournament")
     public ResponseEntity<List<Long>> getBattlesOfTournament(@RequestBody GetBattleRequest idTournament) {
         log.info("[API REQUEST] Get battles of tournament request with id: {}", idTournament.getBattleId());
-        return ResponseEntity.ok(battleService.getBattleOfTournament(idTournament.getBattleId()));
+        return ResponseEntity.ok(battleService.getBattlesTournament(idTournament.getBattleId()));
     }
 }

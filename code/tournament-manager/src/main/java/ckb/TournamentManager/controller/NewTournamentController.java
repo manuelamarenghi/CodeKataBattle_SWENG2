@@ -3,6 +3,7 @@ package ckb.TournamentManager.controller;
 import ckb.TournamentManager.dto.incoming.NewTournamentRequest;
 import ckb.TournamentManager.dto.outcoming.AllStudentsMailRequest;
 import ckb.TournamentManager.model.Role;
+import ckb.TournamentManager.model.Tournament;
 import ckb.TournamentManager.model.User;
 import ckb.TournamentManager.service.TournamentService;
 import lombok.RequiredArgsConstructor;
@@ -22,24 +23,24 @@ public class NewTournamentController extends Controller {
     private final WebClient webClient = WebClient.builder().build();
 
     @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<Object> newTournament(@RequestBody NewTournamentRequest request) {
         // check if the request has valid data
         ResponseEntity<Object> response = checkRequest(request);
         if (response.getStatusCode().is4xxClientError()) return response;
 
-        String content = " Hi! A new tournament is created click here to subscribe " + tournamentService.createTournament(request);
-        log.info("New tournament created");
-
         try {
+            Tournament tournament = tournamentService.createTournament(request);
+            String content = "Hi! A new tournament is created click here to subscribe " +
+                    "http://tournament-service/tournaments/" + request.getName();
+            log.info("New tournament created");
             sendRequest(content);
             log.info("Mail correctly sent!");
+
+            return new ResponseEntity<>(tournament, getHeaders(), HttpStatus.CREATED);
         } catch (Exception e) {
-            log.error("Error while retrieving send request to mail service: {}\n", e.getMessage());
+            log.error("Error while retrieving send request to mail service: {}", e.getMessage());
             return new ResponseEntity<>(getHeaders(), HttpStatus.BAD_REQUEST);
         }
-
-        return new ResponseEntity<>("Tournament created", getHeaders(), HttpStatus.CREATED);
     }
 
     private void sendRequest(String content) throws Exception {

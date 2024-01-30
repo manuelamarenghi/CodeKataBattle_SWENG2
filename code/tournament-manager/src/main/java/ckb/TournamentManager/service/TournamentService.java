@@ -21,31 +21,35 @@ public class TournamentService {
     private final TournamentRankingRepo tournamentRankingRepo;
     private final PermissionRepo permissionRepo;
 
-    public String createTournament(NewTournamentRequest request) {
-        Tournament tournament = new Tournament();
+    public Tournament createTournament(NewTournamentRequest request) {
+        Tournament tournament = Tournament.builder()
+                .name(request.getName())
+                .regdeadline(request.getRegdeadline())
+                .creatorID(request.getCreatorID())
+                .status(true)
+                .build();
+
         tournament.setRegdeadline(request.getRegdeadline());
         tournament.setStatus(true);
         tournament.setCreatorID(request.getCreatorID());
         tournamentRepo.save(tournament);
-        String tournamentUrl = "http://tournament-service/tournaments/" + tournament.getTournamentID();
-        return tournamentUrl;
+
+        permissionRepo.save(new Permission(tournament.getTournamentID(), tournament.getCreatorID()));
+        return tournament;
     }
 
     public Tournament getTournament(Long id) {
         return tournamentRepo.findByTournamentID(id).orElse(null);
     }
 
-    public void deleteTournament(Long id) {
-        tournamentRepo.deleteById(id);
-    }
     public boolean isSubscribed(Long tournamentID, Long userID){
         return tournamentRankingRepo.findByTournamentIDAndUserID(tournamentID,userID).isPresent();
     }
 
     public void addSubscription(@NotNull SubscriptionRequest request) {
         Tournament tournament = tournamentRepo.findByTournamentID(request.getTournamentID()).orElse(null);
-        TournamentRanking ranking = new TournamentRanking();
         if (tournament == null) return;
+        TournamentRanking ranking = new TournamentRanking();
         ranking.setTournamentID(request.getTournamentID());
         ranking.setUserID(request.getUserID());
         ranking.setScore(0);
@@ -55,10 +59,10 @@ public class TournamentService {
     public String addPermission(PermissionRequest request) {
         Permission p = new Permission(request.getTournamentID(), request.getUserID());
         Tournament t = tournamentRepo.findByTournamentID(request.getTournamentID()).orElse(null);
-        if(t.getCreatorID() == request.getCreatorID()){
-        permissionRepo.save(p);
-        String tournamentUrl = "http://tournament-service/tournaments/" + request.getTournamentID();
-        return tournamentUrl;
+        if (t.getCreatorID().equals(request.getCreatorID())) {
+            permissionRepo.save(p);
+            String tournamentUrl = "http://tournament-service/tournaments/" + request.getTournamentID();
+            return tournamentUrl;
         }
         else return null;
     }
@@ -67,13 +71,14 @@ public class TournamentService {
         List<TournamentRanking> rankings = tournamentRankingRepo.findAllByTournamentIDOrderByScoreDesc(request.getTournamentID());
         return rankings;
     }
+
     public List<Tournament> getAllTournaments(){
         return tournamentRepo.findAll();
     }
 
     public boolean closeTournament(CloseTournamentRequest request) {
         Tournament tournament = tournamentRepo.findByTournamentID(request.getTournamentID()).orElse(null);
-        if(tournament.getCreatorID() == request.getCreatorID()){
+        if (tournament.getCreatorID().equals(request.getCreatorID())) {
             tournament.setStatus(false);
             tournamentRepo.save(tournament);
             List<Permission> p = permissionRepo.findAllByTournamentID(request.getTournamentID());
@@ -102,5 +107,12 @@ public class TournamentService {
         records = tournamentRankingRepo.findAllByTournamentID(request.getTournamentID());
         System.out.println("after : "+records);
         return true;
+    }
+
+    public List<Long> getStudentsSubscribed(Long tournamentId) {
+        return tournamentRankingRepo.findAllByTournamentID(tournamentId)
+                .stream()
+                .map(TournamentRanking::getUserID)
+                .toList();
     }
 }

@@ -17,8 +17,8 @@ public class StartBattleController {
         this.webClientBuilder = WebClient.builder();
     }
 
-    public void startBattle(Battle battleToStart) {
-        ResponseEntity<Object> response = webClientBuilder.build()
+    public String startBattle(Battle battleToStart) throws Exception {
+        ResponseEntity<String> response = webClientBuilder.build()
                 .post()
                 .uri(url)
                 .bodyValue(
@@ -27,20 +27,21 @@ public class StartBattleController {
                         )
                 )
                 .retrieve()
-                .toEntity(Object.class)
+                .toEntity(String.class)
                 .block();
 
         if (response == null) {
-            log.error("Error starting battle with id: {}. The response is null", battleToStart.getBattleId());
-            return;
+            log.error("[ERROR] Error starting battle with id: {}. The response is null", battleToStart.getBattleId());
+            throw new Exception("Error starting battle with id: " + battleToStart.getBattleId());
         }
 
         if (!response.getStatusCode().is2xxSuccessful()) {
-            log.error("Error starting battle with id: {}. Error {}", battleToStart.getBattleId(), response.getStatusCode());
-            return;
+            log.error("[ERROR] Error starting battle with id: {}. Error {}", battleToStart.getBattleId(), response.getStatusCode());
+            throw new Exception("Error starting battle with id: " + battleToStart.getBattleId());
         }
 
         log.info("Battle started with id: {}", battleToStart.getBattleId());
+        return response.getBody();
     }
 
     public void initDebug() {

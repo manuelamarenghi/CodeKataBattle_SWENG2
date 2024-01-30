@@ -2,6 +2,7 @@ package ckb.BattleManager.controller;
 
 import ckb.BattleManager.dto.input.CreateBattleRequest;
 import ckb.BattleManager.dto.output.CheckPermissionRequest;
+import ckb.BattleManager.dto.output.InformStudentsRequest;
 import ckb.BattleManager.dto.output.UserRequest;
 import ckb.BattleManager.model.Role;
 import ckb.BattleManager.model.User;
@@ -37,6 +38,7 @@ public class CreateBattleController {
         try {
             checkBattleRequest(request);
             battleService.createBattle(request);
+            informAllStudentsOfTournament(request.getTournamentId(), request.getName());
             return ResponseEntity.ok().build();
         } catch (Exception e) {
             log.info("[EXCEPTION] {}", e.getMessage());
@@ -44,17 +46,55 @@ public class CreateBattleController {
         }
     }
 
+    private void informAllStudentsOfTournament(Long tournamentId, String battleName) throws Exception {
+        ResponseEntity<Object> response = webClient.post()
+                .uri(tournamentManagerUri + "/api/tournament/inform-students")
+                .bodyValue(new InformStudentsRequest(
+                        tournamentId,
+                        battleName
+                ))
+                .retrieve()
+                .toEntity(Object.class)
+                .block();
+
+        if (response == null || response.getStatusCode().is4xxClientError()) {
+            log.error("[ERROR] Inform students of tournament error");
+            throw new Exception("Inform students of tournament error");
+        }
+    }
+
     private void checkBattleRequest(CreateBattleRequest request) throws Exception {
         if (request == null) {
-            log.error("[ERROR]Battle request is null");
+            log.error("[ERROR] Battle request is null");
             throw new Exception("Battle request is null");
         }
 
         if (request.getTournamentId() == null || request.getAuthorId() == null
                 || request.getMinStudents() == null || request.getMaxStudents() == null
-                || request.getRegDeadline() == null || request.getSubDeadline() == null) {
+                || request.getRegDeadline() == null || request.getSubDeadline() == null
+                || request.getName() == null) {
             log.error("[ERROR] One of the field is null, the request is invalid");
             throw new Exception("One of the field is null, the request is invalid");
+        }
+
+        if (request.getTournamentId() <= 0) {
+            log.error("[ERROR] Tournament id must be greater than 0");
+            throw new Exception("Tournament id must be greater than 0");
+        }
+
+        if (request.getAuthorId() <= 0) {
+            log.error("[ERROR] Author id must be greater than 0");
+            throw new Exception("Author id must be greater than 0");
+        }
+
+        if (request.getMinStudents() <= 0) {
+            log.error("[ERROR] Min students must be greater than 0");
+            throw new Exception("Min students must be greater than 0");
+        }
+
+        if (request.getMaxStudents() <= 0) {
+            log.error("[ERROR] Max students must be greater than 0");
+            throw new Exception("Max students must be greater than 0");
         }
 
         if (request.getMaxStudents() < request.getMinStudents()) {
@@ -77,7 +117,6 @@ public class CreateBattleController {
             throw new Exception("Registration deadline must be before submission deadline");
         }
 
-        // TODO: control if the author is an educator and the tournament exists?
         ResponseEntity<User> responseEntityUser = webClient.post()
                 .uri(accountManagerUri + "/api/account/user")
                 .bodyValue(new UserRequest(request.getAuthorId()))

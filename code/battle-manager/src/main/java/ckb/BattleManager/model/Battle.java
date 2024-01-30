@@ -19,6 +19,9 @@ public class Battle {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long battleId;
 
+    @Column(unique = true)
+    private String name;
+
     private Long tournamentId;
 
     @Column(unique = true)

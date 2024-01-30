@@ -17,8 +17,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.ResponseEntity;
 
+import java.util.Calendar;
 import java.util.Date;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockserver.model.HttpRequest.request;
 import static org.mockserver.model.HttpResponse.response;
@@ -27,12 +29,17 @@ import static org.mockserver.model.HttpResponse.response;
 public class PermissionControllerTest {
     @Autowired
     private PermissionController permissionController;
+
     @Autowired
     private TournamentRepo tournamentRepo;
-    private static ClientAndServer mockServermail;
-    private static ClientAndServer mockServeraccount;
+
     @Autowired
     private PermissionRepo permissionRepo;
+
+    private static ClientAndServer mockServermail;
+
+    private static ClientAndServer mockServeraccount;
+
     @BeforeEach
     public void setUpServer() {
         mockServeraccount = ClientAndServer.startClientAndServer(8086);
@@ -41,13 +48,16 @@ public class PermissionControllerTest {
 
     @AfterEach
     public void tearDownServer() {
-        mockServeraccount.stop(); mockServermail.stop();
+        mockServeraccount.stop();
+        mockServermail.stop();
+        permissionRepo.deleteAll();
+        tournamentRepo.deleteAll();
     }
 
     @Test
     public void TournamentAlreadyEndedTest() {
         Long userID = 1L;
-        Date d = new Date(2024,01,20);
+        Date d = new Date(2024, Calendar.FEBRUARY, 20);
         Tournament t = new Tournament();
         t.setRegdeadline(d);
         t.setStatus(false);
@@ -57,9 +67,9 @@ public class PermissionControllerTest {
         Long creatorID = 1L;
         PermissionRequest request = new PermissionRequest(tournamentID, userID,creatorID);
         ResponseEntity<Object> response = permissionController.permission(request);
-        assertTrue(response.getBody().equals("Tournament already ended"));
-        tournamentRepo.deleteById(tournamentID);
+        assertEquals("Tournament already ended", response.getBody());
     }
+
     @Test
     public void TournamentNotExistsTest() {
         Long userID = 1L;
@@ -69,24 +79,28 @@ public class PermissionControllerTest {
         ResponseEntity<Object> response = permissionController.permission(request);
         assertTrue(response.getStatusCode().is4xxClientError());
     }
+
     @Test
     public void UserAlreadyHasPermissionTest() {
         Tournament t = new Tournament();
-        t.setRegdeadline(new Date((2024-1900),01,20));
+        t.setRegdeadline(new Date((2024 - 1900), Calendar.FEBRUARY, 20));
         t.setStatus(true);
         t.setCreatorID(2L);
         tournamentRepo.save(t);
+
         Long userID = 1L;
         Long creatorID = 1L;
         Long tournamentID = t.getTournamentID();
+
         Permission p = new Permission(tournamentID, userID);
         permissionRepo.save(p);
+
         PermissionRequest request = new PermissionRequest(tournamentID, userID, creatorID);
         ResponseEntity<Object> response = permissionController.permission(request);
-        assertTrue(response.getBody().equals("Permission already inserted"));
-        permissionRepo.delete(p);
-        tournamentRepo.deleteById(tournamentID);
+
+        assertEquals("Permission already inserted", response.getBody());
     }
+
     @Test
     public void WrongUser() throws JsonProcessingException {
         User user = new User();
@@ -100,17 +114,18 @@ public class PermissionControllerTest {
         mockServermail
                 .when(request().withMethod("POST").withPath("/api/mail/direct"))
                 .respond(response().withStatusCode(200).withBody("OK"));
+
         Tournament t = new Tournament();
-        t.setRegdeadline(new Date((2024-1900),07,20));
+        t.setRegdeadline(new Date((2024 - 1900), Calendar.AUGUST, 20));
         t.setStatus(true);
         t.setCreatorID(3L);
         tournamentRepo.save(t);
+
         Long tournamentID = t.getTournamentID();
         Long creatorID = 3L;
         PermissionRequest request = new PermissionRequest(tournamentID, 1L, creatorID);
         ResponseEntity<Object> response = permissionController.permission(request);
-        assertTrue(response.getBody().equals("Invalid Request"));
-        tournamentRepo.deleteById(tournamentID);
+        assertEquals("Invalid Request", response.getBody());
     }
 
     @Test
@@ -126,19 +141,18 @@ public class PermissionControllerTest {
         mockServermail
                 .when(request().withMethod("POST").withPath("/api/mail/direct"))
                 .respond(response().withStatusCode(200).withBody("OK"));
+
         Tournament t = new Tournament();
-        t.setRegdeadline(new Date((2024-1900),07,20));
+        t.setRegdeadline(new Date((2024 - 1900), Calendar.AUGUST, 20));
         t.setStatus(true);
         t.setCreatorID(5L);
         tournamentRepo.save(t);
+
         Long tournamentID = t.getTournamentID();
         Long creatorID = 5L;
         PermissionRequest request = new PermissionRequest(tournamentID, 1L,creatorID);
         ResponseEntity<Object> response = permissionController.permission(request);
-        assertTrue(response.getBody().equals("Permission inserted"));
-        tournamentRepo.deleteById(tournamentID);
-        Permission p = new Permission(tournamentID, 1L);
-        permissionRepo.delete(p);
+        assertEquals("Permission inserted", response.getBody());
     }
 
     @Test
@@ -154,16 +168,17 @@ public class PermissionControllerTest {
         mockServermail
                 .when(request().withMethod("POST").withPath("/api/mail/direct"))
                 .respond(response().withStatusCode(200).withBody("OK"));
+
         Tournament t = new Tournament();
-        t.setRegdeadline(new Date((2024-1900),07,20));
+        t.setRegdeadline(new Date((2024 - 1900), Calendar.AUGUST, 20));
         t.setStatus(true);
         t.setCreatorID(4L);
         tournamentRepo.save(t);
+
         Long tournamentID = t.getTournamentID();
         Long creatorID = 5L;
         PermissionRequest request = new PermissionRequest(tournamentID, 1L,creatorID);
         ResponseEntity<Object> response = permissionController.permission(request);
-        assertTrue(response.getBody().equals("Illegal request to give permission"));
-        tournamentRepo.deleteById(tournamentID);
+        assertEquals("Illegal request to give permission", response.getBody());
     }
 }

@@ -36,8 +36,14 @@ public class BattleScheduledService {
             battle.setHasStarted(true);
             battleRepository.save(battle);
 
-            // Call the GitHub manager to start the battle
-            startBattleController.startBattle(battle);
+            try {
+                // Call the GitHub manager to start the battle
+                String repoLink = startBattleController.startBattle(battle);
+                battle.setRepositoryLink(repoLink);
+                battleRepository.save(battle);
+            } catch (Exception e) {
+                log.error("Error starting battle with id: {}. Error {}", battle.getBattleId(), e.getMessage());
+            }
         });
     }
 
