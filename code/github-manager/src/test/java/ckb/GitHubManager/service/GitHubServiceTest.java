@@ -1,6 +1,5 @@
 package ckb.GitHubManager.service;
 
-import ckb.GitHubManager.service.GitHubService;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.junit.jupiter.api.Test;
 import org.kohsuke.github.GHContent;
@@ -9,20 +8,20 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Random;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 public class GitHubServiceTest {
-
+    private final int GENERATE_STRING_LENGTH = 10;
     private final GitHubService gitHubService = new GitHubService();
-
 
     @Test
     public void createRepositoryTest() throws IOException {
         GHRepository repo = null;
         try {
-            repo = gitHubService.createRepository("test_repo");
+            repo = gitHubService.createRepository(getRandomString());
             assertNotNull(repo);
         } catch (Exception e) {
             fail();
@@ -35,10 +34,11 @@ public class GitHubServiceTest {
     public void createDuplicateRepositoryTest() throws IOException {
         GHRepository repo1 = null;
         GHRepository repo2 = null;
+        String repoName = getRandomString();
         try {
-            repo1 = gitHubService.createRepository("test_repo");
+            repo1 = gitHubService.createRepository(repoName);
             assertNotNull(repo1);
-            repo2 = gitHubService.createRepository("test_repo");
+            repo2 = gitHubService.createRepository(repoName);
             assertNull(repo2);
         } catch (Exception e) {
             fail();
@@ -56,7 +56,7 @@ public class GitHubServiceTest {
                 new ImmutablePair<>("directory/TEST.md", "This is a test file in a directory")
         );
         try {
-            repo = gitHubService.createRepository("test_repo");
+            repo = gitHubService.createRepository(getRandomString());
             gitHubService.commitAndPush(repo, files);
             checkCorrectness(repo, files);
         } catch (Exception e) {
@@ -73,5 +73,12 @@ public class GitHubServiceTest {
             assertNotNull(content);
             assertEquals(file.getRight(), content.getContent());
         }
+    }
+
+    private String getRandomString() {
+        return new Random().ints(97 /* letter a */, 122 /* letter z */ + 1)
+                .limit(GENERATE_STRING_LENGTH)
+                .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
+                .toString();
     }
 }
