@@ -83,13 +83,18 @@ public class CEvaluationController extends Controller {
                 .toEntity(Object.class)
                 .block();
 
-        if (response == null || !response.getStatusCode().is2xxSuccessful()){
+        if (response == null || !response.getStatusCode().is2xxSuccessful()) {
             log.error("Error while updating scores");
             return new ResponseEntity<>("Error updating scores", getHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-        else log.info("Score updated successfully");
+        } else log.info("Score updated successfully");
 
-        // TODO cleanup
+        try {
+            evaluationService.cleanUp(path);
+            log.info("Clean up successful, deleted " + path + " directory");
+        } catch (Exception e) {
+            log.error("Error cleaning up " + path);
+            return new ResponseEntity<>("Error cleaning up", getHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
 
         return new ResponseEntity<>("Evaluation successful, you get some points :)", getHeaders(), HttpStatus.OK);
     }
@@ -107,8 +112,7 @@ public class CEvaluationController extends Controller {
         if (response == null || !response.getStatusCode().is2xxSuccessful()) {
             log.error("Error getting official repo url");
             throw new RuntimeException("Error getting official repo url");
-        }
-        else{
+        } else {
             log.info("Official repo url: " + response.getBody());
             return response.getBody();
         }

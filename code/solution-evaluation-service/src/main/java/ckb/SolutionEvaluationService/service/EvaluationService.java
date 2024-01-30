@@ -101,6 +101,23 @@ public class EvaluationService {
         }
     }
 
+    public void cleanUp(String path) {
+        String script = SCRIPTS_PATH + "cleanup.sh";
+        ProcessBuilder processBuilder = new ProcessBuilder(script, path).redirectErrorStream(true);
+        try {
+            Process process = processBuilder.start();
+            BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+            String line;
+            while ((line = reader.readLine()) != null) {
+                log.info(line);
+            }
+            reader.close();
+            if (process.waitFor() != 0) throw new RuntimeException("Error cleaning up " + path);
+        } catch (Exception e) {
+            throw new RuntimeException("Error cleaning up " + path);
+        }
+    }
+
     private int calculateDeduction(List<String> output) {
         int totalDeduction = 0;
         totalDeduction += Integer.valueOf(output.get(output.indexOf("errors") + 1)) * ERROR_DEDUCTION;
