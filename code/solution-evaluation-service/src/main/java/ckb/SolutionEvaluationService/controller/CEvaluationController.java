@@ -37,6 +37,7 @@ public class CEvaluationController extends Controller {
         // compile
         if (!evaluationService.compile("c", path)) {
             log.error("Compilation failed");
+            evaluationService.cleanUp(path);
             return new ResponseEntity<>("Compilation failed", getHeaders(), HttpStatus.BAD_REQUEST);
         } else {
             log.info("Compilation successful");
@@ -49,10 +50,12 @@ public class CEvaluationController extends Controller {
             testsDeduction = runTests("c", path, officialRepoUrl);
         } catch (Exception e) {
             log.error("Error executing tests");
+            evaluationService.cleanUp(path);
             return new ResponseEntity<>("Error executing tests", getHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
         if (testsDeduction >= 100) {
             log.info("Tests failed, deduction >= 100 points, exiting...");
+            evaluationService.cleanUp(path);
             return new ResponseEntity<>("Tests failed, 0 points", getHeaders(), HttpStatus.OK);
         }
 
@@ -61,6 +64,7 @@ public class CEvaluationController extends Controller {
         int staticAnalysisDeduction = evaluationService.executeStaticAnalysis("c", path);
         if (staticAnalysisDeduction < 0) {
             log.error("Error executing static analysis");
+            evaluationService.cleanUp(path);
             return new ResponseEntity<>("Error executing static analysis", getHeaders(), HttpStatus.BAD_REQUEST);
         } else {
             log.info("Deduction: " + staticAnalysisDeduction);
@@ -69,22 +73,33 @@ public class CEvaluationController extends Controller {
         // calculate score
         int score = 100 - testsDeduction - staticAnalysisDeduction;
         log.info("Evaluation completed for " + repoUrl + " score: " + score);
-        if (score < 0) return new ResponseEntity<>("Evaluation successful, please get better...", getHeaders(), HttpStatus.OK);
+        if (score < 0) {
+            evaluationService.cleanUp(path);
+            return new ResponseEntity<>("Evaluation successful, please get better...", getHeaders(), HttpStatus.OK);
+        }
 
         // update score
-        AssignScoreRequest scoreUpdateRequest = AssignScoreRequest.builder()
-                .idTeam(request.getTeamId())
-                .score(score)
-                .build();
-        ResponseEntity<Object> response = webClient.post()
-                .uri(battleManagerUrl + "/api/battle/assign-score")
-                .bodyValue(scoreUpdateRequest)
-                .retrieve()
-                .toEntity(Object.class)
-                .block();
+        ResponseEntity<Object> response;
+        try{
+            AssignScoreRequest scoreUpdateRequest = AssignScoreRequest.builder()
+                    .idTeam(request.getTeamId())
+                    .score(score)
+                    .build();
+            response = webClient.post()
+                    .uri(battleManagerUrl + "/api/battle/assign-score")
+                    .bodyValue(scoreUpdateRequest)
+                    .retrieve()
+                    .toEntity(Object.class)
+                    .block();
+        } catch (Exception e) {
+            log.error("Error while updating scores");
+            evaluationService.cleanUp(path);
+            return new ResponseEntity<>("Error updating scores", getHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
 
         if (response == null || !response.getStatusCode().is2xxSuccessful()) {
             log.error("Error while updating scores");
+            evaluationService.cleanUp(path);
             return new ResponseEntity<>("Error updating scores", getHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);
         } else log.info("Score updated successfully");
 
@@ -109,7 +124,7 @@ public class CEvaluationController extends Controller {
                 .retrieve()
                 .toEntity(String.class)
                 .block();
-        if (response == null || !response.getStatusCode().is2xxSuccessful()) {
+        if (response == null || !response.getStatusCode().is2xxSuccessful() || response.getBody() == null) {
             log.error("Error getting official repo url");
             throw new RuntimeException("Error getting official repo url");
         } else {

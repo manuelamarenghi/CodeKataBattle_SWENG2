@@ -1,15 +1,13 @@
 package ckb.SolutionEvaluationService.controller;
 
 import ckb.SolutionEvaluationService.dto.in.EvaluationRequest;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.*;
 import org.mockserver.integration.ClientAndServer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.ResponseEntity;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockserver.model.HttpRequest.request;
 import static org.mockserver.model.HttpResponse.response;
@@ -22,31 +20,106 @@ public class EvaluationTest {
     private CEvaluationController evaluateController;
     private ClientAndServer battleMockServer;
 
-    @BeforeAll
+    @BeforeEach
     public void setUp() {
         evaluateController.initTestMode();
         battleMockServer = ClientAndServer.startClientAndServer(8082);
-
-        battleMockServer.when(request().withMethod("POST").withPath("/api/battle/assign-score"))
-                .respond(response().withStatusCode(200));
-
-        battleMockServer.when(request().withMethod("POST").withPath("/api/battle/official-repo-url"))
-                .respond(response().withStatusCode(200).withBody("https://github.com/SigCatta/WordChecker.git"));
     }
 
-    @AfterAll
+    @AfterEach
     public void stopProxy() {
         battleMockServer.stop();
     }
 
     @Test
-    public void test() {
+    public void correctBehaviorTest() {
+        battleMockServer.when(request().withMethod("POST").withPath("/api/battle/assign-score"))
+                .respond(response().withStatusCode(200));
+
+        battleMockServer.when(request().withMethod("POST").withPath("/api/battle/official-repo-url"))
+                .respond(response().withStatusCode(200).withBody("https://github.com/SigCatta/WordChecker.git"));
+
         EvaluationRequest request = EvaluationRequest.builder()
                 .teamId(1L)
                 .repoUrl("https://github.com/SigCatta/WordChecker.git")
                 .build();
         ResponseEntity<Object> response = evaluateController.evaluate(request);
         assertTrue(response.getStatusCode().is2xxSuccessful());
+    }
+    @Test
+    public void nonExistingRepoTest() {
+        battleMockServer.when(request().withMethod("POST").withPath("/api/battle/assign-score"))
+                .respond(response().withStatusCode(200));
+
+        battleMockServer.when(request().withMethod("POST").withPath("/api/battle/official-repo-url"))
+                .respond(response().withStatusCode(200).withBody("https://github.com/SigCatta/WordChecker.git"));
+
+        EvaluationRequest request = EvaluationRequest.builder()
+                .teamId(1L)
+                .repoUrl("https://github.com/doesNotExist/SomeRepoThatIsNotTHere.miaooo")
+                .build();
+        ResponseEntity<Object> response = evaluateController.evaluate(request);
+        assertFalse(response.getStatusCode().is2xxSuccessful());
+    }
+    @Test
+    public void failedToScoreTest() {
+        battleMockServer.when(request().withMethod("POST").withPath("/api/battle/assign-score"))
+                .respond(response().withStatusCode(500));
+
+        battleMockServer.when(request().withMethod("POST").withPath("/api/battle/official-repo-url"))
+                .respond(response().withStatusCode(200).withBody("https://github.com/SigCatta/WordChecker.git"));
+
+        EvaluationRequest request = EvaluationRequest.builder()
+                .teamId(1L)
+                .repoUrl("https://github.com/SigCatta/WordChecker.git")
+                .build();
+        ResponseEntity<Object> response = evaluateController.evaluate(request);
+        assertFalse(response.getStatusCode().is2xxSuccessful());
+    }
+    @Test
+    public void failedToCloneOfficialRepoTest() {
+        battleMockServer.when(request().withMethod("POST").withPath("/api/battle/assign-score"))
+                .respond(response().withStatusCode(200));
+
+        battleMockServer.when(request().withMethod("POST").withPath("/api/battle/official-repo-url"))
+                .respond(response().withStatusCode(200).withBody("https://github.com/doesNotExist/SomeRepoThatIsNotTHere.miaooo"));
+
+        EvaluationRequest request = EvaluationRequest.builder()
+                .teamId(1L)
+                .repoUrl("https://github.com/SigCatta/WordChecker.git")
+                .build();
+        ResponseEntity<Object> response = evaluateController.evaluate(request);
+        assertFalse(response.getStatusCode().is2xxSuccessful());
+    }
+    @Test
+    public void failedToGetOfficialRepoUrlTest() {
+        battleMockServer.when(request().withMethod("POST").withPath("/api/battle/assign-score"))
+                .respond(response().withStatusCode(200));
+
+        battleMockServer.when(request().withMethod("POST").withPath("/api/battle/official-repo-url"))
+                .respond(response().withStatusCode(500));
+
+        EvaluationRequest request = EvaluationRequest.builder()
+                .teamId(1L)
+                .repoUrl("https://github.com/SigCatta/WordChecker.git")
+                .build();
+        ResponseEntity<Object> response = evaluateController.evaluate(request);
+        assertFalse(response.getStatusCode().is2xxSuccessful());
+    }
+    @Test
+    public void nullOfficialRepoUrlTest() {
+        battleMockServer.when(request().withMethod("POST").withPath("/api/battle/assign-score"))
+                .respond(response().withStatusCode(200));
+
+        battleMockServer.when(request().withMethod("POST").withPath("/api/battle/official-repo-url"))
+                .respond(response().withStatusCode(200));
+
+        EvaluationRequest request = EvaluationRequest.builder()
+                .teamId(1L)
+                .repoUrl("https://github.com/SigCatta/WordChecker.git")
+                .build();
+        ResponseEntity<Object> response = evaluateController.evaluate(request);
+        assertFalse(response.getStatusCode().is2xxSuccessful());
     }
 
 }
