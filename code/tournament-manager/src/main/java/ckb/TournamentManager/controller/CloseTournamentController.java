@@ -13,7 +13,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 
 @RestController
 @Slf4j
-@RequestMapping("/api/tournament/CloseTournament")
+@RequestMapping("/api/tournament/close-tournament")
 @RequiredArgsConstructor
 @CrossOrigin(origins = "*")
 

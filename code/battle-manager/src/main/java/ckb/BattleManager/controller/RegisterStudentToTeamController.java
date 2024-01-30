@@ -22,7 +22,7 @@ public class RegisterStudentToTeamController {
         this.teamService = teamService;
     }
 
-    @PostMapping("/registerStudentToTeam")
+    @PostMapping("/register-student-team")
     public ResponseEntity<Object> registerStudentToTeam(@RequestBody StudentTeam request) {
         log.info("[API REQUEST] Register student to team request with id_team: {}, id_student: {}", request.getIdTeam(), request.getIdStudent());
         try {

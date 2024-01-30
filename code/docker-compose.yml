@@ -73,7 +73,7 @@ services:
       - SPRING_PROFILES_ACTIVE=docker
       - SPRING_DATASOURCE_URL=jdbc:mysql://mysql-tournament-manager:3306/tournament_schema
     ports:
-      - "8084:8084"
+      - "8087:8087"
     restart: always
 
   battle-manager:
@@ -85,5 +85,5 @@ services:
       - SPRING_PROFILES_ACTIVE=docker
       - SPRING_DATASOURCE_URL=jdbc:mysql://mysql-battle-manager:3306/battle_schema
     ports:
-      - "8087:8087"
+      - "8082:8082"
     restart: always

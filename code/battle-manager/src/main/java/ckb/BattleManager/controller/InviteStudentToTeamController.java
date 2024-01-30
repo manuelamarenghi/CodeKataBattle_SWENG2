@@ -30,7 +30,7 @@ public class InviteStudentToTeamController {
      * @param request
      * @return
      */
-    @PostMapping("/inviteStudentToTeam")
+    @PostMapping("/invite-student-to-team")
     public ResponseEntity<Object> inviteStudentToTeam(@RequestBody StudentTeam request) {
         log.info("[API REQUEST] Invite student to team request with id_team: {}, id_student: {}", request.getIdTeam(), request.getIdStudent());
         String response = webClientBuilder.build()

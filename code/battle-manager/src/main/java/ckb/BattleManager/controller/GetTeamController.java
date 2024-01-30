@@ -40,7 +40,7 @@ public class GetTeamController {
      * @param idTeam id of the team
      * @return a ResponseEntity with the team or a not found status
      */
-    @GetMapping("/getTeam")
+    @GetMapping("/get-team")
     public ResponseEntity<TeamInfoMessage> getTeam(@RequestBody IdLong idTeam) {
         log.info("[API REQUEST] Get team request with id: {}", idTeam.getId());
         try {
@@ -72,7 +72,7 @@ public class GetTeamController {
      * @param idBattle id of the battle
      * @return a ResponseEntity with the list of ids of the teams
      */
-    @GetMapping("/getTeamsOfBattle")
+    @GetMapping("/get-teams-battle")
     public ResponseEntity<List<Team>> getTeamsOfBattle(@RequestBody IdLong idBattle) {
         log.info("[API REQUEST] Get teams of battle request with id: {}", idBattle.getId());
         try {

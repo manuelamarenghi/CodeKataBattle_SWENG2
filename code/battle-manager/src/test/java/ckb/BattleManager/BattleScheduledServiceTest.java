@@ -109,11 +109,11 @@ class BattleScheduledServiceTest {
         );
 
         // TODO: port!!!
-        mockServer = ClientAndServer.startClientAndServer(8084);
+        mockServer = ClientAndServer.startClientAndServer(8087);
         mockServer
                 .when(HttpRequest.request()
                         .withMethod("POST")
-                        .withPath("/api/tournament/UpdateScore")
+                        .withPath("/api/tournament/update-score")
                 )
                 .respond(HttpResponse.response()
                         .withStatusCode(200));

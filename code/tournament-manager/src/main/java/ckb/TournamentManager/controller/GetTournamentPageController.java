@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @Slf4j
-@RequestMapping("/api/tournament/GetTournamentPage")
+@RequestMapping("/api/tournament/get-tournament-page")
 @RequiredArgsConstructor
 @CrossOrigin(origins = "*")
 

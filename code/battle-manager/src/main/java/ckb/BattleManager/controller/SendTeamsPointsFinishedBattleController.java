@@ -14,7 +14,7 @@ import java.util.List;
 @Slf4j
 public class SendTeamsPointsFinishedBattleController {
     private final WebClient.Builder webClientBuilder;
-    private String url = "http://tournament-manager:8084/api/tournament/UpdateScore";
+    private String url = "http://tournament-manager:8087/api/tournament/update-score";
 
     public SendTeamsPointsFinishedBattleController() {
         this.webClientBuilder = WebClient.builder();
@@ -48,6 +48,6 @@ public class SendTeamsPointsFinishedBattleController {
     }
 
     public void initDebug() {
-        url = "http://localhost:8084/api/tournament/UpdateScore";
+        url = "http://localhost:8087/api/tournament/update-score";
     }
 }

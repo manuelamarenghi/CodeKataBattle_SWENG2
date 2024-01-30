@@ -19,7 +19,7 @@ public class TournamentServiceIntegrationTests {
     private static final String accountManagerUri = "http://localhost:8086";
     private static final WebClient webClient = WebClient.create();
     private final int GENERATE_EMAIL_LENGTH = 20;
-    private final String tournamentManagerUri = "http://localhost:8084";
+    private final String tournamentManagerUri = "http://localhost:8087";
     private final WebTestClient webTestClient = WebTestClient.bindToServer().build();
 
 

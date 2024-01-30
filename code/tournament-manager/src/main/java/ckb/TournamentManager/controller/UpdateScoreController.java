@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @Slf4j
-@RequestMapping("/api/tournament/UpdateScore")
+@RequestMapping("/api/tournament/update-score")
 @RequiredArgsConstructor
 @CrossOrigin(origins = "*")
 

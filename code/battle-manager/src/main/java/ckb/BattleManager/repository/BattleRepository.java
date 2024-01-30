@@ -16,7 +16,7 @@ public interface BattleRepository extends JpaRepository<Battle, Long> {
 
     List<Battle> findBattlesByTournamentId(Long idTournament);
 
-    List<Battle> findBattlesByHasStartedIsFalse();
+    List<Battle> findBattlesByHasStartedIsFalseAndRegDeadlineIsBefore(LocalDateTime now);
 
     List<Battle> findBattlesByHasEndedIsFalseAndSubDeadlineBefore(LocalDateTime subDeadline);
 }

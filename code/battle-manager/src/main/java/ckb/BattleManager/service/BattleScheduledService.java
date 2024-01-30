@@ -30,16 +30,14 @@ public class BattleScheduledService {
 
     @Scheduled(fixedRate = 3000) // 3 Seconds
     public void startBattles() {
-        List<Battle> battlesToStart = battleRepository.findBattlesByHasStartedIsFalse();
+        List<Battle> battlesToStart = battleRepository.findBattlesByHasStartedIsFalseAndRegDeadlineIsBefore(LocalDateTime.now());
         //log.info("Found {} battles to start", battlesToStart.size());
         battlesToStart.forEach(battle -> {
-            if (battle.getRegDeadline().isBefore(LocalDateTime.now())) {
-                battle.setHasStarted(true);
-                battleRepository.save(battle);
+            battle.setHasStarted(true);
+            battleRepository.save(battle);
 
-                // Call the GitHub manager to start the battle
-                startBattleController.startBattle(battle);
-            }
+            // Call the GitHub manager to start the battle
+            startBattleController.startBattle(battle);
         });
     }
 

@@ -28,7 +28,7 @@ public class JoinLeaveBattleController {
      * @param request a pair of idStudent and idBattle
      * @return a ResponseEntity with ok status or a bad request
      */
-    @PostMapping("/joinBattle")
+    @PostMapping("/join-battle")
     public ResponseEntity<Object> joinBattle(@RequestBody StudentBattle request) {
         log.info("[API REQUEST] Join battle request with id_battle: {}, id_student: {}", request.getIdBattle(), request.getIdStudent());
         try {
@@ -46,7 +46,7 @@ public class JoinLeaveBattleController {
      * @param request a pair of idStudent and idBattle
      * @return a ResponseEntity with ok status
      */
-    @PostMapping("/leaveBattle")
+    @PostMapping("/leave-battle")
     public ResponseEntity<Object> leaveBattle(@RequestBody StudentBattle request) {
         log.info("[API REQUEST] Leave battle request with id_battle: {}, id_student: {}", request.getIdBattle(), request.getIdStudent());
         try {

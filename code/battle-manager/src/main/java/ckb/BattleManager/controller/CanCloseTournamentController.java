@@ -29,7 +29,7 @@ public class CanCloseTournamentController {
      * @param idTournament id of the tournament
      * @return a ResponseEntity with a true if the tournament can be close, false otherwise
      */
-    @PostMapping("/battleFinished")
+    @PostMapping("/battles-finished")
     public ResponseEntity<Boolean> canCloseTournament(@RequestBody IdLong idTournament) {
         log.info("[API REQUEST] Battle finished request with id tournament: {}", idTournament.getId());
 

@@ -19,7 +19,7 @@ public class CreateBattleController {
         this.battleService = battleService;
     }
 
-    @PostMapping("/createBattle")
+    @PostMapping("/create-battle")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<Object> createBattle(@RequestBody Battle battle) {
         log.info("[API REQUEST] Create battle request with id: {}", battle.getBattleId());

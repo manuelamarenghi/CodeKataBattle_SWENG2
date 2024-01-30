@@ -14,7 +14,7 @@ import java.util.List;
 
 @RestController
 @Slf4j
-@RequestMapping("/api/tournament/GetAllTournaments")
+@RequestMapping("/api/tournament/get-all-tournaments")
 @RequiredArgsConstructor
 @CrossOrigin(origins = "*")
 

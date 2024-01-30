@@ -28,7 +28,7 @@ public class AssignScoreController {
      * @param request a pair team and score
      * @return a ResponseEntity
      */
-    @PostMapping("/assignScore")
+    @PostMapping("/assign-score")
     public ResponseEntity<Object> assignScore(@RequestBody PairTeamScore request) {
         log.info("[API REQUEST] Assign score request with id_team: {}, score: {}", request.getIdTeam(), request.getScore());
         try {
@@ -40,7 +40,7 @@ public class AssignScoreController {
         }
     }
 
-    @PostMapping("/assignPersonalScore")
+    @PostMapping("/assign-personal-score")
     public ResponseEntity<Object> assignPersonalScore(@RequestBody PairTeamScore request) {
         log.info("[API REQUEST] Assign personal score request with id_team: {}, score: {}", request.getIdTeam(), request.getScore());
         try {

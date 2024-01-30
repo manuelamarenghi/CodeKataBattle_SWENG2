@@ -34,7 +34,7 @@ public class GetBattleController {
      * @param idBattle id of the battle
      * @return a ResponseEntity with the battle or a not found status
      */
-    @GetMapping("/getBattle")
+    @GetMapping("/get-battle")
     public ResponseEntity<BattleInfoMessage> getBattle(@RequestBody IdLong idBattle) {
         log.info("[API REQUEST] Get battle request with id: {}", idBattle.getId());
 
@@ -62,7 +62,7 @@ public class GetBattleController {
      * @param idTournament id of the tournament
      * @return a ResponseEntity with the list of ids of the battles
      */
-    @GetMapping("/getBattlesOfTournament")
+    @GetMapping("/get-battles-tournament")
     public ResponseEntity<List<Long>> getBattlesOfTournament(@RequestBody IdLong idTournament) {
         log.info("[API REQUEST] Get battles of tournament request with id: {}", idTournament.getId());
         return ResponseEntity.ok(battleService.getBattleOfTournament(idTournament.getId()));
