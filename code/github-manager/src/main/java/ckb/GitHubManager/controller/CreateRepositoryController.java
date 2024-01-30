@@ -55,6 +55,9 @@ public class CreateRepositoryController extends Controller {
         if (debugMode) {
             lastRepo = repo;
         }
+
+        repoURL += ".git";
+        log.info("Repository {} created successfully, with url: {}", repoName, repoURL);
         return new ResponseEntity<>(repoURL, getHeaders(), HttpStatus.CREATED);
     }
 
