@@ -1,59 +1,50 @@
-<?php
-    if (session_status() == PHP_SESSION_NONE) {
-        session_start();
-    }
-?>
-
-<script>
-    var GetAllTournamentsRequest = {
-            request : "tournaments"
-        };
-    $.ajax({
-  		 type: "POST",
- 		 url: "http://localhost:8080/server",
-         contentType: "application/json",
-  		 data: JSON.stringify({ request: GetAllTournamentsRequest }),
-   		 dataType: "json", 
-     	       success: function (response) {
-                if (response.status === "success") {
-            // Converte la stringa JSON in un array JavaScript
-            var arrayLong = JSON.parse(response.data);
-            var table = document.querySelector('.table-container table');
-        var tableBody = table.querySelector('tbody');
-
-        // Pulisci il corpo della tabella
-        tableBody.innerHTML = '';
-
-        // Itera sull'array e crea una nuova riga per ogni elemento
-        arrayLong.forEach(function (element, index) {
-            var newRow = tableBody.insertRow();
-
-            // Inserisci il numero della riga
-            var cell1 = newRow.insertCell(0);
-            cell1.textContent = index + 1;
-
-            // Inserisci il link con l'elemento dell'array come testo
-            var cell2 = newRow.insertCell(1);
-            var link = document.createElement('a');
-            link.href = "http://localhost/codekatabattle/tournaments/tournament?id=" + (index + 1);
-            link.textContent = element;
-            cell2.appendChild(link);
-        });
-        } else {
-            alert("Errore durante la richiesta AJAX.");
-        }
-            },
-            error: function () {
-                // Errore durante la richiesta AJAX
-                alert("Errore durante la richiesta AJAX.");
-            }
-        });
-</script>
-
 <!DOCTYPE html>
 <html>
 
 <head>
+    <script>
+        var fetchOptions = {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                request : "tournaments"
+            })
+        }; 
+        fetch("http://localhost:8084/api/tournament/GetAllTournaments", fetchOptions)
+            .then(function(response) {
+                if (response.status === "success") {
+                    if (response.status === "success") {
+                        var arrayLong = JSON.parse(response.data);
+                        var table = document.querySelector('.table-container table');
+                        var tableBody = table.querySelector('tbody');
+    
+                tableBody.innerHTML = '';
+    
+                arrayLong.forEach(function (element, index){
+                var newRow = tableBody.insertRow();
+                var cell1 = newRow.insertCell(0);
+                cell1.textContent = index + 1;
+    
+                var cell2 = newRow.insertCell(1);
+                var link = document.createElement('a');
+                link.href = "tournament.html?id=" + element;
+                link.textContent = element;
+                link.addEventListener('click', function(event) {
+                    localStorage.setItem("element", "true");
+                });
+                cell2.appendChild(link);
+            });
+            } else {
+                alert("Errore durante la richiesta.");
+            }}})
+            .catch(data => {
+                console.log(data);
+                alert("Errore durante la richiesta.");
+                window.location.href = "index.html";
+            });   
+    </script>
     <title>Tournaments | CodeKataBattle</title>
     <link rel="icon" href="public\images\iconCKB.png" type="image/x-icon">
     <style>
@@ -79,17 +70,24 @@
         </div>
         <div class="right-content">
             <div class="user-buttons">
-                <button class="button-28" onclick="window.location.href='login.php'">Enter</button>
-                <button class="button-28" onclick="window.location.href='signin.php'">Register</button>
+                <script>
+                    var isUserLoggedIn = localStorage.getItem("logged_in");
+                    
+                    if (isUserLoggedIn && isUserLoggedIn.toLowerCase() === "true") {
+                        document.write('<button class="button-28" onclick="logout()">Logout</button>');
+                    } else {
+                        document.write('<button class="button-28" onclick="window.location.href=\'login.html\'">Enter</button>');
+                        document.write('<button class="button-28" onclick="window.location.href=\'signin.html\'">Register</button>');
+                    }
+                </script>
             </div>
         </div>
     </div>
     <div class="navbar-container">
-        <!-- Contenitore visibile per la navbar -->
         <nav class="navbar">
-            <a onclick="window.location.href='index.php'" >Home</a>
-            <a onclick="window.location.href='tournaments.php'" class="active">Tournaments</a>
-            <a onclick="window.location.href='users.php'">Users</a>
+            <a onclick="window.location.href='index.html'" >Home</a>
+            <a onclick="window.location.href='tournaments.html'" class="active">Tournaments</a>
+            <a onclick="window.location.href='users.html'">Users</a>
             <a  onclick="redirectToAccount()" id="account_page" >Account</a>
         </nav>
     </div>
@@ -99,45 +97,51 @@
         
         function redirectToAccount() {
             if (isUserLoggedIn && isUserLoggedIn.toLowerCase() === "true") {
-                window.location.href = "account.php";
+                window.location.href = "account.html";
             }
-            else{window.location.href = "login.php"; }
+            else{window.location.href = "login.html"; }
+        }
+        function logout() {
+            localStorage.removeItem("logged_in");
+            localStorage.removeItem("user_id");
+            localStorage.removeItem("user_email");
+            localStorage.removeItem("user_role");
+            window.location.href = "index.html";
         }
     </script> 
     <div class="page-container">
         <div class="table-container">
             <div class="tb-title">Tournaments List</div>
             <table>
-                <!-- Aggiungi più righe secondo le tue esigenze -->
                 <tr>
                     <th>#</th>
                     <th class="large-column">Tournaments</th>
                 </tr>
-                <tr>
-                    <td><a href="/pagina1">Clicca qui</a></td>
-                    <td class="large-column">Contenuto della colonna grande</td>
-                </tr>
-                
-                <!-- Fine delle righe aggiuntive -->
             </table>
         </div>
     </div>
     <div class="right">
     <div class="user-buttons" id="session_button">
-        <button class="button-28" onclick="openModal('PermissionModal')">Grant Permission</button>
-        <button class="button-28" onclick="openModal('createTournamentModal')">Create Tournament</button>
+        <script>
+            var isUserLoggedIn = localStorage.getItem("logged_in");
+            if (isUserLoggedIn && isUserLoggedIn.toLowerCase() === "true" && localStorage.getItem("user_role") === "EDUCATOR"){
+                document.write('<button class="button-28" onclick="openModal(\'PermissionModal\')">Grant Permission</button>');
+                document.write('<button class="button-28" onclick="openModal(\'createTournamentModal\')">Create Tournament</button>');
+            }
+        </script>
     </div>
-     <!-- Finestra modale -->
      <div id="createTournamentModal" class="modal">
         <h2>Enjoy creating your tournament!</h2>
         
         <label for="deadline">Registration Deadline:</label>
         <input type="date" id="deadline">
-
-        <button onclick="closeModal('createTournamentModal')">Submit</button>
+        <script>
+            var currentDate = new Date().toISOString().split("T")[0];
+            document.getElementById("deadline").setAttribute("min", currentDate);
+          </script>
+        <button onclick="createTournament()">Submit</button>
     </div>
 
-    <!-- Overlay per la finestra modale -->
     <div id="modalOverlay" class="overlay" onclick="closeModal('createTournamentModal')"></div>
 
     <script>
@@ -155,9 +159,10 @@
 
     <div id="PermissionModal" class="modal">
         <div class="form-container">
-            <label for="educatorRole">Educator Role:</label>
+            <label for="educatorRole">Educator ID:</label>
             <input type="text" id="educatorRole" placeholder="Enter educator role">
-    
+            <label for="tournamentID">Tournament ID:</label>
+            <input type="text" id="tournamentID" placeholder="Enter tournament ID">
             <label >Grant Permission:</label>
             <div class="radio-group">
                 <label for="yes">Yes</label>
@@ -166,10 +171,8 @@
                 <label for="no">No</label>
                 <input type="radio" id="no" name="permission" value="no">
             </div>
-    
-            <button type="button"onclick="closeModal('PermissionModal')">Submit</button>
+            <button type="button"onclick="grantPermission()">Submit</button>
         </div>
     </div>
 </body>
-
 </html>

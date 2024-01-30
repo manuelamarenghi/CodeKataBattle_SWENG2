@@ -2,6 +2,9 @@
 <html>
 
 <head>
+    <script> if(!localStorage.getItem('logged_in')){ 
+        alert('You are not logged in!');
+        window.location.href='index.html' }</script>
     <title>Account | CodeKataBattle</title>
     <link rel="icon" href="public\images\iconCKB.png" type="image/x-icon">
     <style>
@@ -53,27 +56,19 @@
                  
        </div>
         </div>
-        <div class="user-score" id="userDetScore">
+        <div >
         </div>
         <script>
             var storedUserId = localStorage.getItem('user_id');
             var storedUserEmail = localStorage.getItem('user_email');
             var storedUserRole = localStorage.getItem('user_role');
-            var storedUserScore = localStorage.getItem('user_score');
-
             var userDetailsDiv = document.getElementById('userDetails');
-            var userDetScoreDiv = document.getElementById('userDetScore');
-
             var userDetailsHTML = `
                 <div>ID: ${storedUserId}</div>
                 <div>Email: ${storedUserEmail}</div>
                 <div>Role: ${storedUserRole}</div>
             `;
-
-            var userDetScoreHTML = `<p>Score: ${storedUserScore}</p>`;
-
             userDetailsDiv.innerHTML = userDetailsHTML;
-            userDetScoreDiv.innerHTML = userDetScoreHTML;
         </script>
         
     <div class="edit-section" >
@@ -90,7 +85,7 @@
         <button class="button-28" id="submit-button" onclick="updateUserInfo()">Update Profile</button>
     </div>
     </div>
-
+    <script src="utility/app.js"></script>
 </body>
 
 </html>

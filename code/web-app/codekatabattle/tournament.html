@@ -2,6 +2,70 @@
 <html>
 
 <head>
+    <script> 
+    const queryString = window.location.search;
+    const params = new URLSearchParams(queryString);
+    const paramValue = params.get('id');
+    if(!paramValue || !localStorage.getItem(paramValue) && localStorage.getItem(paramValue) !== "true"){ 
+        alert('Invalid access!');
+        window.location.href='index.html' 
+    }
+    window.addEventListener('beforeunload', function() {
+    localStorage.removeItem(paramValue);
+    });
+    var fetchOptions = {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                tournamentID : paramValue,
+            })
+        };
+    fetch("http://localhost:8084/api/tournament/GetTournamentPage",fetchOptions)
+        .then(function(response){
+            if(response.status === "success"){
+                var battles = jsonResponse.battles;
+                var tournamentRankings = jsonResponse.tournamentRankings;
+                
+                // creating tournament ranking table
+                var table = document.getElementById('tournament_ranking');
+                var tableBody = table.querySelector('tbody');
+                tableBody.innerHTML = "";
+
+                for (var j = 0; j < tournamentRankings.length; j++) {
+                var newRow = tableBody.insertRow(-1);
+                var cellNumber = newRow.insertCell(0);
+                var cellUser = newRow.insertCell(1);
+                var cellRating = newRow.insertCell(2);
+
+                cellNumber.textContent = j + 1;
+                cellUser.textContent = tournamentRankings[j].userID; 
+                cellRating.textContent = tournamentRankings[j].score; 
+                }
+
+                // creating battles table
+                var table = document.getElementById('battle_table');
+                var tableBody = table.querySelector('tbody');
+                tableBody.innerHTML = "";
+
+                for (var i = 0; i < battles.length; i++) {
+                var newRow = tableBody.insertRow(-1);
+                var cellLink = newRow.insertCell(0);
+
+                var link = document.createElement('a');
+                link.href = "/battle.html?idT=" + paramValue + "&idB=" + battles[i];
+                link.addEventListener('click', function(event) {
+                    localStorage.setItem(battles[i], "true");
+                });
+                cellLink.appendChild(link);
+        }
+            } else {
+                alert("Errore durante la richiesta.");
+                window.location.href = "index.html";
+            }
+        })
+    </script>
     <title>Tournament | CodeKataBattle</title>
     <link rel="icon" href="public\images\iconCKB.png" type="image/x-icon">
     <style>
@@ -23,6 +87,7 @@
     <link rel="stylesheet" href="public\css\navbar.css" type="text/css">
     <link rel="stylesheet" href="public\css\header.css" type="text/css">
     <link rel="stylesheet" href="public\css\tournament.css" type="text/css">
+    <link rel="stylesheet" href="public\css\createBattle.css" type="text/css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Jura&display=swap">
 </head>
 
@@ -35,13 +100,23 @@
         </div>
         <div class="right-content">
             <div class="user-buttons">
-                <button class="button-28" onclick="window.location.href='login.html'">Enter</button>
-                <button class="button-28" onclick="window.location.href='signin.html'">Register</button>
+                <script>
+                    var isUserLoggedIn = localStorage.getItem("logged_in");
+                    
+                    if (isUserLoggedIn && isUserLoggedIn.toLowerCase() === "true") {
+                        document.write('<button class="button-28" onclick="logout()">Logout</button>');
+                        if(localStorage.getItem("user_role") === "EDUCATOR"){
+                            document.write('<button class="button-28" onclick="closeTournament()">Close Tournament</button>'); 
+                        }
+                    } else {
+                        document.write('<button class="button-28" onclick="window.location.href=\'login.html\'">Enter</button>');
+                        document.write('<button class="button-28" onclick="window.location.href=\'signin.html\'">Register</button>');
+                    }
+                </script>
             </div>
         </div>
     </div>
     <div class="navbar-container">
-        <!-- Contenitore visibile per la navbar -->
         <nav class="navbar">
             <a onclick="window.location.href='index.html'" >Home</a>
             <a onclick="window.location.href='tournaments.html'" class="active">Tournaments</a>
@@ -58,76 +133,176 @@
             }
             else{window.location.href = "login.html"; }
         }
+        function logout() {
+            localStorage.removeItem("logged_in");
+            localStorage.removeItem("user_id");
+            localStorage.removeItem("user_email");
+            localStorage.removeItem("user_role");
+            window.location.href = "index.html";
+        }
+        function registertournament(){
+            var fetchOptions = {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    tournamentID : paramValue,
+                    userID : localStorage.getItem("user_id")
+                })
+            };
+            fetch("http://localhost:8084/api/tournament/subscription",fetchOptions)
+                .then(function(response){
+                    if(response.status === "success"){
+                        alert("You have been registered to the tournament!");
+                        window.location.href = "tournaments.html";
+                    } else {
+                        alert("Errore durante la richiesta.");
+                        window.location.href = "index.html";
+                    }
+            })
+        }
+        function closeTournament(){
+            var fetchOptions = {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    tournamentID : paramValue,
+                })
+            };
+            fetch("http://localhost:8084/api/tournament/closeTournament",fetchOptions)
+                .then(function(response){
+                    if(response.status === "success"){
+                        alert("Tournament closed!");
+                        window.location.href = "tournaments.html";
+                    } else {
+                        alert("Errore durante la richiesta.");
+                        window.location.href = "index.html";
+                    }
+            })
+        }
     </script> 
     <div class="page-container">
-        <div class="table-container">
+        <div class="table-container" id="tournament_ranking">
             <div class="tb-title">Tournament Ranking</div>
             <table>
-                <!-- Aggiungi più righe secondo le tue esigenze -->
                 <tr>
                     <th>#</th>
                     <th class="large-column">User</th>
-                    <!-- Aggiunta di una nuova colonna -->
                     <th>Rating</th>
                 </tr>
-                <tr>
-                    <td>#</td>
-                    <td class="large-column">User</td>
-                    <!-- Aggiunta di una nuova colonna -->
-                    <td>Rating</td>
-                </tr>
-                <tr>
-                    <td>#</td>
-                    <td class="large-column">User</td>
-                    <!-- Aggiunta di una nuova colonna -->
-                    <td>Rating</td>
-                </tr>
-                <tr>
-                    <td>#</td>
-                    <td class="large-column">User</td>
-                    <!-- Aggiunta di una nuova colonna -->
-                    <td>Rating</td>
-                </tr>
                 
-                <!-- Fine delle righe aggiuntive -->
             </table>
         </div>
     </div>
     <div class="tb-title">Battles</div>
 
-    <div class="battle-container">
+    <div class="battle-container" id="battle_table">
         <div class="tb-title">Battles</div>
         <table>
-            <tr>
-                <td><a href="/pagina1">Clicca qui</a></td>
-            </tr>
-            <tr>
-                <td><a href="/pagina1">Clicca qui</a></td>
-            </tr>
-            <tr>
-                <td><a href="/pagina1">Clicca qui</a></td>
-            </tr>
-            <tr>
-                <td><a href="/pagina1">Clicca qui</a></td>
-            </tr>
-            <tr>
-                <td><a href="/pagina1">Clicca qui</a></td>
-            </tr>
-            <tr>
-                <td><a href="/pagina1">Clicca qui</a></td>
-            </tr>
-            <tr>
-                <td><a href="/pagina1">Clicca qui</a></td>
-            </tr>
-
         </table>
     </div>
     <div class="right">
     <div class="button-container">
         <div class="user-buttons" id="session_button">
-            <button class="button-28" >GET IN</button>
+            <script>
+                if(localStorage.getItem("user_role") === "STUDENT"){
+                    document.write('<button onclick="registertournament()" class="button-28" >GET IN</button>');
+                }
+                if(localStorage.getItem("user_role") === "EDUCATOR"){
+                    document.write('<button class="button-28" onclick="openModal(\'CreateBattleModal\')">Create Battle</button>'); 
+                }
+            </script>
         </div>
-    </div>    
+    </div> 
+    <div id="CreateBattleModal" class="modal">
+        <div class="team-section">
+            <label for="teamParticipantMin">Insert min participant for team:</label>
+            <input type="text" id="teamParticipantMin" placeholder="Team participant min">
+            
+            <label for="teamParticipantMax">Insert max participant for team:</label>
+            <input type="text" id="teamParticipantMax" placeholder="Team participant max" disable>
+             <script>
+                document.getElementById("teamParticipantMin").addEventListener("change", function() {
+                document.getElementById("teamParticipantMax").setAttribute("min", this.value);
+            })
+             </script>
+            <label for="evaluation">Add person evaluation:</label>
+            <div>
+                <input type="radio" id="evaluationYes" name="evaluation" value="yes">
+                <label for="evaluationYes">Yes</label>
+    
+                <input type="radio" id="evaluationNo" name="evaluation" value="no">
+                <label for="evaluationNo">No</label>
+            </div>
+    
+            <label for="deadlineSubmission">Add submission deadline:</label>
+            <input type="date" id="deadlineSubmission"disabled>
+    
+            <label for="registrationSubmission">Add registration deadline:</label>
+            <input type="date" id="registrationSubmission">
+            <script>
+                document.getElementById("registrationSubmission").addEventListener("change", function() {
+                document.getElementById("deadlineSubmission").removeAttribute("disabled");
+                var start = this.value;
+                document.getElementById("deadlineSubmission").setAttribute("min", start);
+            })
+              </script>
+    
+            <label for="codeKataUpload">Upload CodeKata (ZIP file):</label>
+            <input type="file" id="codeKataUpload" accept=".zip">
+    
+            <button onclick="submitCreateBattle()">Create Battle</button>
+            <button onclick="closeModal('CreateBattleModal')">Cancel</button>
+        </div>
+    </div>
+    
+    <script>
+        function submitCreateBattle() {
+            var teamParticipant = document.getElementById('teamParticipantMin').value;
+            var teamParticipant = document.getElementById('teamParticipantMax').value;
+            var evaluation = document.querySelector('input[name="evaluation"]:checked').value;
+            if(evaluation === "yes"){ evaluation = true; }
+            else evaluation = false;
+            var deadlineSubmission = document.getElementById('deadlineSubmission').value;
+            var registrationSubmission = document.getElementById('registrationSubmission').value;
+            var codeKataUpload = document.getElementById('codeKataUpload').files[0];
+            const queryString = window.location.search;
+            const params = new URLSearchParams(queryString);
+            const tournamentID = params.get('id');
+            
+            var Battle = {
+                tournamentId: tournamentID,
+                minStudents: teamParticipantMin,
+                maxStudents: teamParticipantMax,
+                regDeadline: registrationSubmission,
+                subDeadline: deadlineSubmission,
+                battleToEval: evaluation,
+            }
+            
+            var fetchOptions = {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    Battle : Battle,
+                })
+            };
+            fetch("http://localhost:8082/api/battle/createBattle",fetchOptions)
+                .then(function(response){
+                    if(response.status === "success"){
+                        alert("Battle created!");
+                    } else {
+                        alert("Errore durante la richiesta.");
+                        window.location.href = "index.html";
+                    }
+            })
+            closeModal('CreateBattleModal');
+        }
+    </script>   
 </body>
 
 </html>

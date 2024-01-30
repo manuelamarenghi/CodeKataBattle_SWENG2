@@ -26,8 +26,16 @@
         </div>
         <div class="right-content">
             <div class="user-buttons" id="session_button">
-                <button class="button-28" onclick="window.location.href='login.html'">Enter</button>
-                <button class="button-28" onclick="window.location.href='signin.html'">Register</button>
+                <script>
+                    var isUserLoggedIn = localStorage.getItem("logged_in");
+                    
+                    if (isUserLoggedIn && isUserLoggedIn.toLowerCase() === "true") {
+                        document.write('<button class="button-28" onclick="logout()">Logout</button>');
+                    } else {
+                        document.write('<button class="button-28" onclick="window.location.href=\'login.html\'">Enter</button>');
+                        document.write('<button class="button-28" onclick="window.location.href=\'signin.html\'">Register</button>');
+                    }
+                </script>
             </div>
         </div>
     </div>
@@ -43,20 +51,13 @@
     </div>
     <div class="search-bar">
         <input type="text" class="search-input" placeholder="Search...">
-        <button class="search-button">Search</button>
+        <button class="search-button" onclick="searchAccount()">Search</button>
     </div>
     <div class="account-container">
         <div class="user-info">
             <img src="public\images\user.png">
             <div class="user-details">
-                <div>Name: John Doe</div>
-                <div>ID: 123456</div>
-                <div>Email: john.doe@example.com</div>
             </div>
-        </div>
-        <div class="user-score">
-            <p>Score: 500</p>
-            <!-- Aggiungi ulteriori informazioni sul punteggio dell'utente o altri dettagli qui -->
         </div>
     </div>
     <script>
@@ -67,6 +68,42 @@
                 window.location.href = "account.html";
             }
             else{window.location.href = "login.html"; }
+        }
+        function logout() {
+            localStorage.removeItem("logged_in");
+            localStorage.removeItem("user_id");
+            localStorage.removeItem("user_email");
+            localStorage.removeItem("user_role");
+        }
+
+        function searchAccount(){
+            var userID = document.querySelector(".search-input").value;
+            var fetchOptions = {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                userID: userID,
+            })
+            };
+            fetch("http://localhost:8086/api/account/user", fetchOptions)
+            .then(function(response) {
+                if(response.status == 200){
+                    response.json().then(function(data) {
+                        var userDetailsDiv = document.getElementById('userDetails');
+                        var userDetailsHTML = `
+                            <div>ID: ${data.id}</div>
+                            <div>Email: ${data.email}</div>
+                            <div>Role: ${data.role}</div>
+                        `;
+                        userDetailsDiv.innerHTML = userDetailsHTML;
+                    })
+                }
+                else{
+                    alert("User not found");
+                }
+            })
         }
     </script> 
 </body>

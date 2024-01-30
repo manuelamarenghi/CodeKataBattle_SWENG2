@@ -2,6 +2,58 @@
 <html>
 
 <head>
+    <script>
+        const queryString = window.location.search;
+        const params = new URLSearchParams(queryString);
+        const tournamentID = params.get('idT');
+        const battleID = params.get('idB');
+
+        if(!tournamentID || !battleID || !localStorage.getItem(battleID) && localStorage.getItem(battleID) !== "true"){ 
+            alert('Invalid access!');
+            window.location.href='index.html' 
+        }
+        window.addEventListener('beforeunload', function() {
+            localStorage.removeItem(battleID);
+        });
+        var fetchOptions = {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                id : battleID
+            })
+        };
+        fetch("http://localhost:8082/api/battle/getBattle",fetchOptions)
+            .then(response => {
+            if (response.status >= 300 ) {
+                console.error('Errore durante la richiesta HTTP:', response.status, response.statusText);
+                window.location.href = "index.html";
+            }
+            })
+            .then(data => {
+            console.log(data);
+            var table = document.getElementById('battle_ranking_table');
+            var tableBody = table.querySelector('tbody');
+            tableBody.innerHTML = "";
+
+            for (var i = 0; i < data.length; i++) {
+            var newRow = tableBody.insertRow(-1);
+            var cellNumber = newRow.insertCell(0);
+            var cellTeam = newRow.insertCell(1);
+            var cellRating = newRow.insertCell(2);
+
+            cellNumber.textContent = j + 1;
+            cellTeam.textContent = data[i].teamID; 
+            cellRating.textContent = data[i].score; 
+            console.log("TeamID:", teamID, "Score:", score);
+            }
+            })
+            .catch(error => {
+                console.error('Errore durante la richiesta HTTP:', error);
+                window.location.href = "index.html";
+            });
+    </script>
     <title>Battle | CodeKataBattle</title>
     <link rel="icon" href="public\images\iconCKB.png" type="image/x-icon">
     <style>
@@ -15,7 +67,6 @@
     <link rel="stylesheet" href="public\css\header.css" type="text/css">
     <link rel="stylesheet" href="public\css\tournament.css" type="text/css">
     <link rel="stylesheet" href="public\css\team.css" type="text/css">
-    <link rel="stylesheet" href="public\css\createBattle.css" type="text/css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Jura&display=swap">
 </head>
 
@@ -28,13 +79,20 @@
         </div>
         <div class="right-content">
             <div class="user-buttons">
-                <button class="button-28" onclick="window.location.href='login.html'">Enter</button>
-                <button class="button-28" onclick="window.location.href='signin.html'">Register</button>
+                <script>
+                    var isUserLoggedIn = localStorage.getItem("logged_in");
+                    
+                    if (isUserLoggedIn && isUserLoggedIn.toLowerCase() === "true") {
+                        document.write('<button class="button-28" onclick="logout()">Logout</button>');
+                    } else {
+                        document.write('<button class="button-28" onclick="window.location.href=\'login.html\'">Enter</button>');
+                        document.write('<button class="button-28" onclick="window.location.href=\'signin.html\'">Register</button>');
+                    }
+                </script>
             </div>
         </div>
     </div>
     <div class="navbar-container">
-        <!-- Contenitore visibile per la navbar -->
         <nav class="navbar">
             <a onclick="window.location.href='index.html'" >Home</a>
             <a onclick="window.location.href='tournaments.html'" class="active">Tournaments</a>
@@ -51,58 +109,40 @@
             }
             else{window.location.href = "login.html"; }
         }
+        function logout() {
+            localStorage.removeItem("logged_in");
+            localStorage.removeItem("user_id");
+            localStorage.removeItem("user_email");
+            localStorage.removeItem("user_role");
+            window.location.href = "index.html";
+        }
+
     </script> 
     <div class="page-container">
-        <div class="table-container">
+        <div class="table-container" id="battle_ranking_table">
             <div class="tb-title">Battle Ranking</div>
             <table>
-                <!-- Aggiungi più righe secondo le tue esigenze -->
-                <tr>
-                    <th>#</th>
-                    <th class="large-column">Team ID</th>
-                    <!-- Aggiunta di una nuova colonna -->
-                    <th>Rating</th>
-                </tr>
-                <tr>
-                    <td>1</td>
-                    <td><a>Clicca qui</a></td>
-                    <!-- Aggiunta di un dato per la nuova colonna -->
-                    <td>Dato Colonna 2</td>
-                </tr>
-                
-                <!-- Fine delle righe aggiuntive -->
             </table>
         </div>
     </div>
     <div class="battle-container2">
         <div class="user-buttons" id="session_button">
-            <button class="button-28" onclick="openModal('CreateBattleModal')">Create Battle</button>
-            <button class="button-28" >Join Battle</button>
-            <button class="button-28" onclick="openModal('TeamModal')">My team</button>
-            <button class="button-28" >Invites</button>
+            <script>
+                if(localStorage.getItem("logged_in") == "true"){
+                if(localStorage.getItem("user_role") == "STUDENT" ){
+                    document.write('<button class="button-28" >Join Battle</button>');  
+                    document.write('<button class="button-28" onclick="GetTeam()">My team</button>');  
+                    document.write('<button class="button-28" >Invites</button>');}
+                }
+            </script>    
         </div>
     </div>
     <div id="TeamModal" class="modal">
         <div class="team-section">
             <div class="team-member">
-                <div>ID Team: 123</div>
-                <div>Score: 500</div>
-                <div>GitHub Repository URL: <a href="https://github.com/team-repo">https://github.com/team-repo</a></div>
+                
             </div>
             <div class="overlay" onclick="closeModal('TeamModal')"></div>
-
-            <div class="team-member">
-                <div class="member-name">Team Member 1</div>
-                <div>Name: Team Member 1</div>
-            </div>
-            <div class="team-member">
-                <div class="member-name">Team Member 2</div>
-                <div>Name: Team Member 2</div>
-            </div>
-            <div class="team-member">
-                <div class="member-name">Team Member 3</div>
-                <div>Name: Team Member 3</div>
-            </div>
         </div>
         
         <script>
@@ -119,52 +159,60 @@
                 modal.style.display = 'none';
                 overlay.style.display = 'none';
             }
+            function GetTeam(){
+                const params = new URLSearchParams(queryString);
+                const tournamentID = params.get('idT');
+                const battleID = params.get('idB');
+                var fetchOptions = {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        userID : localStorage.getItem("user_id"),
+                        battleID : battleID,
+                    })
+                };
+                fetch("http://localhost:8082/api/battle/getTeam",fetchOptions)
+                    .then(response => {
+                    if (response.status >= 300 ) {
+                        console.error('Errore durante la richiesta HTTP:', response.status, response.statusText);
+                        window.location.href = "index.html";
+                    }
+                    })
+                    .then(data => {
+                    console.log(data);
+                    var teamSection = document.querySelector('.team-section');  
+                    teamSection.innerHTML = ""; 
+
+                    for (var i = 0; i < data.length; i++) {
+                    var teamMemberDiv = document.createElement('div');
+                    teamMemberDiv.className = 'team-member';
+
+                    teamMemberDiv.innerHTML = `
+                        <div>ID Team: ${data[i].teamID}</div>
+                        <div>Score: ${data[i].score}</div>
+                        <div>GitHub Repository URL: <a href="${data[i].GitHublink}">${data[i].GitHublink}</a></div>
+                    `;
+
+                    var teamNameDiv = document.createElement('div');
+                    teamNameDiv.className = 'member-name';
+                    teamNameDiv.textContent = `Name: ${data[i].teamName}`;
+                    teamMemberDiv.appendChild(teamNameDiv);                    
+
+                    teamSection.appendChild(teamMemberDiv);
+                    }
+                    })
+                    .catch(error => {
+                        console.error('Errore durante la richiesta HTTP:', error);
+                        window.location.href = "index.html";
+                    });
+                openModal('TeamModal');
+            }
         </script>   
     </div>
 
-    <div id="CreateBattleModal" class="modal">
-        <div class="team-section">
-            <label for="teamParticipant">Insert participant for team:</label>
-            <input type="text" id="teamParticipant" placeholder="Team participant">
     
-            <label for="evaluation">Add person evaluation:</label>
-            <div>
-                <input type="radio" id="evaluationYes" name="evaluation" value="yes">
-                <label for="evaluationYes">Yes</label>
-    
-                <input type="radio" id="evaluationNo" name="evaluation" value="no">
-                <label for="evaluationNo">No</label>
-            </div>
-    
-            <label for="deadlineSubmission">Add deadline submission:</label>
-            <input type="date" id="deadlineSubmission">
-    
-            <label for="registrationSubmission">Add registration submission:</label>
-            <input type="date" id="registrationSubmission">
-    
-            <label for="codeKataUpload">Upload CodeKata (ZIP file):</label>
-            <input type="file" id="codeKataUpload" accept=".zip">
-    
-            <button onclick="submitCreateBattle()">Create Battle</button>
-            <button onclick="closeModal('CreateBattleModal')">Cancel</button>
-        </div>
-    </div>
-    
-    <script>
-        function submitCreateBattle() {
-            // Retrieve values from the modal fields
-            var teamParticipant = document.getElementById('teamParticipant').value;
-            var evaluation = document.querySelector('input[name="evaluation"]:checked').value;
-            var deadlineSubmission = document.getElementById('deadlineSubmission').value;
-            var registrationSubmission = document.getElementById('registrationSubmission').value;
-            var codeKataUpload = document.getElementById('codeKataUpload').files[0];
-    
-            // Perform actions with the retrieved values (e.g., send to server)
-    
-            // Close the modal after submission
-            closeModal('CreateBattleModal');
-        }
-    </script>
     
 </body>
 

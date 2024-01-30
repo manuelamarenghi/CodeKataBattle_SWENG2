@@ -1,44 +1,79 @@
-$("#login-button").click(function () {
-        var email = $("#email").val();
-        var password = $("#password").val();
-        console.log("ciao 1");
-        if (!email || !password ) {
-            alert("Per favore, compila tutti i campi.");
-            return;
-        }
-        console.log("ciao 2");
-        var SignInRequest = {
-            email: email,
-            password: password
-        };
-        $.ajax({
-  		 type: "POST",
- 		 url: "http://localhost:8081/server",
-    	         contentType: "application/json",
-  		 data: JSON.stringify({ utente: SignInRequest }),
-   		 dataType: "json", 
-     	       success: function (response) {
-                console.log("ciao 3");
-                if (response.status === "success") {
-                    // Credenziali corrette, redirect o gestisci la sessione
-                    alert("Accesso riuscito con ruolo: " + response.role);
-                    localStorage.setItem("logged_in", "true");
-                    window.location.href = "index.html";
-                    
-                } else {
-                    // Credenziali errate, mostra un messaggio di errore
-                    alert("Credenziali errate. Riprova.");
-
-                    // Se l'account non esiste, reindirizza alla pagina di registrazione
-                    if (response.reason === "nonexistent_account") {
-                        window.location.href = "signin.html";
-                    }
+function sendLoginReq() {
+    if($("#email").val() == "" || $("#password").val() == ""){
+        alert("Please fill in all fields");
+        return;
+    }
+    var fetchOptions = {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+            email: $("#email").val(),
+            password: $("#password").val(),
+        })
+    };
+    fetch("http://localhost:8086/api/account/sign-in",fetchOptions)
+        .then(function (response) {
+            if (response.status === "success") {
+                localStorage.setItem("logged_in", "true");
+                localStorage.setItem("user_id", response.userid);
+                localStorage.setItem("user_email", response.email);
+                localStorage.setItem("user_role", response.role);
+                window.location.href = "index.html";
+            } else {
+                alert("Credenziali errate. Riprova.");
+                if (response.status >= 400) {
+                    window.location.href = "signin.html";
                 }
-            },
-            error: function () {
-                // Errore durante la richiesta AJAX
-                alert("Errore durante la richiesta AJAX.");
             }
-        });
-    });
+        })
+        .catch(function (err) {
+            alert("Errore durante la richiesta AJAX.");
+                window.location.href = "index.html";
+        })
+};
 
+function sendSignUpReq() {
+    if($("#email").val() == "" || $("#password").val() == "" || $("#name").val() == "" || $("#accountType option:selected").length === 0){
+        alert("Please fill in all fields");
+        return;
+    }
+    var role;
+    if (accountType === "EDUCATOR") {
+        role = "Educator";
+    } else if (accountType === "STUDENT") {
+        role = "Student";
+    } 
+    var fetchOptions = {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+            email: $("#email").val(),
+            password: $("#password").val(),
+            fullname: $("#name").val(),
+            role: role,
+        })
+    };
+    fetch("http://localhost:8086/api/account/sign-up",fetchOptions)
+        .then(function (response) {
+            if (response.status === "success") {
+                localStorage.setItem("logged_in", "true");
+                localStorage.setItem("user_id", response.userid);
+                localStorage.setItem("user_email", response.email);
+                localStorage.setItem("user_role", response.role);
+                window.location.href = "index.html";
+            } else {
+                alert("Credenziali errate. Riprova.");
+                if (response.status >= 400) {
+                    window.location.href = "signin.html";
+                }
+            }
+        })
+        .catch(function (err) {
+            alert("Errore durante la richiesta AJAX.");
+                window.location.href = "index.html";
+        })
+};
