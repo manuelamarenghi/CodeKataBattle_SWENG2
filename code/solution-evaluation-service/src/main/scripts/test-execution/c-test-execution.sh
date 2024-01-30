@@ -5,18 +5,27 @@
 
 DEDUCTION_PER_FAIL=20
 
+if [ "$#" -lt 2 ]; then
+    echo "Not enough arguments provided. Usage: $0 <path> <official_repo_url>"
+    exit 1
+fi
+
+# cd into cloned repo directory
 cd "$1" || exit 255
 
+# clone the official repo to get the official tests
+rm -rf tests/ # have to remove any tests/directories
+
+git clone "$2" "official_repo"
+
+mv "official_repo/tests" "tests"
+
+# run all tests
 readarray -t inputFiles < <(find . -type f -name 'input_*')
 readarray -t outputFiles < <(find . -type f -name 'output_*')
 
 if (( ${#inputFiles[@]} != ${#outputFiles[@]} )); then
     echo "Number of input files does not match number of output files, exiting..."
-    exit 255
-fi
-
-if (( ${#inputFiles[@]} > 100 )); then
-    echo "Too many tests, exiting..."
     exit 255
 fi
 
@@ -34,4 +43,10 @@ for (( i=1; i<=${#inputFiles[@]}; i++ )); do
     fi
 done
 
-exit $((failedTests * DEDUCTION_PER_FAIL))
+totalDeduction=$((failedTests * DEDUCTION_PER_FAIL))
+
+if (( totalDeduction > 100 )); then
+    exit 100
+fi
+
+exit $totalDeduction

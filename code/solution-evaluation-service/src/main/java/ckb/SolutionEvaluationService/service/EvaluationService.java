@@ -24,26 +24,29 @@ public class EvaluationService {
         String script = SCRIPTS_PATH + "pull-repo.sh";
 
         try {
+            // get repo name
             String name = repoUrl.substring(0, repoUrl.lastIndexOf("."))
                     .replace("https://", "")
                     .substring(repoUrl.replace("https://", "").indexOf("/") + 1)
                     .replace("/", "_");
+
+            // start process
             ProcessBuilder processBuilder = new ProcessBuilder(script, repoUrl, name).redirectErrorStream(true);
+            Process process = processBuilder.start();
+
+            // read output
+            BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
             List<String> output = new ArrayList<>();
-            try {
-                Process process = processBuilder.start();
-                BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    output.add(line);
-                }
-            } catch (Exception e) {
-                log.error("Error pulling repo: " + e.getMessage());
-                return "ERR";
+            String line;
+            while ((line = reader.readLine()) != null) {
+                output.add(line);
+                log.info(line);
             }
+
+            if (process.waitFor() == 1) throw new RuntimeException("Error pulling repo: " + repoUrl);
             return output.getLast();
         } catch (Exception e) {
-            log.error("Error pulling repo: " + e.getMessage());
+            log.error("Error pulling repo: " + repoUrl);
             return "ERR";
         }
     }
@@ -80,9 +83,9 @@ public class EvaluationService {
         }
     }
 
-    public int executeTests(String language, String path) {
+    public int executeTests(String language, String path, String officialRepoUrl) {
         String script = SCRIPTS_PATH + "test-execution/" + language + "-test-execution.sh";
-        ProcessBuilder processBuilder = new ProcessBuilder(script, path).redirectErrorStream(true);
+        ProcessBuilder processBuilder = new ProcessBuilder(script, path, officialRepoUrl).redirectErrorStream(true);
         try {
             Process process = processBuilder.start();
             BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
