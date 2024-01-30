@@ -22,7 +22,7 @@
                 tournamentID : paramValue,
             })
         };
-    fetch("http://localhost:8084/api/tournament/GetTournamentPage",fetchOptions)
+    fetch("http://localhost:8087/api/tournament/get-tournament-page",fetchOptions)
         .then(function(response){
             if(response.status === "success"){
                 var battles = jsonResponse.battles;
@@ -151,7 +151,7 @@
                     userID : localStorage.getItem("user_id")
                 })
             };
-            fetch("http://localhost:8084/api/tournament/subscription",fetchOptions)
+            fetch("http://localhost:8087/api/tournament/subscription",fetchOptions)
                 .then(function(response){
                     if(response.status === "success"){
                         alert("You have been registered to the tournament!");
@@ -170,9 +170,10 @@
                 },
                 body: JSON.stringify({
                     tournamentID : paramValue,
+                    creatorID : localStorage.getItem("user_id")
                 })
             };
-            fetch("http://localhost:8084/api/tournament/closeTournament",fetchOptions)
+            fetch("http://localhost:8087/api/tournament/close-tournament",fetchOptions)
                 .then(function(response){
                     if(response.status === "success"){
                         alert("Tournament closed!");
@@ -219,6 +220,9 @@
     </div> 
     <div id="CreateBattleModal" class="modal">
         <div class="team-section">
+            <label for="BattleName">Insert name for the battle:</label>
+            <input type="text" id="BattleName" placeholder="Battle name">
+
             <label for="teamParticipantMin">Insert min participant for team:</label>
             <input type="text" id="teamParticipantMin" placeholder="Team participant min">
             
@@ -249,7 +253,7 @@
                 var start = this.value;
                 document.getElementById("deadlineSubmission").setAttribute("min", start);
             })
-              </script>
+            </script>
     
             <label for="codeKataUpload">Upload CodeKata (ZIP file):</label>
             <input type="file" id="codeKataUpload" accept=".zip">
@@ -258,11 +262,13 @@
             <button onclick="closeModal('CreateBattleModal')">Cancel</button>
         </div>
     </div>
+
     
     <script>
         function submitCreateBattle() {
             var teamParticipant = document.getElementById('teamParticipantMin').value;
             var teamParticipant = document.getElementById('teamParticipantMax').value;
+            var battleName = document.getElementById('BattleName').value;
             var evaluation = document.querySelector('input[name="evaluation"]:checked').value;
             if(evaluation === "yes"){ evaluation = true; }
             else evaluation = false;
@@ -272,26 +278,24 @@
             const queryString = window.location.search;
             const params = new URLSearchParams(queryString);
             const tournamentID = params.get('id');
-            
-            var Battle = {
-                tournamentId: tournamentID,
-                minStudents: teamParticipantMin,
-                maxStudents: teamParticipantMax,
-                regDeadline: registrationSubmission,
-                subDeadline: deadlineSubmission,
-                battleToEval: evaluation,
-            }
-            
+            // TODO gestire file caricato per la repo 
             var fetchOptions = {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify({
-                    Battle : Battle,
+                    name: battleName,
+                    tournamentId: tournamentID,
+                    authorId: localStorage.getItem("user_id"),
+                    minStudents: teamParticipantMin,
+                    maxStudents: teamParticipantMax,
+                    regDeadline: registrationSubmission,
+                    subDeadline: deadlineSubmission,
+                    battleToEval: evaluation,
                 })
             };
-            fetch("http://localhost:8082/api/battle/createBattle",fetchOptions)
+            fetch("http://localhost:8082/api/battle/create-battle",fetchOptions)
                 .then(function(response){
                     if(response.status === "success"){
                         alert("Battle created!");

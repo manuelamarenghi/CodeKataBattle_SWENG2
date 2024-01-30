@@ -21,10 +21,10 @@
                 "Content-Type": "application/json",
             },
             body: JSON.stringify({
-                id : battleID
+                battleId : battleID
             })
         };
-        fetch("http://localhost:8082/api/battle/getBattle",fetchOptions)
+        fetch("http://localhost:8082/api/battle/get-battle",fetchOptions)
             .then(response => {
             if (response.status >= 300 ) {
                 console.error('Errore durante la richiesta HTTP:', response.status, response.statusText);
@@ -68,6 +68,8 @@
     <link rel="stylesheet" href="public\css\tournament.css" type="text/css">
     <link rel="stylesheet" href="public\css\team.css" type="text/css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Jura&display=swap">
+    <script src="utility/battle.js"></script>
+
 </head>
 
 <body>
@@ -130,13 +132,36 @@
             <script>
                 if(localStorage.getItem("logged_in") == "true"){
                 if(localStorage.getItem("user_role") == "STUDENT" ){
-                    document.write('<button class="button-28" >Join Battle</button>');  
+                    document.write('<button class="button-28" onclick="registerBattle()" >Join Battle</button>');  
                     document.write('<button class="button-28" onclick="GetTeam()">My team</button>');  
-                    document.write('<button class="button-28" >Invites</button>');}
+                    document.write('<button class="button-28" onclick="openModal(\'InvitesModal\')">Invites</button>');}
+                if(localStorage.getItem("user_role") == "EDUCATOR" ){
+                    document.write('<button class="button-28" onclick="openModal(\'AddEvalModal\')" >Add Evaluation</button>'); }
                 }
             </script>    
         </div>
     </div>
+
+    <div id="AddEvalModal" class="modal">
+        <label for="TeamID">Insert ID of the team:</label>
+        <input type="text" id="TeamID" placeholder="Team id">
+            
+        <label for="Score">Insert score:</label>
+        <input type="text" id="Score" placeholder="Score" >
+
+        <button onclick="SendEval()">Submit</button>
+    </div>
+
+    <div id="InvitesModal" class="modal">
+        <label for="TeamID">Insert ID of the team:</label>
+        <input type="text" id="TeamID" placeholder="Team id">
+            
+        <label for="UserID">Insert ID of the user to invite:</label>
+        <input type="text" id="UserID" placeholder="user id" >
+
+        <button onclick="InvitesStudent()">Submit</button>
+    </div>
+
     <div id="TeamModal" class="modal">
         <div class="team-section">
             <div class="team-member">
@@ -159,56 +184,7 @@
                 modal.style.display = 'none';
                 overlay.style.display = 'none';
             }
-            function GetTeam(){
-                const params = new URLSearchParams(queryString);
-                const tournamentID = params.get('idT');
-                const battleID = params.get('idB');
-                var fetchOptions = {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({
-                        userID : localStorage.getItem("user_id"),
-                        battleID : battleID,
-                    })
-                };
-                fetch("http://localhost:8082/api/battle/getTeam",fetchOptions)
-                    .then(response => {
-                    if (response.status >= 300 ) {
-                        console.error('Errore durante la richiesta HTTP:', response.status, response.statusText);
-                        window.location.href = "index.html";
-                    }
-                    })
-                    .then(data => {
-                    console.log(data);
-                    var teamSection = document.querySelector('.team-section');  
-                    teamSection.innerHTML = ""; 
-
-                    for (var i = 0; i < data.length; i++) {
-                    var teamMemberDiv = document.createElement('div');
-                    teamMemberDiv.className = 'team-member';
-
-                    teamMemberDiv.innerHTML = `
-                        <div>ID Team: ${data[i].teamID}</div>
-                        <div>Score: ${data[i].score}</div>
-                        <div>GitHub Repository URL: <a href="${data[i].GitHublink}">${data[i].GitHublink}</a></div>
-                    `;
-
-                    var teamNameDiv = document.createElement('div');
-                    teamNameDiv.className = 'member-name';
-                    teamNameDiv.textContent = `Name: ${data[i].teamName}`;
-                    teamMemberDiv.appendChild(teamNameDiv);                    
-
-                    teamSection.appendChild(teamMemberDiv);
-                    }
-                    })
-                    .catch(error => {
-                        console.error('Errore durante la richiesta HTTP:', error);
-                        window.location.href = "index.html";
-                    });
-                openModal('TeamModal');
-            }
+            
         </script>   
     </div>
 

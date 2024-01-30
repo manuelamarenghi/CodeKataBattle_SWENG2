@@ -73,7 +73,7 @@ function sendSignUpReq() {
             }
         })
         .catch(function (err) {
-            alert("Errore durante la richiesta AJAX.");
+            alert("Errore durante la richiesta.");
                 window.location.href = "index.html";
         })
 };

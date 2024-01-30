@@ -12,7 +12,7 @@
                 request : "tournaments"
             })
         }; 
-        fetch("http://localhost:8084/api/tournament/GetAllTournaments", fetchOptions)
+        fetch("http://localhost:8087/api/tournament/get-all-tournaments", fetchOptions)
             .then(function(response) {
                 if (response.status === "success") {
                     if (response.status === "success") {
@@ -21,7 +21,7 @@
                         var tableBody = table.querySelector('tbody');
     
                 tableBody.innerHTML = '';
-    
+                // TODO add name of tournament as a column instead of index
                 arrayLong.forEach(function (element, index){
                 var newRow = tableBody.insertRow();
                 var cell1 = newRow.insertCell(0);
@@ -32,7 +32,7 @@
                 link.href = "tournament.html?id=" + element;
                 link.textContent = element;
                 link.addEventListener('click', function(event) {
-                    localStorage.setItem("element", "true");
+                    localStorage.setItem(element, "true");
                 });
                 cell2.appendChild(link);
             });
@@ -131,7 +131,8 @@
         </script>
     </div>
      <div id="createTournamentModal" class="modal">
-        <h2>Enjoy creating your tournament!</h2>
+        <label for="TournamentName">Insert name for the tournament:</label>
+            <input type="text" id="TournamentName" placeholder="Tournament name">
         
         <label for="deadline">Registration Deadline:</label>
         <input type="date" id="deadline">

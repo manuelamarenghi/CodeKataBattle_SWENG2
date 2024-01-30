@@ -35,6 +35,10 @@
                         document.write('<button class="button-28" onclick="window.location.href=\'login.html\'">Enter</button>');
                         document.write('<button class="button-28" onclick="window.location.href=\'signin.html\'">Register</button>');
                     }
+                    function navigateTo(page) {
+                        // Aggiungi la tua logica per la navigazione
+                        window.location.href = page + '.html';
+                 }
                 </script>
             </div>
         </div>
@@ -44,7 +48,7 @@
         <nav class="navbar">
             <a onclick="window.location.href='index.html'" class="active">Home</a>
             <a onclick="window.location.href='tournaments.html'">Tournaments</a>
-            <a onclick="window.location.href='users.html'">Users</a>
+            <a href="#" onclick="navigateTo('users')">Users</a>
             <a  onclick="redirectToAccount()" id="account_page" >Account</a>
         </nav>
     </div>

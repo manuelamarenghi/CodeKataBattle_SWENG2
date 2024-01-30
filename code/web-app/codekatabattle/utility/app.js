@@ -11,11 +11,12 @@ function createTournament() {
             "Content-Type": "application/json",
         },
         body: JSON.stringify({
+            name: document.getElementById("name").value,
             regdeadline: deadlineDate,
             creatorID: localStorage.getItem("user_id"),
         })
     };
-    fetch("http://localhost:8084/api/tournament/new-tournament",fetchOptions)
+    fetch("http://localhost:8087/api/tournament/new-tournament",fetchOptions)
         .then(function (response) {
             if (response.status === "success") {
                 alert("Torneo creato con successo.");
@@ -29,7 +30,7 @@ function createTournament() {
             closeModal('createTournamentModal');
         })
         .catch(function (err) {
-            alert("Errore durante la richiesta AJAX.");
+            alert("Errore durante la richiesta.");
             window.location.href = "index.html";
             closeModal('createTournamentModal');    
         })
@@ -51,18 +52,17 @@ function grantPermission(){
                 creatorID: localStorage.getItem("user_id"),
             }),
     };
-    fetch("http://localhost:8084/api/tournament/permission", fetchOptions)
+    fetch("http://localhost:8087/api/tournament/permission", fetchOptions)
             .then(function (response) {
                 if (response.status === "success") {
                     alert("Permesso creato.");
                     window.location.href = "tournaments.html";
                 } else {
-                    alert("Errore durante la creazione del torneo. Riprova.");
+                    alert("Permesso non aggiunto. Riprova.");
                     if (response.status >= 400) {
                         window.location.href = "tournaments.html";
                     }
                 }
-                closeModal('createTournamentModal');
             })
             .catch(error => {
                 console.error("Errore nella richiesta HTTP:", error);
