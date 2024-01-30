@@ -14,7 +14,8 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Random;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 @SpringBootTest
 public class MakePublicControllerTest {
@@ -65,7 +66,7 @@ public class MakePublicControllerTest {
         ResponseEntity<Object> response = makePublicController.makePublic(makePublicRequest);
         assertFalse(response.getStatusCode().is2xxSuccessful());
 
-        githubService.getRepo(nameFromUrl).delete();
+        githubService.getRepo("Code-kata-Battle/" + repoName).delete();
     }
 
 

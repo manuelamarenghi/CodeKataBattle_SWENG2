@@ -66,7 +66,9 @@ public class GitHubServiceTest {
         }
     }
 
-    private void checkCorrectness(GHRepository repo, List<ImmutablePair<String, String>> files) throws IOException {
+    private void checkCorrectness(GHRepository repo, List<ImmutablePair<String, String>> files) throws IOException, InterruptedException {
+        Thread.sleep(20000); // wait for GitHub to update
+
         for (ImmutablePair<String, String> file : files) {
             GHContent content;
             content = gitHubService.fetchSources(repo, file.getLeft());
