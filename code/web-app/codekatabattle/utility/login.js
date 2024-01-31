@@ -39,12 +39,7 @@ function sendSignUpReq() {
         alert("Please fill in all fields");
         return;
     }
-    var role;
-    if (accountType === "EDUCATOR") {
-        role = "Educator";
-    } else if (accountType === "STUDENT") {
-        role = "Student";
-    } 
+    
     var fetchOptions = {
         method: "POST",
         headers: {
@@ -54,7 +49,7 @@ function sendSignUpReq() {
             email: $("#email").val(),
             password: $("#password").val(),
             fullname: $("#name").val(),
-            role: role,
+            role: accountType,
         })
     };
     fetch("http://localhost:8086/api/account/sign-up",fetchOptions)

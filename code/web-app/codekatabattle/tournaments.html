@@ -3,8 +3,8 @@
 
 <head>
     <script>
-        var fetchOptions = {
-            method: "POST",
+         var fetchOptions = {
+           method: "POST",
             headers: {
                 "Content-Type": "application/json",
             },
@@ -16,26 +16,23 @@
             .then(function(response) {
                 if (response.status === "success") {
                     if (response.status === "success") {
-                        var arrayLong = JSON.parse(response.data);
-                        var table = document.querySelector('.table-container table');
-                        var tableBody = table.querySelector('tbody');
-    
-                tableBody.innerHTML = '';
-                // TODO add name of tournament as a column instead of index
-                arrayLong.forEach(function (element, index){
-                var newRow = tableBody.insertRow();
-                var cell1 = newRow.insertCell(0);
-                cell1.textContent = index + 1;
-    
-                var cell2 = newRow.insertCell(1);
-                var link = document.createElement('a');
-                link.href = "tournament.html?id=" + element;
-                link.textContent = element;
-                link.addEventListener('click', function(event) {
-                    localStorage.setItem(element, "true");
-                });
-                cell2.appendChild(link);
-            });
+                        var data = JSON.stringify(response.data);
+                        document.addEventListener('DOMContentLoaded', function(data) {
+                        var table = document.getElementById('tournamentlist').querySelector('table'); 
+
+                        for (var key in data) {
+                        if (data.hasOwnProperty(key)) {
+                        var row = table.insertRow();
+                        var keyCell = row.insertCell(0);
+                        var valueCell = row.insertCell(1);
+
+                        var link = document.createElement('a');
+                        link.href = "tournament.html?id="+key;
+
+                        link.textContent = key;
+                        keyCell.appendChild(link);
+                        valueCell.innerHTML = data[key];
+                        }}});
             } else {
                 alert("Errore durante la richiesta.");
             }}})
@@ -43,7 +40,7 @@
                 console.log(data);
                 alert("Errore durante la richiesta.");
                 window.location.href = "index.html";
-            });   
+            });
     </script>
     <title>Tournaments | CodeKataBattle</title>
     <link rel="icon" href="public\images\iconCKB.png" type="image/x-icon">
@@ -102,20 +99,20 @@
             else{window.location.href = "login.html"; }
         }
         function logout() {
-            localStorage.removeItem("logged_in");
-            localStorage.removeItem("user_id");
-            localStorage.removeItem("user_email");
-            localStorage.removeItem("user_role");
+            localStorage.removeItem("logged_in",localStorage.getItem("logged_in"));
+            localStorage.removeItem("user_id",localStorage.getItem("user_id"));
+            localStorage.removeItem("user_email",localStorage.getItem("user_email"));
+            localStorage.removeItem("user_role",localStorage.getItem("user_role"));
             window.location.href = "index.html";
         }
     </script> 
     <div class="page-container">
-        <div class="table-container">
+        <div class="table-container" id="tournamentlist">
             <div class="tb-title">Tournaments List</div>
             <table>
                 <tr>
-                    <th>#</th>
-                    <th class="large-column">Tournaments</th>
+                    <th>TournamentID</th>
+                    <th>Tournament Name</th>
                 </tr>
             </table>
         </div>

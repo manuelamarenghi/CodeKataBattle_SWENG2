@@ -1,6 +1,6 @@
 function GetTeam(){
     //ancora non presente lato server
-    const params = new URLSearchParams(queryString);
+    /*const params = new URLSearchParams(queryString);
     const tournamentID = params.get('idT');
     const battleID = params.get('idB');
     var fetchOptions = {
@@ -45,9 +45,28 @@ function GetTeam(){
         .catch(error => {
             console.error('Errore durante la richiesta HTTP:', error);
             window.location.href = "index.html";
-        });
+        });*/
+        
+        var teamSection = document.querySelector('.team-section');  
+        teamSection.innerHTML = ""; 
+
+        for (var i = 0; i < data.length; i++) {
+        var teamMemberDiv = document.createElement('div');
+        teamMemberDiv.className = 'team-member';
+
+        teamMemberDiv.innerHTML = `
+            <div>ID Team: ${data[i].teamID}</div>
+            <div>Score: ${data[i].score}</div>
+        `;
+
+        var teamNameDiv = document.createElement('div');
+        teamNameDiv.className = 'member-name';
+        teamNameDiv.textContent = `Name: ${data[i].teamName}`;
+        teamMemberDiv.appendChild(teamNameDiv);                    
+
+        teamSection.appendChild(teamMemberDiv);    
     openModal('TeamModal');
-}
+}}
 
 function SendEval(){
     var fetchOptions = {
@@ -57,7 +76,7 @@ function SendEval(){
         },
         body: JSON.stringify({
             userID : localStorage.getItem("user_id"),
-            teamID : document.getElementById("teamID").value,
+            teamID : document.getElementById("team_ID").value,
             score : document.getElementById("score").value,
         })
     };

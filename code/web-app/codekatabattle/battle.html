@@ -3,18 +3,16 @@
 
 <head>
     <script>
-        const queryString = window.location.search;
+     /*   const queryString = window.location.search;
         const params = new URLSearchParams(queryString);
         const tournamentID = params.get('idT');
         const battleID = params.get('idB');
 
-        if(!tournamentID || !battleID || !localStorage.getItem(battleID) && localStorage.getItem(battleID) !== "true"){ 
+        if(!tournamentID || !battleID){ 
             alert('Invalid access!');
             window.location.href='index.html' 
         }
-        window.addEventListener('beforeunload', function() {
-            localStorage.removeItem(battleID);
-        });
+        
         var fetchOptions = {
             method: "POST",
             headers: {
@@ -24,7 +22,7 @@
                 battleId : battleID
             })
         };
-        fetch("http://localhost:8082/api/battle/get-battle",fetchOptions)
+        fetch("http://localhost:8082/api/battle/get-teams-battle",fetchOptions)
             .then(response => {
             if (response.status >= 300 ) {
                 console.error('Errore durante la richiesta HTTP:', response.status, response.statusText);
@@ -52,7 +50,11 @@
             .catch(error => {
                 console.error('Errore durante la richiesta HTTP:', error);
                 window.location.href = "index.html";
-            });
+            });*/
+            localStorage.setItem("logged_in", true);
+            localStorage.setItem("user_id", 1);
+            localStorage.setItem("user_email", "bffdvf");
+            localStorage.setItem("user_role", "STUDENT");
     </script>
     <title>Battle | CodeKataBattle</title>
     <link rel="icon" href="public\images\iconCKB.png" type="image/x-icon">
@@ -67,6 +69,8 @@
     <link rel="stylesheet" href="public\css\header.css" type="text/css">
     <link rel="stylesheet" href="public\css\tournament.css" type="text/css">
     <link rel="stylesheet" href="public\css\team.css" type="text/css">
+    <link rel="stylesheet" href="public\css\modalT.css" type="text/css">
+    <link rel="stylesheet" href="public\css\createBattle.css" type="text/css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Jura&display=swap">
     <script src="utility/battle.js"></script>
 
@@ -112,10 +116,10 @@
             else{window.location.href = "login.html"; }
         }
         function logout() {
-            localStorage.removeItem("logged_in");
-            localStorage.removeItem("user_id");
-            localStorage.removeItem("user_email");
-            localStorage.removeItem("user_role");
+            localStorage.removeItem("logged_in",localStorage.getItem("logged_in"));
+            localStorage.removeItem("user_id",localStorage.getItem("user_id"));
+            localStorage.removeItem("user_email",localStorage.getItem("user_email"));
+            localStorage.removeItem("user_role",localStorage.getItem("user_role"));
             window.location.href = "index.html";
         }
 
@@ -133,24 +137,28 @@
                 if(localStorage.getItem("logged_in") == "true"){
                 if(localStorage.getItem("user_role") == "STUDENT" ){
                     document.write('<button class="button-28" onclick="registerBattle()" >Join Battle</button>');  
-                    document.write('<button class="button-28" onclick="GetTeam()">My team</button>');  
-                    document.write('<button class="button-28" onclick="openModal(\'InvitesModal\')">Invites</button>');}
+                    document.write('<button class="button-28" onclick="GetTeam()" >My team</button>');  
+                    document.write('<button class="button-28" onclick="openModal(\'InvitesModal\')" >Invites</button>');}
                 if(localStorage.getItem("user_role") == "EDUCATOR" ){
                     document.write('<button class="button-28" onclick="openModal(\'AddEvalModal\')" >Add Evaluation</button>'); }
                 }
-            </script>    
+            </script>   
         </div>
-    </div>
-
+    </div>   
+    
     <div id="AddEvalModal" class="modal">
-        <label for="TeamID">Insert ID of the team:</label>
-        <input type="text" id="TeamID" placeholder="Team id">
+        <label for="Team_ID">Insert ID of the team:</label>
+        <input type="text" id="Team_ID" placeholder="Team id">
             
         <label for="Score">Insert score:</label>
         <input type="text" id="Score" placeholder="Score" >
 
         <button onclick="SendEval()">Submit</button>
     </div>
+    <div class="overlay" onclick="closeModal('TeamModal')"></div> 
+    <div class="overlay" onclick="closeModal('AddEvalModal')"></div> 
+    <div class="overlay" onclick="closeModal('InvitesModal')"></div> 
+
 
     <div id="InvitesModal" class="modal">
         <label for="TeamID">Insert ID of the team:</label>
@@ -167,10 +175,10 @@
             <div class="team-member">
                 
             </div>
-            <div class="overlay" onclick="closeModal('TeamModal')"></div>
-        </div>
-        
-        <script>
+            
+        </div>  
+    </div> 
+    <script>
             function openModal(modalId) {
                 var modal = document.getElementById(modalId);
                 var overlay = document.querySelector('.overlay');
@@ -185,11 +193,8 @@
                 overlay.style.display = 'none';
             }
             
-        </script>   
-    </div>
-
-    
-    
+    </script>   
+        
 </body>
 
 </html>

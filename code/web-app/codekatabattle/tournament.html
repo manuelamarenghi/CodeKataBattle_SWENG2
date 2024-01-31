@@ -6,13 +6,10 @@
     const queryString = window.location.search;
     const params = new URLSearchParams(queryString);
     const paramValue = params.get('id');
-    if(!paramValue || !localStorage.getItem(paramValue) && localStorage.getItem(paramValue) !== "true"){ 
+    if(!paramValue ){ 
         alert('Invalid access!');
         window.location.href='index.html' 
     }
-    window.addEventListener('beforeunload', function() {
-    localStorage.removeItem(paramValue);
-    });
     var fetchOptions = {
             method: "POST",
             headers: {
@@ -25,46 +22,32 @@
     fetch("http://localhost:8087/api/tournament/get-tournament-page",fetchOptions)
         .then(function(response){
             if(response.status === "success"){
-                var battles = jsonResponse.battles;
-                var tournamentRankings = jsonResponse.tournamentRankings;
-                
-                // creating tournament ranking table
-                var table = document.getElementById('tournament_ranking');
-                var tableBody = table.querySelector('tbody');
-                tableBody.innerHTML = "";
-
-                for (var j = 0; j < tournamentRankings.length; j++) {
-                var newRow = tableBody.insertRow(-1);
-                var cellNumber = newRow.insertCell(0);
-                var cellUser = newRow.insertCell(1);
-                var cellRating = newRow.insertCell(2);
-
-                cellNumber.textContent = j + 1;
-                cellUser.textContent = tournamentRankings[j].userID; 
-                cellRating.textContent = tournamentRankings[j].score; 
-                }
-
-                // creating battles table
-                var table = document.getElementById('battle_table');
-                var tableBody = table.querySelector('tbody');
-                tableBody.innerHTML = "";
-
-                for (var i = 0; i < battles.length; i++) {
-                var newRow = tableBody.insertRow(-1);
-                var cellLink = newRow.insertCell(0);
-
+                var data = JSON.stringify(response.data);
+                var Rtable = document.getElementById('battle_table').querySelector('table');
+                var battles = data.battles;
+                for(var i in battles){
+                var row = Rtable.insertRow();
+                var keyCell = row.insertCell(0);
                 var link = document.createElement('a');
-                link.href = "/battle.html?idT=" + paramValue + "&idB=" + battles[i];
-                link.addEventListener('click', function(event) {
-                    localStorage.setItem(battles[i], "true");
-                });
-                cellLink.appendChild(link);
-        }
-            } else {
-                alert("Errore durante la richiesta.");
-                window.location.href = "index.html";
-            }
-        })
+                link.href = "battle.html?idB="+i+"&idT="+paramValue;
+                link.textContent = i;
+                keyCell.appendChild(link);
+                }
+                var Ttable = document.getElementById('tournament_ranking').querySelector('table');
+                var tournamentRankings = data.tournamentRankings;
+                for(var i = 0; i < tournamentRankings.length; i++){
+                var row = Ttable.insertRow();
+                var userid = row.insertCell(0);
+                var name  = row.insertCell(1);
+                var score = row.insertCell(2);
+                userid.innerHTML = tournamentRankings[i].playerId;
+                name.innerHTML = tournamentRankings[i].playerName;
+                score.innerHTML = tournamentRankings[i].score;
+                }} else {
+                            alert("Errore durante la richiesta.");
+                            window.location.href = "index.html";
+                        
+                }});
     </script>
     <title>Tournament | CodeKataBattle</title>
     <link rel="icon" href="public\images\iconCKB.png" type="image/x-icon">
@@ -88,6 +71,7 @@
     <link rel="stylesheet" href="public\css\header.css" type="text/css">
     <link rel="stylesheet" href="public\css\tournament.css" type="text/css">
     <link rel="stylesheet" href="public\css\createBattle.css" type="text/css">
+    <link rel="stylesheet" href="public\css\modalT.css" type="text/css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Jura&display=swap">
 </head>
 
@@ -134,12 +118,26 @@
             else{window.location.href = "login.html"; }
         }
         function logout() {
-            localStorage.removeItem("logged_in");
-            localStorage.removeItem("user_id");
-            localStorage.removeItem("user_email");
-            localStorage.removeItem("user_role");
+            localStorage.removeItem("logged_in",localStorage.getItem("logged_in"));
+            localStorage.removeItem("user_id",localStorage.getItem("user_id"));
+            localStorage.removeItem("user_email",localStorage.getItem("user_email"));
+            localStorage.removeItem("user_role",localStorage.getItem("user_role"));
             window.location.href = "index.html";
         }
+        function openModal(modalId) {
+                var modal = document.getElementById(modalId);
+                var overlay = document.querySelector('.overlay');
+                modal.style.display = 'block';
+                overlay.style.display = 'block';
+            }
+        
+            function closeModal(modalId) {
+                var modal = document.getElementById(modalId);
+                var overlay = document.querySelector('.overlay');
+                modal.style.display = 'none';
+                overlay.style.display = 'none';
+            }
+
         function registertournament(){
             var fetchOptions = {
                 method: "POST",
@@ -147,7 +145,7 @@
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify({
-                    tournamentID : paramValue,
+                    tournamentID : params.get('id'),
                     userID : localStorage.getItem("user_id")
                 })
             };
@@ -163,13 +161,13 @@
             })
         }
         function closeTournament(){
-            var fetchOptions = {
+                var fetchOptions = {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify({
-                    tournamentID : paramValue,
+                    tournamentID : params.get('id'),
                     creatorID : localStorage.getItem("user_id")
                 })
             };
@@ -182,23 +180,25 @@
                         alert("Errore durante la richiesta.");
                         window.location.href = "index.html";
                     }
-            })
-        }
+                })
+                .catch(function(response) {
+                    alert("Errore durante la richiesta.");
+                  //  window.location.href = "index.html";
+                }); }
     </script> 
     <div class="page-container">
         <div class="table-container" id="tournament_ranking">
             <div class="tb-title">Tournament Ranking</div>
             <table>
                 <tr>
-                    <th>#</th>
-                    <th class="large-column">User</th>
+                    <th>UserID</th>
+                    <th class="large-column">Name</th>
                     <th>Rating</th>
                 </tr>
                 
             </table>
         </div>
     </div>
-    <div class="tb-title">Battles</div>
 
     <div class="battle-container" id="battle_table">
         <div class="tb-title">Battles</div>
@@ -213,7 +213,7 @@
                     document.write('<button onclick="registertournament()" class="button-28" >GET IN</button>');
                 }
                 if(localStorage.getItem("user_role") === "EDUCATOR"){
-                    document.write('<button class="button-28" onclick="openModal(\'CreateBattleModal\')">Create Battle</button>'); 
+                    document.write('<button onclick="openModal(\'CreateBattleModal\')" class="button-28">Create Battle</button>'); 
                 }
             </script>
         </div>
@@ -242,12 +242,15 @@
                 <label for="evaluationNo">No</label>
             </div>
     
+            <label for="registrationSubmission">Add registration deadline:</label>
+            <input type="date" id="registrationSubmission">
+
             <label for="deadlineSubmission">Add submission deadline:</label>
             <input type="date" id="deadlineSubmission"disabled>
     
-            <label for="registrationSubmission">Add registration deadline:</label>
-            <input type="date" id="registrationSubmission">
             <script>
+                var currentDate = new Intl.DateTimeFormat('en-CA').format(new Date());
+                document.getElementById("registrationSubmission").setAttribute("min", currentDate);
                 document.getElementById("registrationSubmission").addEventListener("change", function() {
                 document.getElementById("deadlineSubmission").removeAttribute("disabled");
                 var start = this.value;
@@ -262,7 +265,7 @@
             <button onclick="closeModal('CreateBattleModal')">Cancel</button>
         </div>
     </div>
-
+    <div id="modalOverlay" class="overlay" onclick="closeModal('CreateBattleModal')"></div>
     
     <script>
         function submitCreateBattle() {
