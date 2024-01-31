@@ -1,9 +1,9 @@
 package ckb.dto.battle;
 
+import ckb.model.WorkingPair;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.List;
 
@@ -11,5 +11,5 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class TeamsRankingMessage {
-    private List<Pair<Long, Integer>> listTeamsIdScore;
+    private List<WorkingPair<Long, Integer>> listTeamsIdScore;
 }

@@ -1,10 +1,10 @@
 package ckb.GitHubManager.controller;
 
 import ckb.GitHubManager.dto.CreateRepositoryRequest;
+import ckb.GitHubManager.model.WorkingPair;
 import ckb.GitHubManager.service.GitHubService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.kohsuke.github.GHRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -42,7 +42,7 @@ public class CreateRepositoryController extends Controller {
             return new ResponseEntity<>("server failed to create repository", getHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
-        List<ImmutablePair<String, String>> files = request.getFiles();
+        List<WorkingPair<String, String>> files = request.getFiles();
         // commit and push files
         try{
             gitHubService.commitAndPush(repo, files);

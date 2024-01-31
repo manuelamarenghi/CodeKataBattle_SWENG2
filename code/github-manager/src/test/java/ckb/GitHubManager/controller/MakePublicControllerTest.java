@@ -2,8 +2,8 @@ package ckb.GitHubManager.controller;
 
 import ckb.GitHubManager.dto.CreateRepositoryRequest;
 import ckb.GitHubManager.dto.MakePublicRequest;
+import ckb.GitHubManager.model.WorkingPair;
 import ckb.GitHubManager.service.GitHubService;
-import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.junit.jupiter.api.Test;
 import org.kohsuke.github.GHRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +32,7 @@ public class MakePublicControllerTest {
         String repoName = getRandomString();
         CreateRepositoryRequest createRequest = CreateRepositoryRequest.builder()
                 .repoName(repoName)
-                .files(List.of(new ImmutablePair<>("README.md", "This is a test")))
+                .files(List.of(new WorkingPair<>("README.md", "This is a test")))
                 .build();
         createRepositoryController.createBattleRepository(createRequest);
         String nameFromUrl = "Code-Kata-Battle/" + repoName;
@@ -54,7 +54,7 @@ public class MakePublicControllerTest {
         String repoName = getRandomString();
         CreateRepositoryRequest createRequest = CreateRepositoryRequest.builder()
                 .repoName(repoName)
-                .files(List.of(new ImmutablePair<>("README.md", "This is a test")))
+                .files(List.of(new WorkingPair<>("README.md", "This is a test")))
                 .build();
         createRepositoryController.createBattleRepository(createRequest);
         String nameFromUrl = "SomeWrongName";

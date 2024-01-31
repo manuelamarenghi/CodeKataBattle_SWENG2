@@ -4,10 +4,7 @@ import ckb.BattleManager.dto.input.GetTeamStudentRequest;
 import ckb.BattleManager.dto.input.GetTeamsRequest;
 import ckb.BattleManager.dto.output.TeamInfoMessage;
 import ckb.BattleManager.dto.output.TeamsRankingMessage;
-import ckb.BattleManager.model.Battle;
-import ckb.BattleManager.model.Participation;
-import ckb.BattleManager.model.ParticipationId;
-import ckb.BattleManager.model.Team;
+import ckb.BattleManager.model.*;
 import ckb.BattleManager.repository.BattleRepository;
 import ckb.BattleManager.repository.ParticipationRepository;
 import ckb.BattleManager.repository.TeamRepository;
@@ -134,7 +131,7 @@ class GetTeamControllerTest {
 
         TeamsRankingMessage teamsRankingMessage = retrievedTeams.getBody();
 
-        List<Pair<Long, Integer>> listTeamsIdScore = teamsRankingMessage.getListTeamsIdScore();
+        List<WorkingPair<Long, Integer>> listTeamsIdScore = teamsRankingMessage.getListTeamsIdScore();
         assertEquals(2, listTeamsIdScore.size());
 
         System.out.println(teamsRankingMessage);

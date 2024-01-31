@@ -4,13 +4,14 @@ import ckb.BattleManager.controller.CreateGHRepositoryBattleController;
 import ckb.BattleManager.dto.input.CreateBattleRequest;
 import ckb.BattleManager.model.Battle;
 import ckb.BattleManager.model.Team;
+import ckb.BattleManager.model.WorkingPair;
 import ckb.BattleManager.repository.BattleRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
+import java.util.Comparator;
 import java.util.List;
 
 @Service
@@ -98,12 +99,14 @@ public class BattleService {
         return canClose;
     }
 
-    public List<Pair<Long, Integer>> getAllTeamsOfBattle(Long idBattle) throws Exception {
+    public List<WorkingPair<Long, Integer>> getAllTeamsOfBattle(Long idBattle) throws Exception {
         Battle battle = getBattle(idBattle);
 
+        Comparator<WorkingPair<Long, Integer>> scoreComparator = Comparator.comparingInt(WorkingPair::getRight);
+
         return battle.getTeamsRegistered().stream()
-                .map(team -> Pair.of(team.getTeamId(), team.getScore()))
-                .sorted((p1, p2) -> p2.getRight().compareTo(p1.getRight()))
+                .map(team -> new WorkingPair<>(team.getTeamId(), team.getScore()))
+                .sorted(scoreComparator.reversed())
                 .toList();
     }
 

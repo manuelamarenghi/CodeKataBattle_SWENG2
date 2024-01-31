@@ -8,7 +8,7 @@ import ckb.dto.tournament.NewTournamentRequest;
 import ckb.dto.tournament.SubscriptionRequest;
 import ckb.model.Battle;
 import ckb.model.Tournament;
-import org.apache.commons.lang3.tuple.ImmutablePair;
+import ckb.model.WorkingPair;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
@@ -58,13 +58,10 @@ public class BattleServiceIntegrationTests {
                 .block();
 
         assertNotNull(userIDResponseEntity);
-        if (userIDResponseEntity.getStatusCode().is2xxSuccessful()) {
-            Long body = userIDResponseEntity.getBody();
-            assertNotNull(body);
-            assertTrue(body > 0);
-            return body;
-        }
-        return null;
+        Long body = userIDResponseEntity.getBody();
+        assertNotNull(body);
+        assertTrue(body > 0);
+        return body;
     }
 
     @Test
@@ -103,8 +100,8 @@ public class BattleServiceIntegrationTests {
                         LocalDateTime.now().plusHours(1),
                         LocalDateTime.now().plusHours(2),
                         List.of(
-                                new ImmutablePair<>("tests/input_1.txt", "1"),
-                                new ImmutablePair<>("tests/output_1.txt", "2")
+                                new WorkingPair<>("tests/input_1.txt", "1"),
+                                new WorkingPair<>("tests/output_1.txt", "2")
                         )
                 ))
                 .accept(MediaType.APPLICATION_JSON)
@@ -145,8 +142,8 @@ public class BattleServiceIntegrationTests {
                         LocalDateTime.now().plusSeconds(5),
                         LocalDateTime.now().plusSeconds(10),
                         List.of(
-                                new ImmutablePair<>("tests/input_1.txt", "1"),
-                                new ImmutablePair<>("tests/output_1.txt", "2")
+                                new WorkingPair<>("tests/input_1.txt", "1"),
+                                new WorkingPair<>("tests/output_1.txt", "2")
                         )
                 ))
                 .accept(MediaType.APPLICATION_JSON)
@@ -224,8 +221,8 @@ public class BattleServiceIntegrationTests {
                         LocalDateTime.now().plusSeconds(5),
                         LocalDateTime.now().plusSeconds(10),
                         List.of(
-                                new ImmutablePair<>("tests/input_1.txt", "1"),
-                                new ImmutablePair<>("tests/output_1.txt", "2")
+                                new WorkingPair<>("tests/input_1.txt", "1"),
+                                new WorkingPair<>("tests/output_1.txt", "2")
                         )
                 ))
                 .retrieve()
@@ -253,9 +250,8 @@ public class BattleServiceIntegrationTests {
         assertNotNull(teamsRankingResponseEntity);
         assertNotNull(teamsRankingResponseEntity.getBody());
         TeamsRankingMessage teamsRanking = teamsRankingResponseEntity.getBody();
-
         webTestClient.post()
-                .uri(battleManagerUri + "/api/battle/assign-evaluation")
+                .uri(battleManagerUri + "/api/battle/assign-score")
                 .bodyValue(
                         new AssignScoreRequest(
                                 teamsRanking.getListTeamsIdScore().get(0).getLeft(),

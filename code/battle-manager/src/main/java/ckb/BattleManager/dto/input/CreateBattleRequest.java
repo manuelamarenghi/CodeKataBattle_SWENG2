@@ -1,9 +1,9 @@
 package ckb.BattleManager.dto.input;
 
+import ckb.BattleManager.model.WorkingPair;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.apache.commons.lang3.tuple.ImmutablePair;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -20,7 +20,7 @@ public class CreateBattleRequest {
     private Boolean battleToEval;
     private LocalDateTime regDeadline;
     private LocalDateTime subDeadline;
-    private List<ImmutablePair<String, String>> files;
+    private List<WorkingPair<String, String>> files;
     /*
     content in the list should be in the following format:
     {

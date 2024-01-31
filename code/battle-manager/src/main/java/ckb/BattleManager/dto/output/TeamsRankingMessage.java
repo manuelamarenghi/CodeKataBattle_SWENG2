@@ -1,5 +1,6 @@
 package ckb.BattleManager.dto.output;
 
+import ckb.BattleManager.model.WorkingPair;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -11,5 +12,5 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class TeamsRankingMessage {
-    private List<Pair<Long, Integer>> listTeamsIdScore;
+    private List<WorkingPair<Long, Integer>> listTeamsIdScore;
 }

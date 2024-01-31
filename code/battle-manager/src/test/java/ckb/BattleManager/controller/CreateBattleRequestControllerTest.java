@@ -1,8 +1,8 @@
 package ckb.BattleManager.controller;
 
 import ckb.BattleManager.dto.input.CreateBattleRequest;
+import ckb.BattleManager.model.WorkingPair;
 import ckb.BattleManager.repository.BattleRepository;
-import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.jupiter.api.*;
@@ -93,7 +93,7 @@ class CreateBattleRequestControllerTest {
                 LocalDateTime.now().plusDays(1),
                 LocalDateTime.now().plusDays(2),
                 List.of(
-                        new ImmutablePair<>(
+                        new WorkingPair<>(
                                 "tests/input_",
                                 "1010001"
                         )
@@ -117,7 +117,7 @@ class CreateBattleRequestControllerTest {
                 LocalDateTime.now().plusDays(1),
                 LocalDateTime.now().plusDays(2),
                 List.of(
-                new ImmutablePair<>(
+                new WorkingPair<>(
                         "tests/input_",
                         "1010001"
                 )
@@ -138,7 +138,7 @@ class CreateBattleRequestControllerTest {
                 LocalDateTime.now().plusDays(1),
                 LocalDateTime.now().plusDays(2),
                 List.of(
-                        new ImmutablePair<>(
+                        new WorkingPair<>(
                                 "tests/input_",
                                 "1010001"
                         )
@@ -162,7 +162,7 @@ class CreateBattleRequestControllerTest {
                 LocalDateTime.now().plusDays(1),
                 LocalDateTime.now().plusDays(2),
                 List.of(
-                        new ImmutablePair<>(
+                        new WorkingPair<>(
                                 "tests/input_",
                                 "1010001"
                         )
@@ -186,7 +186,7 @@ class CreateBattleRequestControllerTest {
                 LocalDateTime.now().minusDays(1),
                 LocalDateTime.now().plusDays(2),
                 List.of(
-                        new ImmutablePair<>(
+                        new WorkingPair<>(
                                 "tests/input_",
                                 "1010001"
                         )

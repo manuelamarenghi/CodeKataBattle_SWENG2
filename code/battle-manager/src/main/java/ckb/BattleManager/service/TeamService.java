@@ -1,9 +1,6 @@
 package ckb.BattleManager.service;
 
-import ckb.BattleManager.model.Battle;
-import ckb.BattleManager.model.Participation;
-import ckb.BattleManager.model.ParticipationId;
-import ckb.BattleManager.model.Team;
+import ckb.BattleManager.model.*;
 import ckb.BattleManager.repository.TeamRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.tuple.Pair;
@@ -158,10 +155,10 @@ public class TeamService {
         log.info("Student {} registered to team {}", idStudent, idNewTeam);
     }
 
-    public List<Pair<Long, Integer>> getListPairIdUserPoints(Battle battle) {
+    public List<WorkingPair<Long, Integer>> getListPairIdUserPoints(Battle battle) {
         List<Object[]> listArrayObjects = teamRepository.findPairsIdUserPointsByBattleId(battle);
         return listArrayObjects.stream()
-                .map(arrayObject -> Pair.of((Long) arrayObject[0], (Integer) arrayObject[1]))
+                .map(arrayObject -> new WorkingPair<Long, Integer>((Long) arrayObject[0], (Integer) arrayObject[1]))
                 .toList();
     }
 }

@@ -1,8 +1,8 @@
 package ckb.GitHubManager.service;
 
+import ckb.GitHubManager.model.WorkingPair;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.kohsuke.github.*;
 import org.springframework.stereotype.Service;
 
@@ -47,7 +47,7 @@ public class GitHubService {
         }
     }
 
-    public void commitAndPush(GHRepository repo, List<ImmutablePair<String, String>> files) throws IOException {
+    public void commitAndPush(GHRepository repo, List<WorkingPair<String, String>> files) throws IOException {
 
         String lastCommitSHA = getLastCommitSHA(repo);
         String baseTreeSHA = getBaseTreeSHA(repo, lastCommitSHA);
@@ -85,9 +85,9 @@ public class GitHubService {
                 .getSha();
     }
 
-    private String createNewTree(GHRepository repo, String baseTreeSHA, List<ImmutablePair<String, String>> files) throws IOException {
+    private String createNewTree(GHRepository repo, String baseTreeSHA, List<WorkingPair<String, String>> files) throws IOException {
         GHTreeBuilder treeBuilder = repo.createTree().baseTree(baseTreeSHA);
-        for (ImmutablePair<String, String> file : files) { // add each file to the tree
+        for (WorkingPair<String, String> file : files) { // add each file to the tree
             treeBuilder.add(
                     file.getLeft(), // path
                     file.getRight(), // content

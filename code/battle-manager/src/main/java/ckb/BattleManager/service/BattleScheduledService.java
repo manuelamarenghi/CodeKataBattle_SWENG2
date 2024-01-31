@@ -61,7 +61,8 @@ public class BattleScheduledService {
             }
 
             // Get the teams and the points of each battle
-            // send the a class containing tournament_id, List<Pair<idTeam, points>>
+            // send the class containing tournament_id, List<Pair<idTeam, points>>
+            // just kidding, we are better, so we use a Working Pair, a pair that actually fucking works
             // to the Tournament manager
             sendTeamsPointsController.sendIdUsersPointsFinishedBattle(
                     battle,

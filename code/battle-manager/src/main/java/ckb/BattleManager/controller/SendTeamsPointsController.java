@@ -2,6 +2,7 @@ package ckb.BattleManager.controller;
 
 import ckb.BattleManager.dto.output.BattleFinishedMessage;
 import ckb.BattleManager.model.Battle;
+import ckb.BattleManager.model.WorkingPair;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +19,7 @@ public class SendTeamsPointsController extends Controller {
         this.webClientBuilder = WebClient.builder();
     }
 
-    public void sendIdUsersPointsFinishedBattle(Battle battle, List<Pair<Long, Integer>> pairsIdUserPoints) {
+    public void sendIdUsersPointsFinishedBattle(Battle battle, List<WorkingPair<Long, Integer>> pairsIdUserPoints) {
         ResponseEntity<Object> response = webClientBuilder.build()
                 .post()
                 .uri(tournamentManagerUri + "/api/tournament/update-score")
