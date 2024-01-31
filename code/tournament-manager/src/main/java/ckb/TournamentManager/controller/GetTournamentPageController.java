@@ -2,22 +2,17 @@ package ckb.TournamentManager.controller;
 
 import ckb.TournamentManager.dto.incoming.GetTournamentPageRequest;
 import ckb.TournamentManager.dto.outcoming.GetBattlesRequest;
+import ckb.TournamentManager.dto.outcoming.ListBattlesResponse;
 import ckb.TournamentManager.model.TournamentRanking;
 import ckb.TournamentManager.service.TournamentService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.reactive.function.client.WebClient;
-import org.springframework.web.reactive.function.client.WebClientResponseException;
-import reactor.core.publisher.Mono;
 
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @Slf4j
@@ -25,65 +20,71 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @CrossOrigin(origins = "*")
 
-public class GetTournamentPageController extends Controller{
+public class GetTournamentPageController extends Controller {
     private final TournamentService tournamentService;
 
     private final WebClient webClient;
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<Object> getTournamentPage(@RequestBody GetTournamentPageRequest request) {
-        ResponseEntity<Object> response = checkRequest(request);
-        if (response.getStatusCode().is4xxClientError()) return response;
+    public ResponseEntity<ResponseWrapper> getTournamentPage(@RequestBody GetTournamentPageRequest request) {
+        if (invalidRequest(request)) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
         List<TournamentRanking> t = tournamentService.getTournamentPage(request);
         ResponseWrapper responseWrapper;
+
         try {
             log.info("Tournament page retrieved");
             List<Long> battles = getBattles(request.getTournamentID());
             responseWrapper = new ResponseWrapper(battles, t);
         } catch (Exception e) {
-            log.error(e.toString());
-            return new ResponseEntity<>("Error while retrieving battles", getHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);
+            log.error("[EXCEPTION] An exception occurred while retrieving battles {}", e.toString());
+            return ResponseEntity.badRequest().build();
         }
+
         return new ResponseEntity<>(responseWrapper, getHeaders(), HttpStatus.CREATED);
     }
 
-    private List<Long> getBattles(Long tournamentID) {
-        try {
-             return webClient
-                    .post()
-                     .uri("http://localhost:8082/api/battle/get-battles-tournament")
-                     .bodyValue(
-                             new GetBattlesRequest(
-                                     tournamentID
-                             )
-                     )
-                    .retrieve()
-                    .onStatus(HttpStatusCode::is4xxClientError, clientResponse -> Mono.error(new RuntimeException("Errore durante la chiamata HTTP")))
-                     .bodyToMono(String.class)
-                     .map(responseBody -> {
-                         responseBody = responseBody.replaceAll("^\\[|\\]$", "");
-                         String[] longStrings = responseBody.split(",");
-                         return Arrays.stream(longStrings)
-                                 .map(Long::valueOf)
-                                 .collect(Collectors.toList());
-                     })
-                     .block();
-        } catch (WebClientResponseException e) {
-            if (e.getStatusCode() != HttpStatus.OK) {
-                log.error("Error while retrieving battles: {}", e.getMessage());
-                return Collections.emptyList();
-            }
-            return Collections.emptyList();
+    private List<Long> getBattles(Long tournamentID) throws Exception {
+        ResponseEntity<ListBattlesResponse> response = webClient
+                .post()
+                .uri(battleManagerUri + "/api/battle/get-battles-tournament")
+                .bodyValue(
+                        new GetBattlesRequest(
+                                tournamentID
+                        )
+                )
+                .retrieve()
+                .toEntity(ListBattlesResponse.class)
+                .block();
+
+        if (response == null) {
+            log.error("[ERROR] The response is null");
+            throw new Exception("The response is null");
         }
-    }
-    private ResponseEntity<Object> checkRequest(GetTournamentPageRequest request) {
-        if(request.getTournamentID() == null || tournamentService.getTournament(request.getTournamentID()) == null){
-            log.error("Invalid tournament id request");
-            return new ResponseEntity<>("Invalid tournament id request", getHeaders(), HttpStatus.BAD_REQUEST);
+
+        if (response.getStatusCode().is4xxClientError()) {
+            log.error("[ERROR] The response has an error {}", response.getBody());
+            throw new Exception("The response has an error");
         }
-        return new ResponseEntity<>("Valid request", getHeaders(), HttpStatus.OK);
+
+        if (response.getBody() == null) {
+            log.error("[ERROR] The response body is null");
+            throw new Exception("The response body is null");
+        }
+
+        log.info("Successfully retrieved the list of battles");
+        return response.getBody().getBattlesID();
     }
 
+    private boolean invalidRequest(GetTournamentPageRequest request) {
+        if (request.getTournamentID() == null || tournamentService.getTournament(request.getTournamentID()) == null) {
+            log.error("Invalid tournament id request");
+            return true;
+        }
+        return false;
+    }
 
 }

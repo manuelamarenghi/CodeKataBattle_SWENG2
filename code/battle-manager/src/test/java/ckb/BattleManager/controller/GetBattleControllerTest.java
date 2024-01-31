@@ -1,6 +1,7 @@
 package ckb.BattleManager.controller;
 
 import ckb.BattleManager.dto.input.GetBattlesRequest;
+import ckb.BattleManager.dto.output.ListBattlesResponse;
 import ckb.BattleManager.model.Battle;
 import ckb.BattleManager.model.Team;
 import ckb.BattleManager.repository.BattleRepository;
@@ -85,12 +86,14 @@ public class GetBattleControllerTest {
 
     @Test
     public void getBattlesOfTournament() {
-        ResponseEntity<List<Long>> result = getBattleController.getBattlesOfTournament(new GetBattlesRequest(1L));
+        ResponseEntity<ListBattlesResponse> result = getBattleController
+                .getBattlesOfTournament(new GetBattlesRequest(1L));
 
         assertTrue(result.getStatusCode().is2xxSuccessful());
         assertNotNull(result.getBody());
-        System.out.println(result.getBody());
-        assertEquals(2, result.getBody().size());
+
+        List<Long> ids = result.getBody().getBattlesID();
+        assertEquals(2, ids.size());
     }
 
     @AfterAll

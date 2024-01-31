@@ -1,6 +1,7 @@
 package ckb.BattleManager.controller;
 
 import ckb.BattleManager.dto.input.GetBattlesRequest;
+import ckb.BattleManager.dto.output.ListBattlesResponse;
 import ckb.BattleManager.service.BattleService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,10 +32,10 @@ public class GetBattleController {
      * @return a ResponseEntity with the list of ids of the battles
      */
     @GetMapping("/get-battles-tournament")
-    public ResponseEntity<List<Long>> getBattlesOfTournament(@RequestBody GetBattlesRequest idTournament) {
+    public ResponseEntity<ListBattlesResponse> getBattlesOfTournament(@RequestBody GetBattlesRequest idTournament) {
         log.info("[API REQUEST] Get battles of tournament request with id: {}", idTournament.getBattleId());
         List<Long> battleIds = battleService.getBattlesTournament(idTournament.getBattleId());
         log.info("The battles of the tournament {} are: {}", idTournament.getBattleId(), battleIds);
-        return ResponseEntity.ok(battleIds);
+        return ResponseEntity.ok(new ListBattlesResponse(battleIds));
     }
 }
