@@ -2,6 +2,7 @@ package ckb.BattleManager.controller;
 
 import ckb.BattleManager.dto.input.CreateBattleRequest;
 import ckb.BattleManager.repository.BattleRepository;
+import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.jupiter.api.*;
@@ -12,6 +13,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.ResponseEntity;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockserver.model.HttpRequest.request;
@@ -29,6 +31,7 @@ class CreateBattleRequestControllerTest {
     private ClientAndServer mockServerAccountManager;
 
     private ClientAndServer mockServerTournamentManager;
+    private ClientAndServer mockServerGithubManager;
 
 
     @BeforeAll
@@ -40,6 +43,7 @@ class CreateBattleRequestControllerTest {
     public void setUp() {
         mockServerAccountManager = ClientAndServer.startClientAndServer(8086);
         mockServerTournamentManager = ClientAndServer.startClientAndServer(8087);
+        mockServerGithubManager = ClientAndServer.startClientAndServer(8083);
     }
 
     @AfterEach
@@ -47,6 +51,7 @@ class CreateBattleRequestControllerTest {
         battleRepository.deleteAll();
         mockServerAccountManager.stop();
         mockServerTournamentManager.stop();
+        mockServerGithubManager.stop();
     }
 
     private void setMockServers() throws JSONException {
@@ -69,6 +74,10 @@ class CreateBattleRequestControllerTest {
         mockServerTournamentManager
                 .when(request().withMethod("POST").withPath("/api/tournament/check-permission"))
                 .respond(response().withStatusCode(200));
+
+        mockServerGithubManager
+                .when(request().withMethod("POST").withPath("/api/github/create-repo"))
+                .respond(response().withStatusCode(200));
     }
 
     @Test
@@ -82,7 +91,13 @@ class CreateBattleRequestControllerTest {
                 2,
                 false,
                 LocalDateTime.now().plusDays(1),
-                LocalDateTime.now().plusDays(2)
+                LocalDateTime.now().plusDays(2),
+                List.of(
+                        new ImmutablePair<>(
+                                "test",
+                                "1010001"
+                        )
+                )
         );
 
         ResponseEntity<Object> retrievedBattle = createBattleController.createBattle(battle);
@@ -100,7 +115,8 @@ class CreateBattleRequestControllerTest {
                 2,
                 false,
                 LocalDateTime.now().plusDays(1),
-                LocalDateTime.now().plusDays(2)
+                LocalDateTime.now().plusDays(2),
+                null
         );
 
         ResponseEntity<Object> retrievedBattle = createBattleController.createBattle(battle1);
@@ -114,7 +130,13 @@ class CreateBattleRequestControllerTest {
                 2,
                 false,
                 LocalDateTime.now().plusDays(1),
-                LocalDateTime.now().plusDays(2)
+                LocalDateTime.now().plusDays(2),
+                List.of(
+                        new ImmutablePair<>(
+                                "test",
+                                "1010001"
+                        )
+                )
         );
 
         retrievedBattle = createBattleController.createBattle(battle2);
@@ -132,7 +154,13 @@ class CreateBattleRequestControllerTest {
                 2,
                 false,
                 LocalDateTime.now().plusDays(1),
-                LocalDateTime.now().plusDays(2)
+                LocalDateTime.now().plusDays(2),
+                List.of(
+                        new ImmutablePair<>(
+                                "test",
+                                "1010001"
+                        )
+                )
         );
 
         ResponseEntity<Object> retrievedBattle = createBattleController.createBattle(battle);
@@ -150,7 +178,13 @@ class CreateBattleRequestControllerTest {
                 2,
                 false,
                 LocalDateTime.now().minusDays(1),
-                LocalDateTime.now().plusDays(2)
+                LocalDateTime.now().plusDays(2),
+                List.of(
+                        new ImmutablePair<>(
+                                "test",
+                                "1010001"
+                        )
+                )
         );
 
         ResponseEntity<Object> retrievedBattle = createBattleController.createBattle(battle);

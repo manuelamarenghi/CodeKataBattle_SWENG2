@@ -1,5 +1,6 @@
 package ckb.BattleManager.service;
 
+import ckb.BattleManager.controller.CreateGHRepositoryBattleController;
 import ckb.BattleManager.dto.input.CreateBattleRequest;
 import ckb.BattleManager.model.Battle;
 import ckb.BattleManager.model.Team;
@@ -17,12 +18,15 @@ import java.util.List;
 public class BattleService {
     private final BattleRepository battleRepository;
     private final TeamService teamService;
+    private final CreateGHRepositoryBattleController createGHRepositoryBattleController;
 
     @Autowired
 
-    public BattleService(BattleRepository battleRepository, TeamService teamService) {
+    public BattleService(BattleRepository battleRepository, TeamService teamService,
+                         CreateGHRepositoryBattleController createGHRepositoryBattleController) {
         this.battleRepository = battleRepository;
         this.teamService = teamService;
+        this.createGHRepositoryBattleController = createGHRepositoryBattleController;
     }
 
     public Battle getBattle(Long id) throws Exception {
@@ -32,7 +36,7 @@ public class BattleService {
         });
     }
 
-    public void createBattle(CreateBattleRequest battleRequest) {
+    public Battle createBattle(CreateBattleRequest battleRequest) throws Exception {
         Battle battle = Battle.builder()
                 .tournamentId(battleRequest.getTournamentId())
                 .name(battleRequest.getName())
@@ -47,7 +51,19 @@ public class BattleService {
                 .isClosed(false)
                 .build();
         battleRepository.save(battle);
-        log.info("Battle created with id: {}", battle.getBattleId());
+        log.info("Battle saved in the database with name {}", battle.getName());
+
+        try {
+            String repoLink = createGHRepositoryBattleController.createGHRepository(battle, battleRequest.getFiles());
+            battle.setRepositoryLink(repoLink);
+            battleRepository.save(battle);
+        } catch (Exception e) {
+            log.error("Error creating repo in GitHub. Error {}", e.getMessage());
+            battleRepository.delete(battle);
+            throw new Exception("Error creating repo in GitHub");
+        }
+
+        return battle;
     }
 
     public List<Long> getBattlesTournament(Long idTournament) {

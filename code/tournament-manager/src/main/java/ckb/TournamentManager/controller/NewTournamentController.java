@@ -30,8 +30,7 @@ public class NewTournamentController extends Controller {
 
         try {
             Tournament tournament = tournamentService.createTournament(request);
-            String content = "Hi! A new tournament is created click here to subscribe " +
-                    "http://tournament-service/tournaments/" + request.getName();
+            String content = "Hi! A new tournament called " + request.getName() + " is created!";
             log.info("New tournament created");
             sendRequest(content);
             log.info("Mail correctly sent!");

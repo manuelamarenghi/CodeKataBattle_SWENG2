@@ -37,7 +37,8 @@ public class InformStudentsController extends Controller {
                         new DirectMailRequest(
                                 tournamentService.getStudentsSubscribed(request.getTournamentId())
                                         .stream()
-                                        .map(Object::toString).toList(),
+                                        .map(Object::toString)
+                                        .toList(),
                                 content
                         )
                 )

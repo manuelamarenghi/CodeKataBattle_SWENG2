@@ -2,9 +2,11 @@ package ckb.BattleManager.dto.output;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @AllArgsConstructor
-public class StartBattleMessage {
-    private Long idBattle;
+@NoArgsConstructor
+public class MakePublicRequest {
+    private String repoName;
 }

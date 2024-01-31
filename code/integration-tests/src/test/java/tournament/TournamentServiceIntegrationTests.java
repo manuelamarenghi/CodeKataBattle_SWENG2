@@ -28,7 +28,7 @@ public class TournamentServiceIntegrationTests {
         Long idEducator = createEducator();
         webTestClient.post()
                 .uri(tournamentManagerUri + "/api/tournament/new-tournament")
-                .bodyValue(new NewTournamentRequest(new Date(2024 - 1900, Calendar.FEBRUARY, 1), idEducator))
+                .bodyValue(new NewTournamentRequest(idEducator, "Catta's Tournament", new Date(2024 - 1900, Calendar.FEBRUARY, 1)))
                 .accept(MediaType.APPLICATION_JSON)
                 .exchange()
                 .expectStatus().is2xxSuccessful();
@@ -39,7 +39,7 @@ public class TournamentServiceIntegrationTests {
         Long idEducator = createEducator();
         webTestClient.post()
                 .uri(tournamentManagerUri + "/api/tournament/new-tournament")
-                .bodyValue(new NewTournamentRequest(new Date(2023 - 1900, Calendar.FEBRUARY, 1), idEducator))
+                .bodyValue(new NewTournamentRequest(idEducator, "Pino's Tournament", new Date(2022 - 1900, Calendar.FEBRUARY, 1)))
                 .accept(MediaType.APPLICATION_JSON)
                 .exchange()
                 .expectStatus().is4xxClientError();
@@ -50,7 +50,7 @@ public class TournamentServiceIntegrationTests {
         Long idStudent = createStudent();
         webTestClient.post()
                 .uri(tournamentManagerUri + "/api/tournament/new-tournament")
-                .bodyValue(new NewTournamentRequest(new Date(2024 - 1900, Calendar.FEBRUARY, 1), idStudent))
+                .bodyValue(new NewTournamentRequest(idStudent, "Pino's Tournament", new Date(2024 - 1900, Calendar.FEBRUARY, 1)))
                 .accept(MediaType.APPLICATION_JSON)
                 .exchange()
                 .expectStatus().is4xxClientError();
@@ -60,7 +60,7 @@ public class TournamentServiceIntegrationTests {
     public void createTournamentNullPointerCreatorID() {
         webTestClient.post()
                 .uri(tournamentManagerUri + "/api/tournament/new-tournament")
-                .bodyValue(new NewTournamentRequest(new Date(2024 - 1900, Calendar.FEBRUARY, 1), null))
+                .bodyValue(new NewTournamentRequest(null, "Pino's Tournament", new Date(2024 - 1900, Calendar.FEBRUARY, 1)))
                 .accept(MediaType.APPLICATION_JSON)
                 .exchange()
                 .expectStatus().is4xxClientError();
@@ -70,7 +70,7 @@ public class TournamentServiceIntegrationTests {
     public void createTournamentNullPointers() {
         webTestClient.post()
                 .uri(tournamentManagerUri + "/api/tournament/new-tournament")
-                .bodyValue(new NewTournamentRequest(null, null))
+                .bodyValue(new NewTournamentRequest(null, null, null))
                 .accept(MediaType.APPLICATION_JSON)
                 .exchange()
                 .expectStatus().is4xxClientError();

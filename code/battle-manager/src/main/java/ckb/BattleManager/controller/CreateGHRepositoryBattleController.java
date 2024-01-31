@@ -1,25 +1,28 @@
 package ckb.BattleManager.controller;
 
-import ckb.BattleManager.dto.output.StartBattleMessage;
+import ckb.BattleManager.dto.output.CreateRepoRequest;
 import ckb.BattleManager.model.Battle;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import java.util.List;
+
 @RestController
 @Slf4j
-public class StartBattleController {
+public class CreateGHRepositoryBattleController extends Controller {
     private final WebClient webClient = WebClient.create();
-    private String githubManagerUri = "http://github-manager:8083";
 
-
-    public String startBattle(Battle battleToStart) throws Exception {
+    public String createGHRepository(Battle battleToStart, List<ImmutablePair<String, String>> files) throws Exception {
         ResponseEntity<String> response = webClient.post()
                 .uri(githubManagerUri + "/api/github/create-repo")
                 .bodyValue(
-                        new StartBattleMessage(
-                                battleToStart.getBattleId()
+                        //TODO name of the battle (the name should be given by the github manager) and files?
+                        new CreateRepoRequest(
+                                battleToStart.getName(),
+                                files
                         )
                 )
                 .retrieve()
@@ -38,9 +41,5 @@ public class StartBattleController {
 
         log.info("Battle started with id: {}", battleToStart.getBattleId());
         return response.getBody();
-    }
-
-    public void initDebug() {
-        githubManagerUri = "http://localhost:8083";
     }
 }

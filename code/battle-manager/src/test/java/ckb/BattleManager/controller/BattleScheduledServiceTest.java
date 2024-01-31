@@ -29,26 +29,26 @@ class BattleScheduledServiceTest {
     private final BattleRepository battleRepository;
     private final TeamRepository teamRepository;
     private final ParticipationRepository participationRepository;
-    private final SendTeamsPointsFinishedBattleController sendTeamsPointsFinishedBattleController;
-    private final StartBattleController startBattleController;
+    private final SendTeamsPointsController sendTeamsPointsController;
+    private final CreateGHRepositoryBattleController createGHRepositoryBattleController;
     private ClientAndServer mockServer;
 
     @Autowired
     public BattleScheduledServiceTest(BattleRepository battleRepository,
                                       TeamRepository teamRepository,
                                       ParticipationRepository participationRepository,
-                                      SendTeamsPointsFinishedBattleController sendTeamsPointsFinishedBattleController,
-                                      StartBattleController startBattleController) {
+                                      SendTeamsPointsController sendTeamsPointsController,
+                                      CreateGHRepositoryBattleController createGHRepositoryBattleController) {
         this.battleRepository = battleRepository;
         this.teamRepository = teamRepository;
         this.participationRepository = participationRepository;
-        this.sendTeamsPointsFinishedBattleController = sendTeamsPointsFinishedBattleController;
-        this.startBattleController = startBattleController;
+        this.sendTeamsPointsController = sendTeamsPointsController;
+        this.createGHRepositoryBattleController = createGHRepositoryBattleController;
     }
 
     @Test
     void startBattles() throws InterruptedException {
-        startBattleController.initDebug();
+        createGHRepositoryBattleController.initDebug();
         mockServer = ClientAndServer.startClientAndServer(8083);
         mockServer
                 .when(HttpRequest.request()
@@ -81,7 +81,7 @@ class BattleScheduledServiceTest {
 
     @Test
     void closeBattles() throws InterruptedException {
-        sendTeamsPointsFinishedBattleController.initDebug();
+        sendTeamsPointsController.initDebug();
         Battle battleToClose = new Battle();
         battleToClose.setTournamentId(1L);
         battleToClose.setRegDeadline(LocalDateTime.now());

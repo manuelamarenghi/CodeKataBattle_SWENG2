@@ -4,6 +4,7 @@ import ckb.BattleManager.dto.input.CreateBattleRequest;
 import ckb.BattleManager.dto.output.CheckPermissionRequest;
 import ckb.BattleManager.dto.output.InformStudentsRequest;
 import ckb.BattleManager.dto.output.UserRequest;
+import ckb.BattleManager.model.Battle;
 import ckb.BattleManager.model.Role;
 import ckb.BattleManager.model.User;
 import ckb.BattleManager.service.BattleService;
@@ -19,11 +20,9 @@ import java.time.LocalDateTime;
 @RestController
 @RequestMapping("/api/battle")
 @Slf4j
-public class CreateBattleController {
+public class CreateBattleController extends Controller {
     private final BattleService battleService;
     private final WebClient webClient = WebClient.create();
-    private String accountManagerUri = "http://account-manager:8086";
-    private String tournamentManagerUri = "http://tournament-manager:8087";
 
     @Autowired
     public CreateBattleController(BattleService battleService) {
@@ -37,10 +36,9 @@ public class CreateBattleController {
 
         try {
             checkBattleRequest(request);
-            ;
-            battleService.createBattle(request);
+            Battle battle = battleService.createBattle(request);
             informAllStudentsOfTournament(request.getTournamentId(), request.getName());
-            return ResponseEntity.ok().build();
+            return ResponseEntity.ok(battle);
         } catch (Exception e) {
             log.info("[EXCEPTION] {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
@@ -75,7 +73,7 @@ public class CreateBattleController {
         if (request.getTournamentId() == null || request.getAuthorId() == null
                 || request.getMinStudents() == null || request.getMaxStudents() == null
                 || request.getRegDeadline() == null || request.getSubDeadline() == null
-                || request.getName() == null) {
+                || request.getName() == null || request.getFiles() == null) {
             log.error("[ERROR] One of the field is null, the request is invalid");
             throw new Exception("One of the field is null, the request is invalid");
         }
@@ -151,10 +149,5 @@ public class CreateBattleController {
         }
 
         log.info("The request to create a new battle is valid");
-    }
-
-    public void initTestMode() {
-        accountManagerUri = "http://localhost:8086";
-        tournamentManagerUri = "http://localhost:8087";
     }
 }

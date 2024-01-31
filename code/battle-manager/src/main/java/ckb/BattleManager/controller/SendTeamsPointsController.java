@@ -12,11 +12,11 @@ import java.util.List;
 
 @RestController
 @Slf4j
-public class SendTeamsPointsFinishedBattleController {
+public class SendTeamsPointsController {
     private final WebClient.Builder webClientBuilder;
     private String tournamentManagerUri = "http://tournament-manager:8087";
 
-    public SendTeamsPointsFinishedBattleController() {
+    public SendTeamsPointsController() {
         this.webClientBuilder = WebClient.builder();
     }
 
