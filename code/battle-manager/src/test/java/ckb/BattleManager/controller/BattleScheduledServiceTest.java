@@ -48,17 +48,18 @@ class BattleScheduledServiceTest {
 
     @Test
     void startBattles() throws InterruptedException {
-        createGHRepositoryBattleController.initDebug();
+        createGHRepositoryBattleController.initTestMode();
         mockServer = ClientAndServer.startClientAndServer(8083);
         mockServer
                 .when(HttpRequest.request()
                         .withMethod("POST")
-                        .withPath("/api/github/create-repo"))
+                        .withPath("/api/github/make-public"))
                 .respond(HttpResponse.response()
                         .withStatusCode(200));
 
         Battle battleToStart = new Battle();
         battleToStart.setTournamentId(1L);
+        battleToStart.setName("Test battle");
         battleToStart.setRegDeadline(LocalDateTime.now().plusSeconds(3));
         battleToStart.setSubDeadline(LocalDateTime.now().plusMinutes(3));
         battleToStart.setRepositoryLink("link1");
@@ -81,7 +82,7 @@ class BattleScheduledServiceTest {
 
     @Test
     void closeBattles() throws InterruptedException {
-        sendTeamsPointsController.initDebug();
+        sendTeamsPointsController.initTestMode();
         Battle battleToClose = new Battle();
         battleToClose.setTournamentId(1L);
         battleToClose.setRegDeadline(LocalDateTime.now());

@@ -12,10 +12,8 @@ import java.util.List;
 
 @RestController
 @Slf4j
-public class SendTeamsPointsController {
+public class SendTeamsPointsController extends Controller {
     private final WebClient.Builder webClientBuilder;
-    private String tournamentManagerUri = "http://tournament-manager:8087";
-
     public SendTeamsPointsController() {
         this.webClientBuilder = WebClient.builder();
     }
@@ -47,7 +45,4 @@ public class SendTeamsPointsController {
         log.info("Successfully sent IdUsers and points of the finished battle with id: {}", battle.getBattleId());
     }
 
-    public void initDebug() {
-        tournamentManagerUri = "http://localhost:8087";
-    }
 }

@@ -52,7 +52,7 @@ class GetTeamControllerTest {
 
     @BeforeAll
     void setUp() throws JSONException {
-        getTeamController.initTest();
+        getTeamController.initTestMode();
         battle = new Battle();
         battle.setTournamentId(1L);
         battle.setRepositoryLink("link");

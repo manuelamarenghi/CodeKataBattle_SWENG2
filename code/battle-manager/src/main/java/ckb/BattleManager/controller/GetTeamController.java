@@ -26,13 +26,12 @@ import java.util.Objects;
 @RestController
 @RequestMapping("/api/battle")
 @Slf4j
-public class GetTeamController {
+public class GetTeamController extends Controller {
     private final WebClient.Builder webClientBuilder;
     private final BattleService battleService;
-    private String accountManagerUri = "http://account-manager:8086";
 
     @Autowired
-    public GetTeamController(BattleService battleService, TeamService teamService) {
+    public GetTeamController(BattleService battleService) {
         this.battleService = battleService;
         this.webClientBuilder = WebClient.builder();
     }
@@ -127,9 +126,5 @@ public class GetTeamController {
         }
 
         return user.getBody().getFullName();
-    }
-
-    public void initTest() {
-        accountManagerUri = "http://localhost:8086";
     }
 }

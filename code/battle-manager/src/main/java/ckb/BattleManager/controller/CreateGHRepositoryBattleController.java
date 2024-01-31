@@ -19,7 +19,6 @@ public class CreateGHRepositoryBattleController extends Controller {
         ResponseEntity<String> response = webClient.post()
                 .uri(githubManagerUri + "/api/github/create-repo")
                 .bodyValue(
-                        //TODO name of the battle (the name should be given by the github manager) and files?
                         new CreateRepoRequest(
                                 battleToStart.getName(),
                                 files

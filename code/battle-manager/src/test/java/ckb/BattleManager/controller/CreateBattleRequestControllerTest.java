@@ -94,7 +94,7 @@ class CreateBattleRequestControllerTest {
                 LocalDateTime.now().plusDays(2),
                 List.of(
                         new ImmutablePair<>(
-                                "test",
+                                "tests/input_",
                                 "1010001"
                         )
                 )
@@ -116,7 +116,13 @@ class CreateBattleRequestControllerTest {
                 false,
                 LocalDateTime.now().plusDays(1),
                 LocalDateTime.now().plusDays(2),
-                null
+                List.of(
+                new ImmutablePair<>(
+                        "tests/input_",
+                        "1010001"
+                )
+        )
+
         );
 
         ResponseEntity<Object> retrievedBattle = createBattleController.createBattle(battle1);
@@ -133,7 +139,7 @@ class CreateBattleRequestControllerTest {
                 LocalDateTime.now().plusDays(2),
                 List.of(
                         new ImmutablePair<>(
-                                "test",
+                                "tests/input_",
                                 "1010001"
                         )
                 )
@@ -181,7 +187,7 @@ class CreateBattleRequestControllerTest {
                 LocalDateTime.now().plusDays(2),
                 List.of(
                         new ImmutablePair<>(
-                                "test",
+                                "tests/input_",
                                 "1010001"
                         )
                 )

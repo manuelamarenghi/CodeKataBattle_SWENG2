@@ -148,6 +148,11 @@ public class CreateBattleController extends Controller {
             throw new Exception("Permission not found");
         }
 
+        if (request.getFiles().stream().noneMatch(f -> f.getLeft().contains("tests/"))){
+            log.error("[ERROR] No tests found");
+            throw new Exception("No tests found");
+        }
+
         log.info("The request to create a new battle is valid");
     }
 }

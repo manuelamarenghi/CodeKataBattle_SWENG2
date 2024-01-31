@@ -37,7 +37,7 @@ class InviteStudentToTeamControllerTest {
 
     @Test
     public void inviteStudentToTeam() {
-        inviteStudentToTeamController.initDebug();
+        inviteStudentToTeamController.initTestMode();
         ResponseEntity<Object> response = inviteStudentToTeamController
                 .inviteStudentToTeam(
                         new InviteStudentTeamRequest(1L, 1L)
