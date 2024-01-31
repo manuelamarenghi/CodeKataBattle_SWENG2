@@ -33,24 +33,28 @@ class CanCloseTournamentControllerTest {
         battle1.setTournamentId(1L);
         battle1.setRepositoryLink("link1");
         battle1.setSubDeadline(LocalDateTime.of(2022, 1, 1, 0, 0));
+        battle1.setIsClosed(true);
         battleRepository.save(battle1);
 
         Battle battle2 = new Battle();
         battle2.setTournamentId(1L);
         battle2.setRepositoryLink("link2");
         battle2.setSubDeadline(LocalDateTime.of(2022, 1, 2, 0, 0));
+        battle2.setIsClosed(true);
         battleRepository.save(battle2);
 
         Battle battle3 = new Battle();
         battle3.setTournamentId(2L);
         battle3.setRepositoryLink("link3");
         battle3.setSubDeadline(LocalDateTime.of(2022, 1, 1, 0, 0));
+        battle3.setIsClosed(true);
         battleRepository.save(battle3);
 
         Battle battle4 = new Battle();
         battle4.setTournamentId(2L);
         battle4.setRepositoryLink("link4");
         battle4.setSubDeadline(LocalDateTime.now().plusDays(1));
+        battle4.setIsClosed(false);
         battleRepository.save(battle4);
     }
 

@@ -88,7 +88,7 @@ public class BattleService {
         List<Battle> battles = battleRepository.findBattlesByTournamentId(idTournament);
         boolean canClose = true;
         for (Battle battle : battles) {
-            if (battle.getSubDeadline().isAfter(LocalDateTime.now())) {
+            if (!battle.getIsClosed()) {
                 canClose = false;
                 break;
             }

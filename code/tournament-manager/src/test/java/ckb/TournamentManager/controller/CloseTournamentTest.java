@@ -3,10 +3,13 @@ package ckb.TournamentManager.controller;
 import ckb.TournamentManager.dto.incoming.CloseTournamentRequest;
 import ckb.TournamentManager.model.Tournament;
 import ckb.TournamentManager.repo.TournamentRepo;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockserver.integration.ClientAndServer;
+import org.mockserver.model.MediaType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.ResponseEntity;
@@ -28,6 +31,7 @@ public class CloseTournamentTest {
 
     @BeforeEach
     public void startMockServer() {
+        closetController.initTestMode();
         mockServer = ClientAndServer.startClientAndServer(8082);
     }
     @AfterEach
@@ -36,16 +40,19 @@ public class CloseTournamentTest {
     }
 
     @Test
-    public void correctTest() {
-        boolean b = true;
+    public void correctTest() throws JSONException {
         CloseTournamentRequest request;
+        JSONObject jsObject = new JSONObject();
+        jsObject.put("ableToClose", true);
         mockServer.when(request()
                         .withMethod("POST")
                         .withPath("/api/battle/battles-finished"))
                 .respond(response()
+                        .withContentType(MediaType.APPLICATION_JSON)
                         .withStatusCode(200)
-                        .withBody(String.valueOf(b)));
-        Long tournamentID = null;
+                        .withBody(jsObject.toString()));
+
+        Long tournamentID;
         Date d = new Date((2024 - 1900), Calendar.FEBRUARY, 20);
         Tournament t = new Tournament();
         t.setRegdeadline(d);
@@ -68,6 +75,7 @@ public class CloseTournamentTest {
                         .withMethod("POST")
                         .withPath("/api/battle/battles-finished"))
                 .respond(response()
+                        .withContentType(MediaType.APPLICATION_JSON)
                         .withStatusCode(200)
                         .withBody(String.valueOf(b)));
         Long tournamentID = null;
@@ -124,6 +132,7 @@ public class CloseTournamentTest {
                         .withMethod("POST")
                         .withPath("/api/battle/battles-finished"))
                 .respond(response()
+                        .withContentType(MediaType.APPLICATION_JSON)
                         .withStatusCode(200)
                         .withBody(String.valueOf(b)));
         Long tournamentID = null;

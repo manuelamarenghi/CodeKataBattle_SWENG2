@@ -2,6 +2,7 @@ package ckb.TournamentManager.controller;
 
 import ckb.TournamentManager.dto.incoming.CloseTournamentRequest;
 import ckb.TournamentManager.dto.outcoming.AbleToCloseRequest;
+import ckb.TournamentManager.dto.outcoming.BattleFinishedResponse;
 import ckb.TournamentManager.model.Tournament;
 import ckb.TournamentManager.service.TournamentService;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +17,6 @@ import org.springframework.web.reactive.function.client.WebClient;
 @RequestMapping("/api/tournament/close-tournament")
 @RequiredArgsConstructor
 @CrossOrigin(origins = "*")
-
 public class CloseTournamentController extends Controller {
     private final TournamentService tournamentService;
     private final WebClient webClient;
@@ -27,28 +27,27 @@ public class CloseTournamentController extends Controller {
         // check if the request has valid data
         ResponseEntity<Object> response = checkRequest(request);
         if (response.getStatusCode().is4xxClientError()) return response;
-        if(contactBattleManager(request)){
-            if(tournamentService.closeTournament(request)){
+        if (contactBattleManager(request)) {
+            if (tournamentService.closeTournament(request)) {
                 return new ResponseEntity<>("Tournament closed", getHeaders(), HttpStatus.CREATED);
-            }
-            else return new ResponseEntity<>("Not allowed to close tournament", getHeaders(), HttpStatus.BAD_REQUEST);
+            } else return new ResponseEntity<>("Not allowed to close tournament", getHeaders(), HttpStatus.BAD_REQUEST);
         } else {
             return new ResponseEntity<>("Not possible to close", getHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     private boolean contactBattleManager(CloseTournamentRequest request) {
-        try {
-            String responseString = webClient
+        try{
+            ResponseEntity<BattleFinishedResponse> response = webClient
                     .post()
-                    .uri("http://localhost:8082/api/battle/battles-finished")
+                    .uri(battleManagerUri + "/api/battle/battles-finished")
                     .bodyValue(new AbleToCloseRequest(request.getTournamentID()))
                     .retrieve()
-                    .bodyToMono(String.class)
+                    .toEntity(BattleFinishedResponse.class)
                     .block();
-            return Boolean.parseBoolean(responseString);
+            return response != null && response.getBody() != null && response.getBody().getAbleToClose();
         } catch (Exception e) {
-            log.error("Error while retrieving battles");
+            log.error("Error contacting battle manager {}", e.getMessage());
             return false;
         }
     }

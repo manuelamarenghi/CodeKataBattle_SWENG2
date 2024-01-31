@@ -4,15 +4,15 @@ import ckb.BattleManager.dto.input.CloseTournamentRequest;
 import ckb.BattleManager.service.BattleService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/battle")
 @Slf4j
+@CrossOrigin(origins = "*")
 public class CanCloseTournamentController {
     private final BattleService battleService;
 
@@ -30,9 +30,19 @@ public class CanCloseTournamentController {
      * @return a ResponseEntity with a true if the tournament can be close, false otherwise
      */
     @PostMapping("/battles-finished")
+    @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<Boolean> canCloseTournament(@RequestBody CloseTournamentRequest request) {
         log.info("[API REQUEST] Battle finished request with id tournament: {}", request.getIdTournament());
+        if (battleService.canCloseTournament(request.getIdTournament())) {
+            return new ResponseEntity<>(true, getHeaders(), HttpStatus.OK);
+        }
+        return ResponseEntity.badRequest().body(false);
+    }
 
-        return ResponseEntity.ok(battleService.canCloseTournament(request.getIdTournament()));
+    private HttpHeaders getHeaders() {
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Access-Control-Allow-Methods", "POST, GET, OPTIONS, DELETE");
+        headers.add("Access-Control-Allow-Headers", "Content-Type, Authorization");
+        return headers;
     }
 }
