@@ -2,6 +2,7 @@ package ckb.TournamentManager.controller;
 
 import ckb.TournamentManager.dto.incoming.NewTournamentRequest;
 import ckb.TournamentManager.dto.outcoming.AllStudentsMailRequest;
+import ckb.TournamentManager.dto.outcoming.UserRequest;
 import ckb.TournamentManager.model.Role;
 import ckb.TournamentManager.model.Tournament;
 import ckb.TournamentManager.model.User;
@@ -75,7 +76,9 @@ public class NewTournamentController extends Controller {
 
         ResponseEntity<User> responseEntityUser = webClient.post()
                 .uri(accountManagerUri + "/api/account/user")
-                .bodyValue(request.getCreatorID())
+                .bodyValue(
+                        new UserRequest(request.getCreatorID())
+                )
                 .retrieve()
                 .toEntity(User.class)
                 .block();

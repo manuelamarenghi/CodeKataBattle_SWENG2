@@ -41,7 +41,7 @@ public class CloseTournamentTest {
         CloseTournamentRequest request;
         mockServer.when(request()
                         .withMethod("POST")
-                        .withPath("/api/battle/servizio"))
+                        .withPath("/api/battle/battles-finished"))
                 .respond(response()
                         .withStatusCode(200)
                         .withBody(String.valueOf(b)));
@@ -66,7 +66,7 @@ public class CloseTournamentTest {
         CloseTournamentRequest request;
         mockServer.when(request()
                         .withMethod("POST")
-                        .withPath("/api/battle/servizio"))
+                        .withPath("/api/battle/battles-finished"))
                 .respond(response()
                         .withStatusCode(200)
                         .withBody(String.valueOf(b)));
@@ -122,7 +122,7 @@ public class CloseTournamentTest {
         CloseTournamentRequest request;
         mockServer.when(request()
                         .withMethod("POST")
-                        .withPath("/api/battle/servizio"))
+                        .withPath("/api/battle/battles-finished"))
                 .respond(response()
                         .withStatusCode(200)
                         .withBody(String.valueOf(b)));

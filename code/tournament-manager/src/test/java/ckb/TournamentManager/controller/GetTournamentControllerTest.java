@@ -54,11 +54,12 @@ public class GetTournamentControllerTest {
         tournamentRepo.save(t);
         Long tournamentID = t.getTournamentID();
         mockServer
-                .when(request().withMethod("POST").withPath("/api/battle/servizio"))
+                .when(request().withMethod("POST").withPath("/api/battle/get-battles-tournament"))
                 .respond(response().withStatusCode(200).withBody(json));
         GetTournamentPageRequest request = new GetTournamentPageRequest(tournamentID);
         ResponseEntity<Object> response = getTournamentController.getTournamentPage(request);
         assertTrue(response.getStatusCode().is2xxSuccessful());
+        System.out.println(response.getBody());
         tournamentRepo.deleteById(tournamentID);
     }
     @Test
@@ -79,7 +80,7 @@ public class GetTournamentControllerTest {
         tournamentRankingRepo.save(tr2);
         Long tournamentID = t.getTournamentID();
         mockServer
-                .when(request().withMethod("POST").withPath("/api/battle/servizio"))
+                .when(request().withMethod("POST").withPath("/api/battle/get-battles-tournament"))
                 .respond(response().withStatusCode(200));
         GetTournamentPageRequest request = new GetTournamentPageRequest(tournamentID);
         ResponseEntity<Object> response = getTournamentController.getTournamentPage(request);
@@ -101,7 +102,7 @@ public class GetTournamentControllerTest {
         tournamentRepo.save(t);
         Long tournamentID = t.getTournamentID();
         mockServer
-                .when(request().withMethod("POST").withPath("/api/battle/servizio"))
+                .when(request().withMethod("POST").withPath("/api/battle/get-battles-tournament"))
                 .respond(response().withStatusCode(200).withBody(json));
         GetTournamentPageRequest request = new GetTournamentPageRequest(tournamentID);
         ResponseEntity<Object> response = getTournamentController.getTournamentPage(request);

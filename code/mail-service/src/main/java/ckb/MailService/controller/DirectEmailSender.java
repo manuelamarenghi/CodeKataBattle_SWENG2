@@ -28,6 +28,11 @@ public class DirectEmailSender extends EmailSender {
     public ResponseEntity<Object> sendEmail(@RequestBody DirectMailRequest request) {
 
         List<String> userIDs = request.getUserIDs();
+        if (userIDs.isEmpty()) {
+            log.info("No user id provided, exiting...");
+            return new ResponseEntity<>("no user id provided", getHeaders(), HttpStatus.OK);
+        }
+
         List<String> addresses;
         try {
             addresses = getEmailAddresses(userIDs);

@@ -41,7 +41,7 @@ public class CloseTournamentController extends Controller {
         try {
             String responseString = webClient
                     .post()
-                    .uri("http://localhost:8082/api/battle/servizio")
+                    .uri("http://localhost:8082/api/battle/battles-finished")
                     .bodyValue(new AbleToCloseRequest(request.getTournamentID()))
                     .retrieve()
                     .bodyToMono(String.class)

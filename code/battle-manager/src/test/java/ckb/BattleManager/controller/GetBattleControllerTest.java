@@ -1,11 +1,9 @@
 package ckb.BattleManager.controller;
 
-import ckb.BattleManager.dto.input.GetBattleRequest;
-import ckb.BattleManager.dto.output.BattleInfoMessage;
+import ckb.BattleManager.dto.input.GetBattlesRequest;
 import ckb.BattleManager.model.Battle;
 import ckb.BattleManager.model.Team;
 import ckb.BattleManager.repository.BattleRepository;
-import org.apache.commons.lang3.tuple.Pair;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -86,22 +84,8 @@ public class GetBattleControllerTest {
     }
 
     @Test
-    public void getBattle() {
-        ResponseEntity<BattleInfoMessage> battleResponse = getBattleController.getBattle(new GetBattleRequest(battle1.getBattleId()));
-
-        assertTrue(battleResponse.getStatusCode().is2xxSuccessful());
-        assertNotNull(battleResponse.getBody());
-        BattleInfoMessage battleInfoMessage = battleResponse.getBody();
-        List<Pair<Long, Integer>> pairsIdTeamPoints = battleInfoMessage.getPairsIdTeamPoints();
-        assertEquals(3, pairsIdTeamPoints.size());
-        assertEquals(team3.getTeamId(), pairsIdTeamPoints.get(0).getLeft());
-        assertEquals(team2.getTeamId(), pairsIdTeamPoints.get(1).getLeft());
-        assertEquals(team1.getTeamId(), pairsIdTeamPoints.get(2).getLeft());
-    }
-
-    @Test
     public void getBattlesOfTournament() {
-        ResponseEntity<List<Long>> result = getBattleController.getBattlesOfTournament(new GetBattleRequest(1L));
+        ResponseEntity<List<Long>> result = getBattleController.getBattlesOfTournament(new GetBattlesRequest(1L));
 
         assertTrue(result.getStatusCode().is2xxSuccessful());
         assertNotNull(result.getBody());

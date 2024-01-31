@@ -163,7 +163,7 @@ class CreateBattleRequestControllerTest {
                 LocalDateTime.now().plusDays(2),
                 List.of(
                         new ImmutablePair<>(
-                                "test",
+                                "tests/input_",
                                 "1010001"
                         )
                 )

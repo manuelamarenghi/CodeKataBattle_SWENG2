@@ -1,6 +1,7 @@
 package ckb.TournamentManager.controller;
 
 import ckb.TournamentManager.dto.incoming.GetTournamentPageRequest;
+import ckb.TournamentManager.dto.outcoming.GetBattlesRequest;
 import ckb.TournamentManager.model.TournamentRanking;
 import ckb.TournamentManager.service.TournamentService;
 import lombok.RequiredArgsConstructor;
@@ -46,12 +47,17 @@ public class GetTournamentPageController extends Controller{
         }
         return new ResponseEntity<>(responseWrapper, getHeaders(), HttpStatus.CREATED);
     }
-    private List<Long> getBattles(Long variableValue) {
+
+    private List<Long> getBattles(Long tournamentID) {
         try {
              return webClient
                     .post()
-                    .uri("http://localhost:8082/api/battle/servizio")
-                    .bodyValue(variableValue)
+                     .uri("http://localhost:8082/api/battle/get-battles-tournament")
+                     .bodyValue(
+                             new GetBattlesRequest(
+                                     tournamentID
+                             )
+                     )
                     .retrieve()
                     .onStatus(HttpStatusCode::is4xxClientError, clientResponse -> Mono.error(new RuntimeException("Errore durante la chiamata HTTP")))
                      .bodyToMono(String.class)

@@ -8,6 +8,7 @@ import ckb.dto.tournament.NewTournamentRequest;
 import ckb.dto.tournament.SubscriptionRequest;
 import ckb.model.Battle;
 import ckb.model.Tournament;
+import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
@@ -20,6 +21,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Random;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -100,7 +102,10 @@ public class BattleServiceIntegrationTests {
                         1, 2, false,
                         LocalDateTime.now().plusHours(1),
                         LocalDateTime.now().plusHours(2),
-                        null
+                        List.of(
+                                new ImmutablePair<>("tests/input_1.txt", "1"),
+                                new ImmutablePair<>("tests/output_1.txt", "2")
+                        )
                 ))
                 .accept(MediaType.APPLICATION_JSON)
                 .exchange()
@@ -139,7 +144,10 @@ public class BattleServiceIntegrationTests {
                         1, 2, false,
                         LocalDateTime.now().plusSeconds(5),
                         LocalDateTime.now().plusSeconds(10),
-                        null
+                        List.of(
+                                new ImmutablePair<>("tests/input_1.txt", "1"),
+                                new ImmutablePair<>("tests/output_1.txt", "2")
+                        )
                 ))
                 .accept(MediaType.APPLICATION_JSON)
                 .exchange()
@@ -215,7 +223,10 @@ public class BattleServiceIntegrationTests {
                         1, 2, false,
                         LocalDateTime.now().plusSeconds(5),
                         LocalDateTime.now().plusSeconds(10),
-                        null
+                        List.of(
+                                new ImmutablePair<>("tests/input_1.txt", "1"),
+                                new ImmutablePair<>("tests/output_1.txt", "2")
+                        )
                 ))
                 .retrieve()
                 .toEntity(Battle.class)

@@ -23,9 +23,11 @@ public class GetAllTournamentsTest {
          Date d = new Date((2024 - 1900), 03, 20);
          tournament.setRegdeadline(d);
          tournament.setStatus(true);
+        tournament.setName("tournament");
          tournamentRepo.save(tournament);
         GetAllTournamentsRequest request = new GetAllTournamentsRequest("tournament");
         ResponseEntity<Object> response =getTournamentsController.getTournaments(request);
+
         System.out.println(response.getBody());
     }
     @Test
