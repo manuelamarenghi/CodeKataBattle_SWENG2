@@ -73,6 +73,22 @@ class RegisterStudentToTeamControllerTest {
         assertTrue(response.getStatusCode().is2xxSuccessful());
         assertTrue(participationRepository.existsById(new ParticipationId(1L, newTeam)));
     }
+    @Test
+    void registerStudentToNonExistingTeam() {
+        ResponseEntity<Object> response = registerStudentToTeamController.registerStudentToTeam(
+                new AcceptStudentTeamRequest(1L,0L)
+        );
+
+        assertTrue(response.getStatusCode().is4xxClientError());
+    }
+    @Test
+    void registerNonExistingStudent() {
+        ResponseEntity<Object> response = registerStudentToTeamController.registerStudentToTeam(
+                new AcceptStudentTeamRequest(0L, newTeam.getTeamId())
+        );
+
+        assertTrue(response.getStatusCode().is4xxClientError());
+    }
 
     @AfterEach
     void tearDown() {

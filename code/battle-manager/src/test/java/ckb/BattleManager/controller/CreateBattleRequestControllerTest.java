@@ -40,10 +40,11 @@ class CreateBattleRequestControllerTest {
     }
 
     @BeforeEach
-    public void setUp() {
+    public void setUp() throws JSONException {
         mockServerAccountManager = ClientAndServer.startClientAndServer(8086);
         mockServerTournamentManager = ClientAndServer.startClientAndServer(8087);
         mockServerGithubManager = ClientAndServer.startClientAndServer(8083);
+        setMockServers();
     }
 
     @AfterEach
@@ -83,8 +84,7 @@ class CreateBattleRequestControllerTest {
     }
 
     @Test
-    public void createBattle() throws JSONException {
-        setMockServers();
+    public void createBattle() {
         CreateBattleRequest battle = new CreateBattleRequest(
                 1L,
                 "Battle 1",
@@ -107,8 +107,36 @@ class CreateBattleRequestControllerTest {
     }
 
     @Test
-    public void createTwoBattlesWithSameName() throws JSONException {
-        setMockServers();
+    public void createBattleNonExistingEducator() {
+        mockServerAccountManager.stop();
+        mockServerAccountManager = ClientAndServer.startClientAndServer(8086);
+        mockServerAccountManager
+                .when(request().withMethod("POST").withPath("/api/account/user"))
+                .respond(response().withStatusCode(404));
+
+        CreateBattleRequest battle = new CreateBattleRequest(
+                1L,
+                "Battle 1",
+                9999L,
+                1,
+                2,
+                false,
+                LocalDateTime.now().plusDays(1),
+                LocalDateTime.now().plusDays(2),
+                List.of(
+                        new WorkingPair<>(
+                                "tests/input_",
+                                "1010001"
+                        )
+                )
+        );
+
+        ResponseEntity<Object> retrievedBattle = createBattleController.createBattle(battle);
+        assertTrue(retrievedBattle.getStatusCode().is4xxClientError());
+    }
+    
+    @Test
+    public void createTwoBattlesWithSameName() {
         CreateBattleRequest battle1 = new CreateBattleRequest(
                 1L,
                 "Battle 1",
@@ -152,8 +180,7 @@ class CreateBattleRequestControllerTest {
     }
 
     @Test
-    public void wrongInputCreateTournament() throws JSONException {
-        setMockServers();
+    public void wrongInputCreateTournament()  {
         CreateBattleRequest battle = new CreateBattleRequest(
                 -1L,
                 "Battle 1",
@@ -176,8 +203,7 @@ class CreateBattleRequestControllerTest {
     }
 
     @Test
-    public void wrongDate() throws JSONException {
-        setMockServers();
+    public void wrongDate() {
         CreateBattleRequest battle = new CreateBattleRequest(
                 1L,
                 "Battle 1",

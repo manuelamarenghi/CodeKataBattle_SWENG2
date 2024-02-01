@@ -8,7 +8,6 @@ import ckb.BattleManager.model.*;
 import ckb.BattleManager.repository.BattleRepository;
 import ckb.BattleManager.repository.ParticipationRepository;
 import ckb.BattleManager.repository.TeamRepository;
-import org.apache.commons.lang3.tuple.Pair;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.jupiter.api.AfterAll;
@@ -119,6 +118,22 @@ class GetTeamControllerTest {
         System.out.println(teamInfoMessage);
         assertEquals(team1.getTeamId(), teamInfoMessage.getTeamId());
         assertEquals(teamInfoMessage.getParticipantsName().size(), 2);
+    }
+
+    @Test
+    public void getNonExistingTeam() {
+        ResponseEntity<TeamInfoMessage> retrievedTeam = getTeamController.
+                getTeam(new GetTeamStudentRequest(battle.getBattleId(), 0L));
+
+        assertTrue(retrievedTeam.getStatusCode().is4xxClientError());
+    }
+
+    @Test
+    public void getNonExistingBattle() {
+        ResponseEntity<TeamInfoMessage> retrievedTeam = getTeamController.
+                getTeam(new GetTeamStudentRequest(0L, 1L));
+
+        assertTrue(retrievedTeam.getStatusCode().is4xxClientError());
     }
 
     @Test

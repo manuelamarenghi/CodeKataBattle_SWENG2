@@ -3,6 +3,11 @@
 # $1 -> zip file name
 # $2 -> random string to create a unique folder
 
+if [ $# -ne 2 ]; then
+    echo "[ERROR] Usage: $0 <zip file name> <random string to create a unique folder>"
+    exit 1
+fi
+
 cd || exit 1
 
 zipFilePath="$1"

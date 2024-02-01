@@ -151,6 +151,21 @@ public class CreateBattleController extends Controller {
             throw new Exception("Author id must be greater than 0");
         }
 
+        ResponseEntity<User> response = webClient.post()
+                .uri(accountManagerUri + "/api/account/user")
+                .bodyValue(UserRequest.builder()
+                        .userID(request.getAuthorId())
+                        .build()
+                ).retrieve()
+                .toEntity(User.class)
+                .block();
+
+        if (response == null || response.getStatusCode().is4xxClientError()
+                || response.getBody() == null || response.getBody().getRole() != Role.EDUCATOR) {
+            log.error("[ERROR] User not found or user is not an educator");
+            throw new Exception("User not found or user is not an educator");
+        }
+
         if (request.getMinStudents() <= 0) {
             log.error("[ERROR] Min students must be greater than 0");
             throw new Exception("Min students must be greater than 0");

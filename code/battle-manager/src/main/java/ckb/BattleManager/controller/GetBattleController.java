@@ -28,14 +28,14 @@ public class GetBattleController {
      * Method to get all the battles of a tournament
      * ATTENTION: I cannot control the id of the tournament
      *
-     * @param idTournament id of the tournament
+     * @param request id of the tournament
      * @return a ResponseEntity with the list of ids of the battles
      */
     @GetMapping("/get-battles-tournament")
-    public ResponseEntity<ListBattlesResponse> getBattlesOfTournament(@RequestBody GetBattlesRequest idTournament) {
-        log.info("[API REQUEST] Get battles of tournament request with id: {}", idTournament.getBattleId());
-        List<Long> battleIds = battleService.getBattlesTournament(idTournament.getBattleId());
-        log.info("The battles of the tournament {} are: {}", idTournament.getBattleId(), battleIds);
+    public ResponseEntity<ListBattlesResponse> getBattlesOfTournament(@RequestBody GetBattlesRequest request) {
+        log.info("[API REQUEST] Get battles of tournament request with id: {}", request.getTournamentID());
+        List<Long> battleIds = battleService.getBattlesTournament(request.getTournamentID());
+        log.info("The battles of the tournament {} are: {}", request.getTournamentID(), battleIds);
         return ResponseEntity.ok(new ListBattlesResponse(battleIds));
     }
 }

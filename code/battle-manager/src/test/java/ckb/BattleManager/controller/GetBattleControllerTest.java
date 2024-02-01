@@ -95,6 +95,17 @@ public class GetBattleControllerTest {
         List<Long> ids = result.getBody().getBattlesID();
         assertEquals(2, ids.size());
     }
+    @Test
+    public void getBattlesOfNonExistingTournament() {
+        ResponseEntity<ListBattlesResponse> result = getBattleController
+                .getBattlesOfTournament(new GetBattlesRequest(0L));
+
+        assertTrue(result.getStatusCode().is2xxSuccessful());
+        assertNotNull(result.getBody());
+
+        List<Long> ids = result.getBody().getBattlesID();
+        assertEquals(0, ids.size());
+    }
 
     @AfterAll
     public void tearDown() {

@@ -8,5 +8,5 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class GetBattlesRequest {
-    private Long battleId;
+    private Long tournamentID;
 }

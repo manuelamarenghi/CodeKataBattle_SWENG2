@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 
 import java.time.LocalDateTime;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockserver.model.HttpRequest.request;
 import static org.mockserver.model.HttpResponse.response;
@@ -71,6 +72,44 @@ class CloseBattleControllerTest {
 
         assertTrue(response.getStatusCode().is2xxSuccessful());
         assertTrue(battle.getHasEnded());
+    }
+
+    @Test
+    public void closeBattleNonExisting() {
+        ResponseEntity<Object> response = closeBattleController.closeBattle(
+                new CloseBattleRequest(
+                        0L,
+                        1L
+                )
+        );
+
+        assertTrue(response.getStatusCode().is4xxClientError());
+    }
+    @Test
+    public void closeBattleNotStarted() {
+        Battle battle = Battle.builder()
+                .name("Test not started battle")
+                .authorId(1L)
+                .hasStarted(false)
+                .hasEnded(false)
+                .isClosed(false)
+                .battleToEval(false)
+                .regDeadline(LocalDateTime.now().plusMinutes(2))
+                .subDeadline(LocalDateTime.now().plusMinutes(5))
+                .build();
+        battleRepository.save(battle);
+
+        ResponseEntity<Object> response = closeBattleController.closeBattle(
+                new CloseBattleRequest(
+                        battle.getBattleId(),
+                        1L
+                )
+        );
+
+        assertTrue(response.getStatusCode().is4xxClientError());
+        Long battleID = battle.getBattleId();
+        assertTrue(battleRepository.findById(battleID).isPresent());
+        assertFalse(battleRepository.findById(battleID).get().getIsClosed());
     }
 
     @Test
