@@ -3,7 +3,7 @@
 
 <head>
     <script>
-     /*   const queryString = window.location.search;
+        const queryString = window.location.search;
         const params = new URLSearchParams(queryString);
         const tournamentID = params.get('idT');
         const battleID = params.get('idB');
@@ -30,31 +30,23 @@
             }
             })
             .then(data => {
-            console.log(data);
-            var table = document.getElementById('battle_ranking_table');
-            var tableBody = table.querySelector('tbody');
-            tableBody.innerHTML = "";
-
-            for (var i = 0; i < data.length; i++) {
-            var newRow = tableBody.insertRow(-1);
-            var cellNumber = newRow.insertCell(0);
-            var cellTeam = newRow.insertCell(1);
-            var cellRating = newRow.insertCell(2);
-
-            cellNumber.textContent = j + 1;
-            cellTeam.textContent = data[i].teamID; 
-            cellRating.textContent = data[i].score; 
-            console.log("TeamID:", teamID, "Score:", score);
-            }
+            console.log(data);    
+            var table = document.getElementById('battle_ranking_table').querySelector('table'); 
+                for (var key in data) {
+                    if (data.hasOwnProperty(key)) {
+                        var row = table.insertRow();
+                        var keyCell = row.insertCell(0);
+                        var valueCell = row.insertCell(1);
+                        keyCell.innerHTML = key;
+                        valueCell.innerHTML = data[key];
+                    }
+                }
             })
             .catch(error => {
                 console.error('Errore durante la richiesta HTTP:', error);
                 window.location.href = "index.html";
-            });*/
-            localStorage.setItem("logged_in", true);
-            localStorage.setItem("user_id", 1);
-            localStorage.setItem("user_email", "bffdvf");
-            localStorage.setItem("user_role", "STUDENT");
+            });
+            
     </script>
     <title>Battle | CodeKataBattle</title>
     <link rel="icon" href="public\images\iconCKB.png" type="image/x-icon">
@@ -128,6 +120,10 @@
         <div class="table-container" id="battle_ranking_table">
             <div class="tb-title">Battle Ranking</div>
             <table>
+                <tr>
+                    <th>UserID</th>
+                    <th>Score</th>
+                </tr>
             </table>
         </div>
     </div>
@@ -140,7 +136,8 @@
                     document.write('<button class="button-28" onclick="GetTeam()" >My team</button>');  
                     document.write('<button class="button-28" onclick="openModal(\'InvitesModal\')" >Invites</button>');}
                 if(localStorage.getItem("user_role") == "EDUCATOR" ){
-                    document.write('<button class="button-28" onclick="openModal(\'AddEvalModal\')" >Add Evaluation</button>'); }
+                    document.write('<button class="button-28" onclick="openModal(\'AddEvalModal\')" >Add Evaluation</button>');
+                    document.write('<button class="button-28" onclick="closeBattle()" >Close Battle</button>');}
                 }
             </script>   
         </div>
@@ -171,28 +168,51 @@
     </div>
 
     <div id="TeamModal" class="modal">
-        <div class="team-section">
-            <div class="team-member">
-                
-            </div>
-            
+        <div id="team-sec" class="team-section" onclick="closeModal('TeamModal')">   
         </div>  
     </div> 
     <script>
-            function openModal(modalId) {
-                var modal = document.getElementById(modalId);
-                var overlay = document.querySelector('.overlay');
-                modal.style.display = 'block';
-                overlay.style.display = 'block';
-            }
+        function openModal(modalId) {
+            var modal = document.getElementById(modalId);
+            var overlay = document.querySelector('.overlay');
+            modal.style.display = 'block';
+            overlay.style.display = 'block';
+        }
+    
+        function closeModal(modalId) {
+            var modal = document.getElementById(modalId);
+            var overlay = document.querySelector('.overlay');
+            modal.style.display = 'none';
+            overlay.style.display = 'none';
+        }
         
-            function closeModal(modalId) {
-                var modal = document.getElementById(modalId);
-                var overlay = document.querySelector('.overlay');
-                modal.style.display = 'none';
-                overlay.style.display = 'none';
-            }
-            
+        function closeBattle(){
+            var fetchOptions = {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    battleId : params.get('idB'),
+                    educatorId : localStorage.getItem("user_id")
+                })
+            };
+            fetch("http://localhost:8082/api/battle/close-battle",fetchOptions)
+                .then(response => {
+                if (response.status >= 300 ) {
+                    console.error('Errore durante la richiesta HTTP:', response.status, response.statusText);
+                    window.location.href = "index.html";
+                }
+                })
+                .then(data => {
+                    alert("Battle closed");
+                    window.location.href = "tournaments.html";
+                })
+                .catch(error => {
+                    console.error('Errore durante la richiesta HTTP:', error);
+                    window.location.href = "index.html";
+                });
+        }
     </script>   
         
 </body>

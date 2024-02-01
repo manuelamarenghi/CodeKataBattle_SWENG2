@@ -1,6 +1,6 @@
 function GetTeam(){
     //ancora non presente lato server
-    /*const params = new URLSearchParams(queryString);
+    const params = new URLSearchParams(queryString);
     const tournamentID = params.get('idT');
     const battleID = params.get('idB');
     var fetchOptions = {
@@ -9,8 +9,8 @@ function GetTeam(){
             "Content-Type": "application/json",
         },
         body: JSON.stringify({
-            userID : localStorage.getItem("user_id"),
-            battleID : battleID,
+            studentId : localStorage.getItem("user_id"),
+            battleId : battleID,
         })
     };
     fetch("http://localhost:8082/api/battle/get-team",fetchOptions)
@@ -22,51 +22,30 @@ function GetTeam(){
         })
         .then(data => {
         console.log(data);
-        var teamSection = document.querySelector('.team-section');  
-        teamSection.innerHTML = ""; 
-
-        for (var i = 0; i < data.length; i++) {
+        var members = data.members;
+        openModal('TeamModal');
+        var teamSection = document.getElementById('team-sec');  
+        teamSection.innerHTML = '';
         var teamMemberDiv = document.createElement('div');
         teamMemberDiv.className = 'team-member';
-
+        
         teamMemberDiv.innerHTML = `
-            <div>ID Team: ${data[i].teamID}</div>
-            <div>Score: ${data[i].score}</div>
+            <div>ID Team: ${data.teamID}</div>
         `;
-
-        var teamNameDiv = document.createElement('div');
-        teamNameDiv.className = 'member-name';
-        teamNameDiv.textContent = `Name: ${data[i].teamName}`;
-        teamMemberDiv.appendChild(teamNameDiv);                    
-
+        
+        for (var i = 0; i < members.length; i++) {
+            var teamNameDiv = document.createElement('div');
+            teamNameDiv.className = 'member-name';
+            teamNameDiv.textContent = `USERID: ${members[i].userID}     |     Name: ${members[i].fullName}`;
+            teamMemberDiv.appendChild(teamNameDiv);                    
+        }  
         teamSection.appendChild(teamMemberDiv);
-        }
         })
         .catch(error => {
             console.error('Errore durante la richiesta HTTP:', error);
             window.location.href = "index.html";
-        });*/
-        
-        var teamSection = document.querySelector('.team-section');  
-        teamSection.innerHTML = ""; 
-
-        for (var i = 0; i < data.length; i++) {
-        var teamMemberDiv = document.createElement('div');
-        teamMemberDiv.className = 'team-member';
-
-        teamMemberDiv.innerHTML = `
-            <div>ID Team: ${data[i].teamID}</div>
-            <div>Score: ${data[i].score}</div>
-        `;
-
-        var teamNameDiv = document.createElement('div');
-        teamNameDiv.className = 'member-name';
-        teamNameDiv.textContent = `Name: ${data[i].teamName}`;
-        teamMemberDiv.appendChild(teamNameDiv);                    
-
-        teamSection.appendChild(teamMemberDiv);    
-    openModal('TeamModal');
-}}
+        });
+       }
 
 function SendEval(){
     var fetchOptions = {
@@ -75,8 +54,8 @@ function SendEval(){
             "Content-Type": "application/json",
         },
         body: JSON.stringify({
-            userID : localStorage.getItem("user_id"),
-            teamID : document.getElementById("team_ID").value,
+            studentId : localStorage.getItem("user_id"),
+            idTeam : document.getElementById("team_ID").value,
             score : document.getElementById("score").value,
         })
     };
@@ -131,6 +110,6 @@ function InvitesStudent(){
                 alert('Errore nella richiesta al server');            
                 window.location.href = "index.html";
             }
-            closeModal('InvitesModal');
           })
+    closeModal('InvitesModal');
 }

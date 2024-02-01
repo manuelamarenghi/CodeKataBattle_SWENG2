@@ -17,7 +17,6 @@
                 if (response.status === "success") {
                     if (response.status === "success") {
                         var data = JSON.stringify(response.data);
-                        document.addEventListener('DOMContentLoaded', function(data) {
                         var table = document.getElementById('tournamentlist').querySelector('table'); 
 
                         for (var key in data) {
@@ -32,8 +31,8 @@
                         link.textContent = key;
                         keyCell.appendChild(link);
                         valueCell.innerHTML = data[key];
-                        }}});
-            } else {
+                        }}
+                    } else {
                 alert("Errore durante la richiesta.");
             }}})
             .catch(data => {
