@@ -23,6 +23,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Random;
 
 @RestController
 @RequestMapping("/api/battle")
@@ -31,6 +32,8 @@ public class CreateBattleController extends Controller {
     private final BattleService battleService;
     private final WebClient webClient = WebClient.create();
     private final UnzipService unzipService;
+
+    private final int STRING_LENGTH = 20;
 
     @Autowired
     public CreateBattleController(BattleService battleService, UnzipService unzipService) {
@@ -69,8 +72,8 @@ public class CreateBattleController extends Controller {
 
             // convert the zip file into a List<WorkingPair<String, String>>
             String fileName = zipFile.getOriginalFilename();
-            String desktopPath = System.getProperty("user.home") + "/Desktop/";
-            String filePath = desktopPath + fileName;
+            String home = System.getProperty("user.home");
+            String filePath = home + fileName; // zip file will be put in the home directory
 
             List<WorkingPair<String, String>> files;
 
@@ -81,8 +84,10 @@ public class CreateBattleController extends Controller {
                 while ((bytesRead = is.read(buffer)) != -1) {
                     os.write(buffer, 0, bytesRead);
                 }
-                files = unzipService.unzip(fileName);
+                files = unzipService.unzip(fileName, getRandomString());
+                log.info("Unzip successful");
             } catch (Exception e) {
+                log.error("Failed to unzip files for {}", fileName);
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
             }
 
@@ -98,7 +103,7 @@ public class CreateBattleController extends Controller {
                     .subDeadline(subDeadline)
                     .build();
             return createBattle(battle);
-        } catch (Exception e){
+        } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
     }
@@ -212,5 +217,12 @@ public class CreateBattleController extends Controller {
         }
 
         log.info("The request to create a new battle is valid");
+    }
+
+    private String getRandomString() {
+        return new Random().ints(97 /* letter a */, 122 /* letter z */ + 1)
+                .limit(STRING_LENGTH)
+                .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
+                .toString();
     }
 }
