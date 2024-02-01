@@ -55,7 +55,11 @@ public class BattleService {
         log.info("Battle saved in the database: {}", battle);
 
         try {
-            String repoLink = createGHRepositoryBattleController.createGHRepository(battle, battleRequest.getFiles());
+            String repoLink = createGHRepositoryBattleController
+                    .createGHRepository(battle, battleRequest.getFiles());
+            // https://github.com/Code-Kata-Battle/Test-Battle-xvmudweqnxshqtehmcgq
+            // 19 => because I want to erase the first 19 chars
+            repoLink = repoLink.substring(19);
             battle.setRepositoryLink(repoLink);
             battleRepository.save(battle);
         } catch (Exception e) {
@@ -64,6 +68,7 @@ public class BattleService {
             throw new Exception("Error creating repo in GitHub");
         }
 
+        log.info("Set the name of the repository of the battle: {}", battle.getRepositoryLink());
         return battle;
     }
 

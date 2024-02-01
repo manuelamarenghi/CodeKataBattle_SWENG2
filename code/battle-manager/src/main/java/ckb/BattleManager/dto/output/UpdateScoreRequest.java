@@ -1,6 +1,6 @@
-package ckb.TournamentManager.dto.incoming;
+package ckb.BattleManager.dto.output;
 
-import ckb.TournamentManager.model.WorkingPair;
+import ckb.BattleManager.model.WorkingPair;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

@@ -122,7 +122,9 @@ public class BattleServiceIntegrationTests {
                                 educatorID, "Pino's Closed Tournament",
                                 Date.from(
                                         LocalDateTime.now().plusSeconds(10)
-                                                .atZone(ZoneId.systemDefault()).toInstant()
+                                                .atZone(ZoneId.of(
+                                                        "Europe/Rome"
+                                                )).toInstant()
                                 )
                         )
                 )
@@ -138,11 +140,11 @@ public class BattleServiceIntegrationTests {
                 .uri(battleManagerUri + "/api/battle/create-battle")
                 .bodyValue(new CreateBattleRequest(
                         tournament.getTournamentID(),
-                        "Test Battle " + getRandomString(),
+                        "Test Battle" + getRandomString(),
                         educatorID,
                         1, 2, false,
-                        LocalDateTime.now().plusSeconds(5),
-                        LocalDateTime.now().plusSeconds(10),
+                        LocalDateTime.now().plusSeconds(5).atZone(ZoneId.of("Europe/Rome")).toLocalDateTime(),
+                        LocalDateTime.now().plusSeconds(20).atZone(ZoneId.of("Europe/Rome")).toLocalDateTime(),
                         List.of(
                                 new WorkingPair<>("tests/input_1.txt", "1"),
                                 new WorkingPair<>("tests/output_1.txt", "2")
@@ -153,7 +155,7 @@ public class BattleServiceIntegrationTests {
                 .expectStatus().is2xxSuccessful();
 
         // Sleep 15 seconds
-        Thread.sleep(15000);
+        Thread.sleep(21000);
 
         webTestClient.post()
                 .uri(tournamentManagerUri + "/api/tournament/close-tournament")
@@ -200,8 +202,8 @@ public class BattleServiceIntegrationTests {
                         "Test Battle " + getRandomString(),
                         educatorID,
                         1, 2, false,
-                        LocalDateTime.now().plusSeconds(30),
-                        LocalDateTime.now().plusSeconds(50),
+                        LocalDateTime.now().plusSeconds(25).atZone(ZoneId.of("Europe/Rome")).toLocalDateTime(),
+                        LocalDateTime.now().plusSeconds(50).atZone(ZoneId.of("Europe/Rome")).toLocalDateTime(),
                         List.of(
                                 new WorkingPair<>("tests/input_1.txt", "1"),
                                 new WorkingPair<>("tests/output_1.txt", "2")
@@ -229,7 +231,7 @@ public class BattleServiceIntegrationTests {
                 .toEntity(TeamsRankingMessage.class)
                 .block();
 
-        Thread.sleep(30000);
+        Thread.sleep(26000);
 
         assertNotNull(teamsRankingResponseEntity);
         assertNotNull(teamsRankingResponseEntity.getBody());
@@ -340,6 +342,18 @@ public class BattleServiceIntegrationTests {
 
         // Sleep 15 seconds
         Thread.sleep(30000);
+
+        webTestClient.post()
+                .uri(battleManagerUri + "/api/battle/close-battle")
+                .bodyValue(
+                        new CloseBattleRequest(
+                                battle.getBattleId(),
+                                educatorID
+                        )
+                )
+                .exchange()
+                .expectStatus()
+                .is2xxSuccessful();
 
         webTestClient.post()
                 .uri(tournamentManagerUri + "/api/tournament/close-tournament")

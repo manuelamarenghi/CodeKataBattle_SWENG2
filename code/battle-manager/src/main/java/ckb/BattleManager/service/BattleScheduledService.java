@@ -38,7 +38,8 @@ public class BattleScheduledService {
     public void startBattles() {
         List<Battle> battlesToStart = battleRepository
                 .findBattlesByHasStartedIsFalseAndRegDeadlineIsBefore(LocalDateTime.now());
-        battlesToStart.forEach(battle -> {
+
+        for (Battle battle : battlesToStart) {
             battle.setHasStarted(true);
             battleRepository.save(battle);
             log.info("Starting battle with name: {}", battle.getName());
@@ -49,14 +50,16 @@ public class BattleScheduledService {
             } catch (Exception e) {
                 log.error("Error making the repository public for battle with name {}. Error {}", battle.getName(), e.getMessage());
             }
-        });
+        }
     }
 
     @Scheduled(fixedRate = 3000) // 3 Seconds
-    public void closeBattles() {
-        List<Battle> battlesToStart = battleRepository.
+    public void closeBattles() throws Exception {
+        log.info("Date of now: {}", LocalDateTime.now());
+        List<Battle> battlesToEnd = battleRepository.
                 findBattlesByHasEndedIsFalseAndSubDeadlineIsBefore(LocalDateTime.now());
-        battlesToStart.forEach(battle -> {
+
+        for (Battle battle : battlesToEnd) {
             battle.setHasEnded(true);
             battleRepository.save(battle);
             log.info("The battle {} has ended", battle.getName());
@@ -65,7 +68,11 @@ public class BattleScheduledService {
                 battle.setIsClosed(true);
                 log.info("The battle {} has been closed", battle.getName());
                 battleRepository.save(battle);
-                sendMailsToParticipants.send(battle);
+                try {
+                    sendMailsToParticipants.send(battle);
+                } catch (Exception e) {
+                    log.error("Error sending emails to the participant of the battle {}. Error {}", battle.getName(), e.getMessage());
+                }
             }
 
             // Get the teams and the points of each battle
@@ -76,6 +83,6 @@ public class BattleScheduledService {
                     battle,
                     teamService.getListPairIdUserPoints(battle)
             );
-        });
+        }
     }
 }

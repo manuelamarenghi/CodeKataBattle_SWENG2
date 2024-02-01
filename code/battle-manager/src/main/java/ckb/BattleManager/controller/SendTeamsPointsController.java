@@ -1,10 +1,9 @@
 package ckb.BattleManager.controller;
 
-import ckb.BattleManager.dto.output.BattleFinishedMessage;
+import ckb.BattleManager.dto.output.UpdateScoreRequest;
 import ckb.BattleManager.model.Battle;
 import ckb.BattleManager.model.WorkingPair;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -20,17 +19,17 @@ public class SendTeamsPointsController extends Controller {
     }
 
     public void sendIdUsersPointsFinishedBattle(Battle battle, List<WorkingPair<Long, Integer>> pairsIdUserPoints) {
-        ResponseEntity<Object> response = webClientBuilder.build()
+        ResponseEntity<String> response = webClientBuilder.build()
                 .post()
                 .uri(tournamentManagerUri + "/api/tournament/update-score")
                 .bodyValue(
-                        new BattleFinishedMessage(
+                        new UpdateScoreRequest(
                                 battle.getTournamentId(),
                                 pairsIdUserPoints
                         )
                 )
                 .retrieve()
-                .toEntity(Object.class)
+                .toEntity(String.class)
                 .block();
 
         if (response == null) {

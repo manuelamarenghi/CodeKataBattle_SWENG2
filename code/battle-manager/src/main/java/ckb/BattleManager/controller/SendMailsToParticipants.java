@@ -5,6 +5,7 @@ import ckb.BattleManager.model.Battle;
 import ckb.BattleManager.service.BattleService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
@@ -20,8 +21,8 @@ public class SendMailsToParticipants extends Controller {
         this.webClient = WebClient.create();
     }
 
-    public void send(Battle battle) {
-        webClient.post()
+    public void send(Battle battle) throws Exception {
+        ResponseEntity<String> response = webClient.post()
                 .uri(mailServiceUri + "/api/mail/direct")
                 .bodyValue(
                         new DirectMailRequest(
@@ -33,8 +34,13 @@ public class SendMailsToParticipants extends Controller {
                         )
                 )
                 .retrieve()
-                .toEntity(Object.class)
+                .toEntity(String.class)
                 .block();
+
+        if (response == null || response.getStatusCode().is4xxClientError()) {
+            log.error("Error sending emails to the participant of the battle {}", battle.getName());
+            throw new Exception("Error sending emails to the participant of the battle " + battle.getName());
+        }
 
         log.info("Successfully sent emails to the participant of the battle {}", battle.getName());
     }
