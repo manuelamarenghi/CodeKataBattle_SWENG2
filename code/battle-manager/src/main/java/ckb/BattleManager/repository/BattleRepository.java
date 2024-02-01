@@ -2,6 +2,7 @@ package ckb.BattleManager.repository;
 
 import ckb.BattleManager.model.Battle;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
@@ -16,7 +17,9 @@ public interface BattleRepository extends JpaRepository<Battle, Long> {
 
     List<Battle> findBattlesByTournamentId(Long idTournament);
 
+    @Query("select b from Battle b where b.hasStarted = false and b.regDeadline < ?1")
     List<Battle> findBattlesByHasStartedIsFalseAndRegDeadlineIsBefore(LocalDateTime now);
 
-    List<Battle> findBattlesByHasEndedIsFalseAndSubDeadlineBefore(LocalDateTime subDeadline);
+    @Query("select b from Battle b where b.hasEnded = false and b.subDeadline < ?1")
+    List<Battle> findBattlesByHasEndedIsFalseAndSubDeadlineIsBefore(LocalDateTime now);
 }

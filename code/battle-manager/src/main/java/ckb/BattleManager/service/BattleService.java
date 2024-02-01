@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
 
@@ -51,7 +52,7 @@ public class BattleService {
                 .isClosed(false)
                 .build();
         battleRepository.save(battle);
-        log.info("Battle saved in the database with name {}", battle.getName());
+        log.info("Battle saved in the database: {}", battle);
 
         try {
             String repoLink = createGHRepositoryBattleController.createGHRepository(battle, battleRequest.getFiles());
@@ -76,7 +77,13 @@ public class BattleService {
 
     public void joinBattle(Long idStudent, Long idBattle) throws Exception {
         Battle battle = getBattle(idBattle);
-        teamService.createTeam(idStudent, battle);
+
+        if (LocalDateTime.now().isBefore(battle.getRegDeadline())) {
+            teamService.createTeam(idStudent, battle);
+        } else {
+            log.error("The registration deadline has passed");
+            throw new Exception("The registration deadline has passed");
+        }
     }
 
     public void leaveBattle(Long idStudent, Long idBattle) throws Exception {

@@ -38,7 +38,7 @@ public class CreateGHRepositoryBattleController extends Controller {
             throw new Exception("Error starting battle with id: " + battleToStart.getBattleId());
         }
 
-        log.info("Battle started with id: {}", battleToStart.getBattleId());
+        log.info("Battle {} repository created", battleToStart.getName());
         return response.getBody();
     }
 }

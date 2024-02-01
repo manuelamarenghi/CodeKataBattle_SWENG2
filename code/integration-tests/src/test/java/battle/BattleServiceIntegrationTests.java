@@ -67,7 +67,6 @@ public class BattleServiceIntegrationTests {
     public void createBattleTest() {
         Long educatorID = createEducator();
 
-
         ResponseEntity<Tournament> tournamentResponseEntity = webClient.post()
                 .uri(tournamentManagerUri + "/api/tournament/new-tournament")
                 .bodyValue(
@@ -165,26 +164,6 @@ public class BattleServiceIntegrationTests {
                 .expectStatus().is2xxSuccessful();
     }
 
-    private Long createEducator() {
-        SignUpRequest request = SignUpRequest.builder()
-                .email(getRandomString() + "@mail.com")
-                .fullName("Test Educator")
-                .password("password")
-                .role(Role.EDUCATOR)
-                .build();
-
-        Long userID = webClient.post()
-                .uri(accountManagerUri + "/api/account/sign-up")
-                .bodyValue(request)
-                .retrieve()
-                .bodyToMono(Long.class)
-                .block();
-
-        assertNotNull(userID);
-        assertTrue(userID > 0);
-        return userID;
-    }
-
     @Test
     public void assignEvaluationToTeamAndCheckTheCorrectnessOfRanking() throws InterruptedException {
         Long educatorID = createEducator();
@@ -221,8 +200,8 @@ public class BattleServiceIntegrationTests {
                         "Test Battle " + getRandomString(),
                         educatorID,
                         1, 2, false,
-                        LocalDateTime.now().plusSeconds(10),
-                        LocalDateTime.now().plusSeconds(20),
+                        LocalDateTime.now().plusSeconds(30),
+                        LocalDateTime.now().plusSeconds(50),
                         List.of(
                                 new WorkingPair<>("tests/input_1.txt", "1"),
                                 new WorkingPair<>("tests/output_1.txt", "2")
@@ -250,6 +229,8 @@ public class BattleServiceIntegrationTests {
                 .toEntity(TeamsRankingMessage.class)
                 .block();
 
+        Thread.sleep(30000);
+
         assertNotNull(teamsRankingResponseEntity);
         assertNotNull(teamsRankingResponseEntity.getBody());
         TeamsRankingMessage teamsRanking = teamsRankingResponseEntity.getBody();
@@ -265,7 +246,6 @@ public class BattleServiceIntegrationTests {
                 .expectStatus()
                 .is2xxSuccessful();
 
-        // Sleep 15 seconds
         Thread.sleep(30000);
 
         webTestClient.post()
@@ -368,6 +348,26 @@ public class BattleServiceIntegrationTests {
                 )
                 .exchange()
                 .expectStatus().is2xxSuccessful();
+    }
+
+    private Long createEducator() {
+        SignUpRequest request = SignUpRequest.builder()
+                .email(getRandomString() + "@mail.com")
+                .fullName("Test Educator")
+                .password("password")
+                .role(Role.EDUCATOR)
+                .build();
+
+        Long userID = webClient.post()
+                .uri(accountManagerUri + "/api/account/sign-up")
+                .bodyValue(request)
+                .retrieve()
+                .bodyToMono(Long.class)
+                .block();
+
+        assertNotNull(userID);
+        assertTrue(userID > 0);
+        return userID;
     }
 
     private String getRandomString() {

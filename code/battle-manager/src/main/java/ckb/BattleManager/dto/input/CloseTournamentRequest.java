@@ -8,5 +8,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CloseTournamentRequest {
-    private Long idTournament;
+    private Long tournamentID;
 }

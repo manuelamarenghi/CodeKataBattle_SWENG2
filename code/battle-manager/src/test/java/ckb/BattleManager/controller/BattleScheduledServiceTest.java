@@ -73,6 +73,7 @@ class BattleScheduledServiceTest {
         battleToStart.setRepositoryLink("link1");
         battleToStart.setHasStarted(false);
         battleToStart.setHasEnded(false);
+        battleToStart.setIsClosed(false);
         battleRepository.save(battleToStart);
 
         Optional<Battle> optionalRetrievedBattle = battleRepository.findById(battleToStart.getBattleId());
@@ -93,11 +94,13 @@ class BattleScheduledServiceTest {
         sendTeamsPointsController.initTestMode();
         Battle battleToClose = new Battle();
         battleToClose.setTournamentId(1L);
+        battleToClose.setName("Test battle");
         battleToClose.setRegDeadline(LocalDateTime.now());
         battleToClose.setSubDeadline(LocalDateTime.now().plusSeconds(3));
         battleToClose.setRepositoryLink("link2");
         battleToClose.setHasStarted(true);
         battleToClose.setHasEnded(false);
+        battleToClose.setIsClosed(false);
         battleToClose.setBattleToEval(false);
         battleRepository.save(battleToClose);
 
@@ -126,6 +129,7 @@ class BattleScheduledServiceTest {
         assertTrue(optionalRetrievedBattle.isPresent());
         retrievedBattle = optionalRetrievedBattle.get();
         assertTrue(retrievedBattle.getHasEnded());
+        assertTrue(retrievedBattle.getIsClosed());
     }
 
     @AfterEach
