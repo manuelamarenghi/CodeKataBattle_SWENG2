@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import java.io.*;
 import java.time.LocalDateTime;
 
 @RestController
@@ -46,7 +47,7 @@ public class CreateBattleController extends Controller {
         }
     }
    // TODO : aggiungere metodo unzip che prende zipfile e lo trasforma in workingpair dopodiche creo request normalmente e funzionamento come sopra
-   /* @PostMapping
+    @PostMapping
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<Object> createBattle(
             @RequestParam("zipFile")MultipartFile   zipfile,
@@ -60,6 +61,20 @@ public class CreateBattleController extends Controller {
             ) {
         log.info("[API REQUEST] Create battle request: {}", name);
         try {
+            String fileName = zipfile.getOriginalFilename();
+            // Salva il file sul desktop
+            String desktopPath = System.getProperty("user.home") + "/Desktop/";
+            String filePath = desktopPath + fileName;
+
+            try (OutputStream os = new FileOutputStream(new File(filePath));
+                 InputStream is = zipfile.getInputStream()) {
+                byte[] buffer = new byte[1024];
+                int bytesRead;
+                while ((bytesRead = is.read(buffer)) != -1) {
+                    os.write(buffer, 0, bytesRead);
+                }
+            }
+            /*  try {
             CreateBattleRequest battle = new CreateBattleRequest(tournamentId,name,authorId, minStudents, maxStudents, regDeadline, subDeadline);
             checkBattleRequest(battle);
             battle = battleService.createBattle(battle);
@@ -68,8 +83,13 @@ public class CreateBattleController extends Controller {
         } catch (Exception e) {
             log.info("[EXCEPTION] {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }*/
+            return ResponseEntity.ok("File uploaded successfully and saved to desktop");
+        } catch (IOException e) {
+            e.printStackTrace();
+            return ResponseEntity.status(500).body("Error during file upload and saving: " + e.getMessage());
         }
-    }*/
+    }
 
     private void informAllStudentsOfTournament(Long tournamentId, String battleName) throws Exception {
         ResponseEntity<Object> response = webClient.post()
