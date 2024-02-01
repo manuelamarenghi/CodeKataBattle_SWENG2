@@ -7,7 +7,9 @@ import ckb.BattleManager.dto.output.UserRequest;
 import ckb.BattleManager.model.Battle;
 import ckb.BattleManager.model.Role;
 import ckb.BattleManager.model.User;
+import ckb.BattleManager.model.WorkingPair;
 import ckb.BattleManager.service.BattleService;
+import ckb.BattleManager.service.UnzipService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,8 +18,11 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.reactive.function.client.WebClient;
 
-import java.io.*;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/battle")
@@ -25,13 +30,15 @@ import java.time.LocalDateTime;
 public class CreateBattleController extends Controller {
     private final BattleService battleService;
     private final WebClient webClient = WebClient.create();
+    private final UnzipService unzipService;
 
     @Autowired
-    public CreateBattleController(BattleService battleService) {
+    public CreateBattleController(BattleService battleService, UnzipService unzipService) {
         this.battleService = battleService;
+        this.unzipService = unzipService;
     }
 
-    @PostMapping("/create-battle")
+    @PostMapping("/create-battle-list")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<Object> createBattle(@RequestBody CreateBattleRequest request) {
         log.info("[API REQUEST] Create battle request: {}", request);
@@ -46,48 +53,53 @@ public class CreateBattleController extends Controller {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
-   // TODO : aggiungere metodo unzip che prende zipfile e lo trasforma in workingpair dopodiche creo request normalmente e funzionamento come sopra
-    @PostMapping
+
+    @PostMapping("/create-battle")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<Object> createBattle(
-            @RequestParam("zipFile")MultipartFile   zipfile,
+            @RequestParam("zipFile") MultipartFile zipFile, // TODO check if it works with the web app ~ variable name
             @RequestParam("tournamentId") Long tournamentId,
             @RequestParam("authorId") Long authorId,
             @RequestParam("minStudents") Integer minStudents,
             @RequestParam("maxStudents") Integer maxStudents,
             @RequestParam("regDeadline") LocalDateTime regDeadline,
             @RequestParam("subDeadline") LocalDateTime subDeadline,
-            @RequestParam("name") String name
-            ) {
-        log.info("[API REQUEST] Create battle request: {}", name);
+            @RequestParam("name") String name) {
         try {
-            String fileName = zipfile.getOriginalFilename();
-            // Salva il file sul desktop
+
+            // convert the zip file into a List<WorkingPair<String, String>>
+            String fileName = zipFile.getOriginalFilename();
             String desktopPath = System.getProperty("user.home") + "/Desktop/";
             String filePath = desktopPath + fileName;
 
-            try (OutputStream os = new FileOutputStream(new File(filePath));
-                 InputStream is = zipfile.getInputStream()) {
+            List<WorkingPair<String, String>> files;
+
+            try (OutputStream os = new FileOutputStream(filePath);
+                 InputStream is = zipFile.getInputStream()) {
                 byte[] buffer = new byte[1024];
                 int bytesRead;
                 while ((bytesRead = is.read(buffer)) != -1) {
                     os.write(buffer, 0, bytesRead);
                 }
+                files = unzipService.unzip(fileName);
+            } catch (Exception e) {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
             }
-            /*  try {
-            CreateBattleRequest battle = new CreateBattleRequest(tournamentId,name,authorId, minStudents, maxStudents, regDeadline, subDeadline);
-            checkBattleRequest(battle);
-            battle = battleService.createBattle(battle);
-            informAllStudentsOfTournament(battle.getTournamentId(), battle.getName());
-            return ResponseEntity.ok(battle);
-        } catch (Exception e) {
-            log.info("[EXCEPTION] {}", e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-        }*/
-            return ResponseEntity.ok("File uploaded successfully and saved to desktop");
-        } catch (IOException e) {
-            e.printStackTrace();
-            return ResponseEntity.status(500).body("Error during file upload and saving: " + e.getMessage());
+
+            // create a request and use the method above
+            CreateBattleRequest battle = CreateBattleRequest.builder()
+                    .files(files)
+                    .name(name)
+                    .tournamentId(tournamentId)
+                    .authorId(authorId)
+                    .minStudents(minStudents)
+                    .maxStudents(maxStudents)
+                    .regDeadline(regDeadline)
+                    .subDeadline(subDeadline)
+                    .build();
+            return createBattle(battle);
+        } catch (Exception e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
     }
 
@@ -194,7 +206,7 @@ public class CreateBattleController extends Controller {
             throw new Exception("Permission not found");
         }
 
-        if (request.getFiles().stream().noneMatch(f -> f.getLeft().contains("tests/"))){
+        if (request.getFiles().stream().noneMatch(f -> f.getLeft().contains("tests/"))) {
             log.error("[ERROR] No tests found");
             throw new Exception("No tests found");
         }

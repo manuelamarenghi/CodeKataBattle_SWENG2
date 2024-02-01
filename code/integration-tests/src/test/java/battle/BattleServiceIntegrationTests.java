@@ -93,7 +93,7 @@ public class BattleServiceIntegrationTests {
                 .expectStatus().is2xxSuccessful();
 
         webTestClient.post()
-                .uri(battleManagerUri + "/api/battle/create-battle")
+                .uri(battleManagerUri + "/api/battle/create-battle-list")
                 .bodyValue(new CreateBattleRequest(
                         tournament.getTournamentID(),
                         "Test Battle " + getRandomString(),
@@ -135,7 +135,7 @@ public class BattleServiceIntegrationTests {
         Tournament tournament = tournamentResponseEntity.getBody();
 
         webTestClient.post()
-                .uri(battleManagerUri + "/api/battle/create-battle")
+                .uri(battleManagerUri + "/api/battle/create-battle-list")
                 .bodyValue(new CreateBattleRequest(
                         tournament.getTournamentID(),
                         "Test Battle " + getRandomString(),
@@ -194,7 +194,7 @@ public class BattleServiceIntegrationTests {
                 .expectStatus().is2xxSuccessful();
 
         ResponseEntity<Battle> battleResponseEntity = webClient.post()
-                .uri(battleManagerUri + "/api/battle/create-battle")
+                .uri(battleManagerUri + "/api/battle/create-battle-list")
                 .bodyValue(new CreateBattleRequest(
                         tournament.getTournamentID(),
                         "Test Battle " + getRandomString(),
@@ -287,7 +287,7 @@ public class BattleServiceIntegrationTests {
                 .expectStatus().is2xxSuccessful();
 
         ResponseEntity<Battle> battleResponseEntity = webClient.post()
-                .uri(battleManagerUri + "/api/battle/create-battle")
+                .uri(battleManagerUri + "/api/battle/create-battle-list")
                 .bodyValue(new CreateBattleRequest(
                         tournament.getTournamentID(),
                         "Test Battle " + getRandomString(),

@@ -1,6 +1,6 @@
 package ckb.BattleManager.controller;
 
-import ckb.BattleManager.dto.output.CreateRepoRequest;
+import ckb.BattleManager.dto.output.CreateRepositoryRequest;
 import ckb.BattleManager.model.Battle;
 import ckb.BattleManager.model.WorkingPair;
 import lombok.extern.slf4j.Slf4j;
@@ -19,7 +19,7 @@ public class CreateGHRepositoryBattleController extends Controller {
         ResponseEntity<String> response = webClient.post()
                 .uri(githubManagerUri + "/api/github/create-repo")
                 .bodyValue(
-                        new CreateRepoRequest(
+                        new CreateRepositoryRequest(
                                 battleToStart.getName(),
                                 files
                         )

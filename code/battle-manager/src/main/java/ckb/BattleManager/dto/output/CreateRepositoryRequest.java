@@ -2,15 +2,17 @@ package ckb.BattleManager.dto.output;
 
 import ckb.BattleManager.model.WorkingPair;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
 
 @Data
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class CreateRepoRequest {
+public class CreateRepositoryRequest {
     private String repoName;
     private List<WorkingPair<String, String>> files;
     /*

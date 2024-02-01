@@ -48,7 +48,7 @@ public class CreateRepositoryController extends Controller {
             gitHubService.commitAndPush(repo, files);
             log.info("Files committed and pushed successfully\n");
         } catch (Exception e){
-            log.error("Error while committing and pushing files to repository {}\n", repoName);
+            log.error("Error while committing and pushing files to repository {}\n {}", repoName, e.getMessage());
             return new ResponseEntity<>("server failed to commit and push files", getHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
