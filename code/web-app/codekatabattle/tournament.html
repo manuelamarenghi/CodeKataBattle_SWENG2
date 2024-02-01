@@ -269,8 +269,8 @@
     
     <script>
         function submitCreateBattle() {
-            var teamParticipant = document.getElementById('teamParticipantMin').value;
-            var teamParticipant = document.getElementById('teamParticipantMax').value;
+            var teamParticipant_min = document.getElementById('teamParticipantMin').value;
+            var teamParticipant_max = document.getElementById('teamParticipantMax').value;
             var battleName = document.getElementById('BattleName').value;
             var evaluation = document.querySelector('input[name="evaluation"]:checked').value;
             if(evaluation === "yes"){ evaluation = true; }
@@ -281,23 +281,25 @@
             const queryString = window.location.search;
             const params = new URLSearchParams(queryString);
             const tournamentID = params.get('id');
-            // TODO gestire file caricato per la repo 
+            var formData = new FormData();
+            formData.append("zipFile", codeKataUpload);
+            formData.append("name", battleName);
+            formData.append("tournamentId", tournamentID);
+            formData.append("authorId", localStorage.getItem("user_id"));
+            formData.append("minStudents", teamParticipant_min);
+            formData.append("maxStudents", teamParticipant_max);
+            formData.append("regDeadline", registrationSubmission);
+            formData.append("subDeadline", deadlineSubmission);
+            formData.append("battleToEval", evaluation);
+
             var fetchOptions = {
                 method: "POST",
                 headers: {
-                    "Content-Type": "application/json",
+                    "Content-Type": "multipart/form-data",
                 },
-                body: JSON.stringify({
-                    name: battleName,
-                    tournamentId: tournamentID,
-                    authorId: localStorage.getItem("user_id"),
-                    minStudents: teamParticipantMin,
-                    maxStudents: teamParticipantMax,
-                    regDeadline: registrationSubmission,
-                    subDeadline: deadlineSubmission,
-                    battleToEval: evaluation,
-                })
+                body: formData
             };
+            console.log(fetchOptions);
             fetch("http://localhost:8082/api/battle/create-battle",fetchOptions)
                 .then(function(response){
                     if(response.status === "success"){
