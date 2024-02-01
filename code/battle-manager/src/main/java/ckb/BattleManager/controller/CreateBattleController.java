@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import java.time.LocalDateTime;
@@ -44,6 +45,31 @@ public class CreateBattleController extends Controller {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
+   // TODO : aggiungere metodo unzip che prende zipfile e lo trasforma in workingpair dopodiche creo request normalmente e funzionamento come sopra
+   /* @PostMapping
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<Object> createBattle(
+            @RequestParam("zipFile")MultipartFile   zipfile,
+            @RequestParam("tournamentId") Long tournamentId,
+            @RequestParam("authorId") Long authorId,
+            @RequestParam("minStudents") Integer minStudents,
+            @RequestParam("maxStudents") Integer maxStudents,
+            @RequestParam("regDeadline") LocalDateTime regDeadline,
+            @RequestParam("subDeadline") LocalDateTime subDeadline,
+            @RequestParam("name") String name
+            ) {
+        log.info("[API REQUEST] Create battle request: {}", name);
+        try {
+            CreateBattleRequest battle = new CreateBattleRequest(tournamentId,name,authorId, minStudents, maxStudents, regDeadline, subDeadline);
+            checkBattleRequest(battle);
+            battle = battleService.createBattle(battle);
+            informAllStudentsOfTournament(battle.getTournamentId(), battle.getName());
+            return ResponseEntity.ok(battle);
+        } catch (Exception e) {
+            log.info("[EXCEPTION] {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+    }*/
 
     private void informAllStudentsOfTournament(Long tournamentId, String battleName) throws Exception {
         ResponseEntity<Object> response = webClient.post()
