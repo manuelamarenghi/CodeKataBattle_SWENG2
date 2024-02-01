@@ -19,7 +19,6 @@ import org.springframework.web.reactive.function.client.WebClient;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
@@ -73,7 +72,11 @@ public class BattleServiceIntegrationTests {
                 .uri(tournamentManagerUri + "/api/tournament/new-tournament")
                 .bodyValue(
                         new NewTournamentRequest(
-                                educatorID, "Pino's Tournament", new Date(2024 - 1900, Calendar.FEBRUARY, 1)
+                                educatorID, "Pino's Tournament",
+                                Date.from(
+                                        LocalDateTime.now().plusMinutes(10)
+                                                .atZone(ZoneId.systemDefault()).toInstant()
+                                )
                         )
                 )
                 .retrieve()
@@ -192,7 +195,7 @@ public class BattleServiceIntegrationTests {
                         new NewTournamentRequest(
                                 educatorID, "Pino's Evaluation Tournament",
                                 Date.from(
-                                        LocalDateTime.now().plusSeconds(5)
+                                        LocalDateTime.now().plusSeconds(10)
                                                 .atZone(ZoneId.systemDefault()).toInstant()
                                 )
                         )
@@ -218,8 +221,8 @@ public class BattleServiceIntegrationTests {
                         "Test Battle " + getRandomString(),
                         educatorID,
                         1, 2, false,
-                        LocalDateTime.now().plusSeconds(5),
                         LocalDateTime.now().plusSeconds(10),
+                        LocalDateTime.now().plusSeconds(20),
                         List.of(
                                 new WorkingPair<>("tests/input_1.txt", "1"),
                                 new WorkingPair<>("tests/output_1.txt", "2")
@@ -263,7 +266,7 @@ public class BattleServiceIntegrationTests {
                 .is2xxSuccessful();
 
         // Sleep 15 seconds
-        Thread.sleep(15000);
+        Thread.sleep(30000);
 
         webTestClient.post()
                 .uri(tournamentManagerUri + "/api/tournament/close-tournament")
@@ -282,9 +285,9 @@ public class BattleServiceIntegrationTests {
                 .uri(tournamentManagerUri + "/api/tournament/new-tournament")
                 .bodyValue(
                         new NewTournamentRequest(
-                                educatorID, "Pino's Evaluation Tournament",
+                                educatorID, "Pino's Personal Evaluation Tournament",
                                 Date.from(
-                                        LocalDateTime.now().plusSeconds(5)
+                                        LocalDateTime.now().plusSeconds(10)
                                                 .atZone(ZoneId.systemDefault()).toInstant()
                                 )
                         )
@@ -309,9 +312,9 @@ public class BattleServiceIntegrationTests {
                         tournament.getTournamentID(),
                         "Test Battle " + getRandomString(),
                         educatorID,
-                        1, 2, false,
-                        LocalDateTime.now().plusSeconds(5),
+                        1, 2, true,
                         LocalDateTime.now().plusSeconds(10),
+                        LocalDateTime.now().plusSeconds(15),
                         List.of(
                                 new WorkingPair<>("tests/input_1.txt", "1"),
                                 new WorkingPair<>("tests/output_1.txt", "2")
@@ -356,7 +359,7 @@ public class BattleServiceIntegrationTests {
                 .is2xxSuccessful();
 
         // Sleep 15 seconds
-        Thread.sleep(15000);
+        Thread.sleep(30000);
 
         webTestClient.post()
                 .uri(tournamentManagerUri + "/api/tournament/close-tournament")
