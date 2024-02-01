@@ -192,7 +192,7 @@ public class BattleServiceIntegrationTests {
                         new NewTournamentRequest(
                                 educatorID, "Pino's Evaluation Tournament",
                                 Date.from(
-                                        LocalDateTime.now().plusSeconds(10)
+                                        LocalDateTime.now().plusSeconds(5)
                                                 .atZone(ZoneId.systemDefault()).toInstant()
                                 )
                         )
@@ -256,6 +256,99 @@ public class BattleServiceIntegrationTests {
                         new AssignScoreRequest(
                                 teamsRanking.getListTeamsIdScore().get(0).getLeft(),
                                 20
+                        )
+                )
+                .exchange()
+                .expectStatus()
+                .is2xxSuccessful();
+
+        // Sleep 15 seconds
+        Thread.sleep(15000);
+
+        webTestClient.post()
+                .uri(tournamentManagerUri + "/api/tournament/close-tournament")
+                .bodyValue(
+                        new CloseTournamentRequest(tournament.getTournamentID(), educatorID)
+                )
+                .exchange()
+                .expectStatus().is2xxSuccessful();
+    }
+
+    @Test
+    public void assignPersonalScoreTest() throws InterruptedException {
+        Long educatorID = createEducator();
+
+        ResponseEntity<Tournament> tournamentResponseEntity = webClient.post()
+                .uri(tournamentManagerUri + "/api/tournament/new-tournament")
+                .bodyValue(
+                        new NewTournamentRequest(
+                                educatorID, "Pino's Evaluation Tournament",
+                                Date.from(
+                                        LocalDateTime.now().plusSeconds(5)
+                                                .atZone(ZoneId.systemDefault()).toInstant()
+                                )
+                        )
+                )
+                .retrieve()
+                .toEntity(Tournament.class)
+                .block();
+
+        assertNotNull(tournamentResponseEntity);
+        assertNotNull(tournamentResponseEntity.getBody());
+        Tournament tournament = tournamentResponseEntity.getBody();
+
+        webTestClient.post()
+                .uri(tournamentManagerUri + "/api/tournament/subscription")
+                .bodyValue(new SubscriptionRequest(tournament.getTournamentID(), cattaId))
+                .exchange()
+                .expectStatus().is2xxSuccessful();
+
+        ResponseEntity<Battle> battleResponseEntity = webClient.post()
+                .uri(battleManagerUri + "/api/battle/create-battle")
+                .bodyValue(new CreateBattleRequest(
+                        tournament.getTournamentID(),
+                        "Test Battle " + getRandomString(),
+                        educatorID,
+                        1, 2, false,
+                        LocalDateTime.now().plusSeconds(5),
+                        LocalDateTime.now().plusSeconds(10),
+                        List.of(
+                                new WorkingPair<>("tests/input_1.txt", "1"),
+                                new WorkingPair<>("tests/output_1.txt", "2")
+                        )
+                ))
+                .retrieve()
+                .toEntity(Battle.class)
+                .block();
+
+        assertNotNull(battleResponseEntity);
+        assertNotNull(battleResponseEntity.getBody());
+        Battle battle = battleResponseEntity.getBody();
+
+        webTestClient.post()
+                .uri(battleManagerUri + "/api/battle/join-battle")
+                .bodyValue(new JoinRequest(cattaId, battle.getBattleId()))
+                .exchange()
+                .expectStatus().is2xxSuccessful();
+
+        ResponseEntity<TeamsRankingMessage> teamsRankingResponseEntity = webClient
+                .post()
+                .uri(battleManagerUri + "/api/battle/get-teams-battle")
+                .bodyValue(new GetTeamsRequest(battle.getBattleId()))
+                .retrieve()
+                .toEntity(TeamsRankingMessage.class)
+                .block();
+
+        assertNotNull(teamsRankingResponseEntity);
+        assertNotNull(teamsRankingResponseEntity.getBody());
+        TeamsRankingMessage teamsRanking = teamsRankingResponseEntity.getBody();
+        webTestClient.post()
+                .uri(battleManagerUri + "/api/battle/assign-personal-score")
+                .bodyValue(
+                        new AssignPersonalScoreRequest(
+                                teamsRanking.getListTeamsIdScore().get(0).getLeft(),
+                                5,
+                                educatorID
                         )
                 )
                 .exchange()

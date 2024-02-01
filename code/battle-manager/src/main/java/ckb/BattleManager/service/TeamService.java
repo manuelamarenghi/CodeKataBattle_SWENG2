@@ -3,11 +3,11 @@ package ckb.BattleManager.service;
 import ckb.BattleManager.model.*;
 import ckb.BattleManager.repository.TeamRepository;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Collection;
 import java.util.List;
 
 @Service
@@ -158,7 +158,15 @@ public class TeamService {
     public List<WorkingPair<Long, Integer>> getListPairIdUserPoints(Battle battle) {
         List<Object[]> listArrayObjects = teamRepository.findPairsIdUserPointsByBattleId(battle);
         return listArrayObjects.stream()
-                .map(arrayObject -> new WorkingPair<Long, Integer>((Long) arrayObject[0], (Integer) arrayObject[1]))
+                .map(arrayObject -> new WorkingPair<>((Long) arrayObject[0], (Integer) arrayObject[1]))
+                .toList();
+    }
+
+    public List<Long> getBattleParticipants(Battle battle) {
+        return teamRepository.findTeamsByBattle(battle).stream()
+                .map(Team::getParticipation)
+                .flatMap(Collection::stream)
+                .map(participation -> participation.getParticipationId().getStudentId())
                 .toList();
     }
 }

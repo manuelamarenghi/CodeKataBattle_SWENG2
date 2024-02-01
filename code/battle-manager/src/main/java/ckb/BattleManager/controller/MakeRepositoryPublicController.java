@@ -3,13 +3,13 @@ package ckb.BattleManager.controller;
 import ckb.BattleManager.dto.output.MakePublicRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
-@RestController
 @Slf4j
+@Service
 public class MakeRepositoryPublicController extends Controller {
-    private WebClient webClient = WebClient.create();
+    private final WebClient webClient = WebClient.create();
 
     public void makeRepositoryPublic(String repositoryName) throws Exception {
         ResponseEntity<String> response = webClient.post()

@@ -38,11 +38,12 @@ public class InviteStudentToTeamController extends Controller {
                     .post()
                     .uri(mailServiceUri + "/api/mail/direct")
                     .bodyValue(
-                            // TODO: change the link
+                            // TODO: try the link
                             new DirectMailRequest(List.of(request.getIdStudent().toString()),
                                     "You have been invited to join the team: " + request.getIdTeam()
                                             + ". Please join the team by clicking on the link below:\n" +
-                                            "link: " + "123456789"
+                                            "link: " + "http://localhost:3000/invite.html?idTeam=" + request.getIdTeam() +
+                                            "&idUser=" + request.getIdStudent()
                             )
                     )
                     .retrieve()

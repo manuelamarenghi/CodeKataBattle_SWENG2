@@ -7,7 +7,6 @@ import ckb.BattleManager.model.Team;
 import ckb.BattleManager.model.WorkingPair;
 import ckb.BattleManager.repository.BattleRepository;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -118,5 +117,33 @@ public class BattleService {
     public Team getListParticipation(Long battleId, Long studentId) throws Exception {
         Battle battle = getBattle(battleId);
         return teamService.getTeam(battle, studentId);
+    }
+
+    public Battle closeBattle(Long battleId, Long educatorId) throws Exception {
+        Battle battle = getBattle(battleId);
+
+        if (battle.getHasEnded().equals(false)) {
+            log.error("The battle {} cannot be closed because it has not ended", battle.getName());
+            throw new Exception("The battle " + battle.getName() + " has not ended");
+        }
+
+        if (battle.getIsClosed().equals(true)) {
+            log.error("The battle {} is already closed", battle.getName());
+            throw new Exception("The battle " + battle.getName() + " is already closed");
+        }
+
+        if (educatorId.equals(battle.getAuthorId())) {
+            battle.setIsClosed(true);
+            battleRepository.save(battle);
+            log.info("Battle {} is closed", battle.getName());
+        } else {
+            log.error("The educator {} is not the author of the battle {}", educatorId, battle.getName());
+            throw new Exception("The educator " + educatorId + " is not the author of the battle " + battle.getName());
+        }
+        return battle;
+    }
+
+    public List<Long> getBattleParticipants(Battle battle) {
+        return teamService.getBattleParticipants(battle);
     }
 }

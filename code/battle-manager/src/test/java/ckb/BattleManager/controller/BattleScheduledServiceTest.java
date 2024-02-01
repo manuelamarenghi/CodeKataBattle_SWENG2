@@ -7,13 +7,8 @@ import ckb.BattleManager.model.Team;
 import ckb.BattleManager.repository.BattleRepository;
 import ckb.BattleManager.repository.ParticipationRepository;
 import ckb.BattleManager.repository.TeamRepository;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.*;
 import org.mockserver.integration.ClientAndServer;
-import org.mockserver.model.HttpRequest;
-import org.mockserver.model.HttpResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -22,6 +17,8 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockserver.model.HttpRequest.request;
+import static org.mockserver.model.HttpResponse.response;
 
 @SpringBootTest
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -31,7 +28,9 @@ class BattleScheduledServiceTest {
     private final ParticipationRepository participationRepository;
     private final SendTeamsPointsController sendTeamsPointsController;
     private final CreateGHRepositoryBattleController createGHRepositoryBattleController;
-    private ClientAndServer mockServer;
+    private final ClientAndServer mockServerGithubManager = ClientAndServer.startClientAndServer(8083);
+    private final ClientAndServer mockServerMailService = ClientAndServer.startClientAndServer(8085);
+    private final ClientAndServer mockServerTournamentManager = ClientAndServer.startClientAndServer(8087);
 
     @Autowired
     public BattleScheduledServiceTest(BattleRepository battleRepository,
@@ -46,17 +45,26 @@ class BattleScheduledServiceTest {
         this.createGHRepositoryBattleController = createGHRepositoryBattleController;
     }
 
+    @BeforeAll
+    public void beforeAll() {
+        createGHRepositoryBattleController.initTestMode();
+        sendTeamsPointsController.initTestMode();
+
+        mockServerGithubManager
+                .when(request().withMethod("POST").withPath("/api/github/make-public"))
+                .respond(response().withStatusCode(200));
+
+        mockServerMailService
+                .when(request().withMethod("POST").withPath("/api/mail/direct"))
+                .respond(response().withStatusCode(200));
+
+        mockServerTournamentManager
+                .when(request().withMethod("POST").withPath("/api/tournament/update-score"))
+                .respond(response().withStatusCode(200));
+    }
+
     @Test
     void startBattles() throws InterruptedException {
-        createGHRepositoryBattleController.initTestMode();
-        mockServer = ClientAndServer.startClientAndServer(8083);
-        mockServer
-                .when(HttpRequest.request()
-                        .withMethod("POST")
-                        .withPath("/api/github/make-public"))
-                .respond(HttpResponse.response()
-                        .withStatusCode(200));
-
         Battle battleToStart = new Battle();
         battleToStart.setTournamentId(1L);
         battleToStart.setName("Test battle");
@@ -107,15 +115,6 @@ class BattleScheduledServiceTest {
                 )
         );
 
-        mockServer = ClientAndServer.startClientAndServer(8087);
-        mockServer
-                .when(HttpRequest.request()
-                        .withMethod("POST")
-                        .withPath("/api/tournament/update-score")
-                )
-                .respond(HttpResponse.response()
-                        .withStatusCode(200));
-
         Optional<Battle> optionalRetrievedBattle = battleRepository.findById(battleToClose.getBattleId());
         assertTrue(optionalRetrievedBattle.isPresent());
         Battle retrievedBattle = optionalRetrievedBattle.get();
@@ -130,14 +129,16 @@ class BattleScheduledServiceTest {
     }
 
     @AfterEach
-    void tearDownEach() {
-        mockServer.stop();
+    public void afterEach() {
+        battleRepository.deleteAll();
+        teamRepository.deleteAll();
+        participationRepository.deleteAll();
     }
 
     @AfterAll
     void tearDown() {
-        participationRepository.deleteAll();
-        teamRepository.deleteAll();
-        battleRepository.deleteAll();
+        mockServerGithubManager.stop();
+        mockServerMailService.stop();
+        mockServerTournamentManager.stop();
     }
 }

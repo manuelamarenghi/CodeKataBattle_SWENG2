@@ -1,10 +1,12 @@
 package ckb.BattleManager.service;
 
 import ckb.BattleManager.controller.MakeRepositoryPublicController;
+import ckb.BattleManager.controller.SendMailsToParticipants;
 import ckb.BattleManager.controller.SendTeamsPointsController;
 import ckb.BattleManager.model.Battle;
 import ckb.BattleManager.repository.BattleRepository;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -18,14 +20,18 @@ public class BattleScheduledService {
     private final TeamService teamService;
     private final MakeRepositoryPublicController makeRepositoryPublicController;
     private final SendTeamsPointsController sendTeamsPointsController;
+    private final SendMailsToParticipants sendMailsToParticipants;
 
+    @Autowired
     public BattleScheduledService(BattleRepository battleRepository, TeamService teamService,
                                   MakeRepositoryPublicController makeRepositoryPublicController,
-                                  SendTeamsPointsController sendTeamsPointsController) {
+                                  SendTeamsPointsController sendTeamsPointsController,
+                                  SendMailsToParticipants sendMailsToParticipants) {
         this.battleRepository = battleRepository;
         this.teamService = teamService;
         this.makeRepositoryPublicController = makeRepositoryPublicController;
         this.sendTeamsPointsController = sendTeamsPointsController;
+        this.sendMailsToParticipants = sendMailsToParticipants;
     }
 
     @Scheduled(fixedRate = 3000) // 3 Seconds
@@ -38,7 +44,6 @@ public class BattleScheduledService {
 
             try {
                 // Call the GitHub manager to start the battle
-                // TODO make repo public
                 makeRepositoryPublicController.makeRepositoryPublic(battle.getRepositoryLink());
             } catch (Exception e) {
                 log.error("Error making the repository public for battle with name {}. Error {}", battle.getName(), e.getMessage());
@@ -58,6 +63,7 @@ public class BattleScheduledService {
             if (battle.getBattleToEval()) {
                 battle.setIsClosed(true);
                 log.info("The battle {} has been closed", battle.getName());
+                sendMailsToParticipants.send(battle);
             }
 
             // Get the teams and the points of each battle
