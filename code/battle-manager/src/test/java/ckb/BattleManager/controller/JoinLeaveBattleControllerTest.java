@@ -19,6 +19,7 @@ import org.springframework.http.ResponseEntity;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest
@@ -49,7 +50,7 @@ class JoinLeaveBattleControllerTest {
                 .maxStudents(1)
                 .battleToEval(false)
                 .regDeadline(LocalDateTime.now().plusHours(10))
-                .subDeadline(LocalDateTime.now().minusHours(20))
+                .subDeadline(LocalDateTime.now().plusHours(20))
                 .hasStarted(false)
                 .hasEnded(false)
                 .isClosed(false)
@@ -57,7 +58,7 @@ class JoinLeaveBattleControllerTest {
         battleRepository.save(battle);
 
         // Join
-        Long idStudent = 1L;
+        Long idStudent = 2L;
         ResponseEntity<Object> response = joinLeaveBattleController.joinBattle(new JoinRequest(idStudent, battle.getBattleId()));
         assertTrue(response.getStatusCode().is2xxSuccessful());
 
@@ -65,6 +66,7 @@ class JoinLeaveBattleControllerTest {
 
         assertTrue(optionalTeam.isPresent());
         assertTrue(teamRepository.existsById(optionalTeam.get().getTeamId()));
+        assertEquals(1, teamRepository.findAll().size());
 
         // Leave
         response = joinLeaveBattleController.leaveBattle(new LeaveRequest(idStudent, battle.getBattleId()));
@@ -74,6 +76,10 @@ class JoinLeaveBattleControllerTest {
         assertTrue(participation.isEmpty());
         optionalTeam = teamRepository.findTeamByStudentIdAndBattle(idStudent, battle);
         assertTrue(optionalTeam.isEmpty());
+
+        Long id = teamRepository.findAll().getFirst().getTeamId();
+        System.out.println(teamRepository.findById(id).get().getTeamId());
+        assertTrue(teamRepository.findById(id).isEmpty());
     }
 
     @Test

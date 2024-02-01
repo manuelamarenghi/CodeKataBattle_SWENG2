@@ -89,7 +89,7 @@ class AssignScoreControllerTest {
 
     @Test
     public void assignScoreAndPersonalScore() {
-        int scoreSubmission = 60, scorePersonal = 110;
+        int scoreSubmission = 60, scorePersonal = 100;
         ResponseEntity<Object> response1 = assignScoreController.assignScore(
                 new AssignScoreRequest(team.getTeamId(), scoreSubmission));
         ResponseEntity<Object> response2 = assignScoreController.assignPersonalScore(

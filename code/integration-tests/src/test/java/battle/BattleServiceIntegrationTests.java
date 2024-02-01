@@ -23,8 +23,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class BattleServiceIntegrationTests {
     private final String battleManagerUri = "http://localhost:8082";
@@ -362,6 +361,118 @@ public class BattleServiceIntegrationTests {
                 )
                 .exchange()
                 .expectStatus().is2xxSuccessful();
+    }
+
+    @Test
+    public void createWrongTest() {
+        Long educatorID = createEducator();
+
+        ResponseEntity<Tournament> tournamentResponseEntity = webClient.post()
+                .uri(tournamentManagerUri + "/api/tournament/new-tournament")
+                .bodyValue(
+                        new NewTournamentRequest(
+                                educatorID, "Pino's Wrong Tournament",
+                                Date.from(
+                                        LocalDateTime.now().plusSeconds(10)
+                                                .atZone(ZoneId.of("Europe/Rome")).toInstant()
+                                )
+                        )
+                )
+                .retrieve()
+                .toEntity(Tournament.class)
+                .block();
+
+        assertNotNull(tournamentResponseEntity);
+        assertNotNull(tournamentResponseEntity.getBody());
+        Tournament tournament = tournamentResponseEntity.getBody();
+
+        webTestClient.post()
+                .uri(tournamentManagerUri + "/api/tournament/new-tournament")
+                .bodyValue(
+                        new NewTournamentRequest(
+                                educatorID, "Pino's Wrong Tournament",
+                                Date.from(
+                                        LocalDateTime.now().plusSeconds(10)
+                                                .atZone(ZoneId.of("Europe/Rome")).toInstant()
+                                )
+                        )
+                )
+                .exchange()
+                .expectStatus().is4xxClientError();
+
+        webTestClient.post()
+                .uri(tournamentManagerUri + "/api/tournament/subscription")
+                .bodyValue(new SubscriptionRequest(tournament.getTournamentID(), cattaId))
+                .exchange()
+                .expectStatus().is2xxSuccessful();
+
+        ResponseEntity<Battle> battleResponseEntity = webClient.post()
+                .uri(battleManagerUri + "/api/battle/create-battle-list")
+                .bodyValue(new CreateBattleRequest(
+                        tournament.getTournamentID(),
+                        "Test Battle" + getRandomString(),
+                        educatorID,
+                        1, 2, true,
+                        LocalDateTime.now().plusSeconds(40),
+                        LocalDateTime.now().plusSeconds(45),
+                        List.of(
+                                new WorkingPair<>("tests/input_1.txt", "1"),
+                                new WorkingPair<>("tests/output_1.txt", "2")
+                        )
+                ))
+                .retrieve()
+                .toEntity(Battle.class)
+                .block();
+
+        assertNotNull(battleResponseEntity);
+        assertNotNull(battleResponseEntity.getBody());
+        Battle battle = battleResponseEntity.getBody();
+
+        webTestClient.post()
+                .uri(battleManagerUri + "/api/battle/leave-battle")
+                .bodyValue(new JoinRequest(cattaId, battle.getBattleId()))
+                .exchange()
+                .expectStatus().is4xxClientError();
+
+        webTestClient.post()
+                .uri(battleManagerUri + "/api/battle/join-battle")
+                .bodyValue(new JoinRequest(cattaId, battle.getBattleId()))
+                .exchange()
+                .expectStatus().is2xxSuccessful();
+
+        ResponseEntity<TeamsRankingMessage> teamsRankingResponseEntity = webClient
+                .post()
+                .uri(battleManagerUri + "/api/battle/get-teams-battle")
+                .bodyValue(new GetTeamsRequest(battle.getBattleId()))
+                .retrieve()
+                .toEntity(TeamsRankingMessage.class)
+                .block();
+
+        assertNotNull(teamsRankingResponseEntity);
+        assertNotNull(teamsRankingResponseEntity.getBody());
+        TeamsRankingMessage teamsRanking = teamsRankingResponseEntity.getBody();
+
+        assertEquals(1, teamsRanking.getListTeamsIdScore().size());
+
+        webTestClient.post()
+                .uri(battleManagerUri + "/api/battle/leave-battle")
+                .bodyValue(new JoinRequest(cattaId, battle.getBattleId()))
+                .exchange()
+                .expectStatus().is2xxSuccessful();
+
+        teamsRankingResponseEntity = webClient
+                .post()
+                .uri(battleManagerUri + "/api/battle/get-teams-battle")
+                .bodyValue(new GetTeamsRequest(battle.getBattleId()))
+                .retrieve()
+                .toEntity(TeamsRankingMessage.class)
+                .block();
+
+        assertNotNull(teamsRankingResponseEntity);
+        assertNotNull(teamsRankingResponseEntity.getBody());
+        teamsRanking = teamsRankingResponseEntity.getBody();
+
+        assertEquals(0, teamsRanking.getListTeamsIdScore().size());
     }
 
     private Long createEducator() {

@@ -119,7 +119,7 @@ class CloseBattleControllerTest {
                 .authorId(1L)
                 .hasStarted(true)
                 .hasEnded(true)
-                .hasEnded(false)
+                .isClosed(false)
                 .battleToEval(true)
                 .regDeadline(LocalDateTime.now().minusMinutes(2))
                 .subDeadline(LocalDateTime.now().minusMinutes(1))

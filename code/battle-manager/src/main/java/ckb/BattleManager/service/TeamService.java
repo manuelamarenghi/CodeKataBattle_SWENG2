@@ -47,38 +47,53 @@ public class TeamService {
                 .eduEvaluated(false)
                 .score(0)
                 .build();
-        team.setParticipation(List.of(
-                new Participation(
-                        new ParticipationId(
-                                studentId,
-                                team
+
+        team.setParticipation(
+                List.of(
+                        new Participation(
+                                new ParticipationId(studentId, team)
                         )
                 )
-        ));
-
+        );
         teamRepository.save(team);
-        log.info("Team created with id: {}", team.getTeamId());
+
+        log.info("Team created with id {} and participation {}", team.getTeamId(), team.getParticipation());
     }
 
-    public void deleteParticipation(Long idStudent, Battle battle) throws Exception {
-        Team studentTeam = teamRepository.findTeamByStudentIdAndBattle(idStudent, battle).orElseThrow(
+    private Team getTeamByStudentIdAndBattle(Long studentId, Battle battle) throws Exception {
+        return teamRepository.findTeamByStudentIdAndBattle(studentId, battle).orElseThrow(
                 () -> {
-                    log.error("Team not found with id student {} and battle {}", idStudent, battle.getName());
-                    return new Exception("Team not found with id student " + idStudent +
+                    log.error("Team not found with id student {} and battle {}", studentId, battle.getName());
+                    return new Exception("Team not found with id student " + studentId +
                             " and battle: " + battle.getName());
                 }
         );
-        participationService.deleteParticipationHavingIdStudentAndTeam(idStudent, studentTeam);
+    }
 
-        if (studentTeam.getParticipation().isEmpty()) {
+    public void deleteParticipation(Long idStudent, Battle battle) throws Exception {
+        Team studentTeam = getTeamByStudentIdAndBattle(idStudent, battle);
+
+        if (studentTeam.getParticipation().size() == 1) {
+            participationService.deleteParticipationHavingIdStudentAndTeam(idStudent, studentTeam);
             teamRepository.delete(studentTeam);
             log.info("Team deleted with id: {}", studentTeam.getTeamId());
+        } else {
+            participationService.deleteParticipationHavingIdStudentAndTeam(idStudent, studentTeam);
         }
     }
 
     public void assignScore(Long idTeam, Integer score) throws Exception {
-        Team team = checkScoreAndRetrieveTeam(idTeam, score);
+        if (score < 0) {
+            log.info("Score cannot be negative");
+            throw new Exception("Score cannot be negative");
+        }
 
+        if (score > 100) {
+            log.info("Score cannot be greater than 100");
+            throw new Exception("Score cannot be greater than 100");
+        }
+
+        Team team = getTeam(idTeam);
         Battle battleOfTeam = team.getBattle();
 
         if (battleOfTeam.getSubDeadline().isBefore(LocalDateTime.now())) {
@@ -93,8 +108,17 @@ public class TeamService {
     }
 
     public void assignPersonalScore(Long idTeam, Integer score, Long idEducator) throws Exception {
-        Team team = checkScoreAndRetrieveTeam(idTeam, score);
+        if (score < 0) {
+            log.info("Score cannot be negative");
+            throw new Exception("Score cannot be negative");
+        }
 
+        if (score > 100) {
+            log.info("Score cannot be greater than 100");
+            throw new Exception("Score cannot be greater than 100");
+        }
+
+        Team team = getTeam(idTeam);
         Battle battleOfTeam = team.getBattle();
 
         if (battleOfTeam.getHasEnded()) {
@@ -122,15 +146,6 @@ public class TeamService {
         teamRepository.save(team);
 
         log.info("Team personal score updated with id {} and score: {}", idTeam, score);
-    }
-
-    private Team checkScoreAndRetrieveTeam(Long idTeam, Integer score) throws Exception {
-        if (score < 0) {
-            log.info("Score cannot be negative");
-            throw new Exception("Score cannot be negative");
-        }
-
-        return getTeam(idTeam);
     }
 
     public void registerStudentToTeam(Long idStudent, Long idNewTeam) throws Exception {
