@@ -27,7 +27,7 @@ public class UnzipServiceTest {
 
         CreateRepositoryRequest repoRequest = CreateRepositoryRequest.builder()
                 .files(files)
-                .repoName("101esima")
+                .repoName(getRandomString())
                 .build();
 
         ResponseEntity<String> response = webClient.post()

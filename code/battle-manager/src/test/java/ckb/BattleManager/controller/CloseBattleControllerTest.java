@@ -45,6 +45,7 @@ class CloseBattleControllerTest {
     @AfterAll
     public void afterAll() {
         mockServerMailService.stop();
+        mockServerTournamentService.stop();
     }
 
     @Test
