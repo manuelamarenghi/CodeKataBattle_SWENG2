@@ -3,6 +3,7 @@ package ckb.TournamentManager.controller;
 import ckb.TournamentManager.dto.incoming.CloseTournamentRequest;
 import ckb.TournamentManager.dto.outcoming.AbleToCloseRequest;
 import ckb.TournamentManager.dto.outcoming.BattleFinishedResponse;
+import ckb.TournamentManager.dto.outcoming.DirectMailRequest;
 import ckb.TournamentManager.model.Tournament;
 import ckb.TournamentManager.service.TournamentService;
 import lombok.RequiredArgsConstructor;
@@ -11,6 +12,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.reactive.function.client.WebClient;
+
+import java.util.List;
 
 @RestController
 @Slf4j
@@ -22,22 +25,49 @@ public class CloseTournamentController extends Controller {
     private final WebClient webClient;
 
     @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<Object> CloseTournament(@RequestBody CloseTournamentRequest request) {
         // check if the request has valid data
         ResponseEntity<Object> response = checkRequest(request);
         if (response.getStatusCode().is4xxClientError()) return response;
         if (contactBattleManager(request)) {
             if (tournamentService.closeTournament(request)) {
-                return new ResponseEntity<>("Tournament closed", getHeaders(), HttpStatus.CREATED);
+                Long tournamentID = request.getTournamentID();
+                String tournamentName = tournamentService.getTournament(tournamentID).getName();
+
+                List<String> studentIDs = tournamentService.getStudentsSubscribed(tournamentID).stream().map(Object::toString).toList();
+                log.info("Tournament {} is now closed", tournamentName);
+
+                sendMailToAllStudents(studentIDs, tournamentName);
+                return new ResponseEntity<>("Tournament closed", getHeaders(), HttpStatus.OK);
             } else return new ResponseEntity<>("Not allowed to close tournament", getHeaders(), HttpStatus.BAD_REQUEST);
         } else {
             return new ResponseEntity<>("Not possible to close", getHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
+    private void sendMailToAllStudents(List<String> studentIDs, String tournamentName) {
+        DirectMailRequest request = DirectMailRequest.builder()
+                .userIDs(studentIDs)
+                .content("Tournament " + tournamentName + "has ended")
+                .build();
+
+        ResponseEntity<Object> response = webClient.post()
+                .uri(mailServiceUri + "/api/mail/direct")
+                .bodyValue(request)
+                .retrieve()
+                .toEntity(Object.class)
+                .block();
+
+        if (response != null && response.getStatusCode().is2xxSuccessful()) {
+            log.info("Mail sent to all participants of {} to inform them of the tournament ending", tournamentName);
+        } else {
+            log.error("Failed to send email for ending tournament {}", tournamentName);
+        }
+    }
+
     private boolean contactBattleManager(CloseTournamentRequest request) {
-        try{
+        try {
             ResponseEntity<BattleFinishedResponse> response = webClient
                     .post()
                     .uri(battleManagerUri + "/api/battle/battles-finished")

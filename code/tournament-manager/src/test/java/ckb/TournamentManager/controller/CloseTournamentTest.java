@@ -27,16 +27,21 @@ public class CloseTournamentTest {
     private CloseTournamentController closetController;
     @Autowired
     private TournamentRepo tournamentRepo;
-    private static ClientAndServer mockServer;
+    private static ClientAndServer battleManagerMockServer;
+    private static ClientAndServer mailServiceMockServer;
 
     @BeforeEach
     public void startMockServer() {
         closetController.initTestMode();
-        mockServer = ClientAndServer.startClientAndServer(8082);
+        battleManagerMockServer = ClientAndServer.startClientAndServer(8082);
+        mailServiceMockServer = ClientAndServer.startClientAndServer(8085);
+        mailServiceMockServer.when(request().withMethod("POST").withPath("/api/mail/direct"))
+                .respond(response().withStatusCode(200));
     }
     @AfterEach
     public void stopMockServer() {
-        mockServer.stop();
+        battleManagerMockServer.stop();
+        mailServiceMockServer.stop();
     }
 
     @Test
@@ -44,7 +49,7 @@ public class CloseTournamentTest {
         CloseTournamentRequest request;
         JSONObject jsObject = new JSONObject();
         jsObject.put("ableToClose", true);
-        mockServer.when(request()
+        battleManagerMockServer.when(request()
                         .withMethod("POST")
                         .withPath("/api/battle/battles-finished"))
                 .respond(response()
@@ -71,7 +76,7 @@ public class CloseTournamentTest {
     public void cannotcloseTest() {
         boolean b = false;
         CloseTournamentRequest request;
-        mockServer.when(request()
+        battleManagerMockServer.when(request()
                         .withMethod("POST")
                         .withPath("/api/battle/battles-finished"))
                 .respond(response()
@@ -128,7 +133,7 @@ public class CloseTournamentTest {
     public void WrongIDCreator() {
         boolean b = true;
         CloseTournamentRequest request;
-        mockServer.when(request()
+        battleManagerMockServer.when(request()
                         .withMethod("POST")
                         .withPath("/api/battle/battles-finished"))
                 .respond(response()
