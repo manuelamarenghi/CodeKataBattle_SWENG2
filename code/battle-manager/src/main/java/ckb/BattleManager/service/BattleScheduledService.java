@@ -36,7 +36,8 @@ public class BattleScheduledService {
 
     @Scheduled(fixedRate = 3000) // 3 Seconds
     public void startBattles() {
-        List<Battle> battlesToStart = battleRepository.findBattlesByHasStartedIsFalseAndRegDeadlineIsBefore(LocalDateTime.now());
+        List<Battle> battlesToStart = battleRepository
+                .findBattlesByHasStartedIsFalseAndRegDeadlineIsBefore(LocalDateTime.now());
         battlesToStart.forEach(battle -> {
             battle.setHasStarted(true);
             battleRepository.save(battle);
@@ -54,15 +55,16 @@ public class BattleScheduledService {
     @Scheduled(fixedRate = 3000) // 3 Seconds
     public void closeBattles() {
         List<Battle> battlesToStart = battleRepository.
-                findBattlesByHasEndedIsFalseAndSubDeadlineBefore(LocalDateTime.now());
+                findBattlesByHasEndedIsFalseAndSubDeadlineIsBefore(LocalDateTime.now());
         battlesToStart.forEach(battle -> {
             battle.setHasEnded(true);
             battleRepository.save(battle);
             log.info("The battle {} has ended", battle.getName());
 
-            if (battle.getBattleToEval()) {
+            if (!battle.getBattleToEval()) {
                 battle.setIsClosed(true);
                 log.info("The battle {} has been closed", battle.getName());
+                battleRepository.save(battle);
                 sendMailsToParticipants.send(battle);
             }
 

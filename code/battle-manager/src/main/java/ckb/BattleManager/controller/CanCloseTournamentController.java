@@ -32,8 +32,8 @@ public class CanCloseTournamentController {
     @PostMapping("/battles-finished")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<Boolean> canCloseTournament(@RequestBody CloseTournamentRequest request) {
-        log.info("[API REQUEST] Battle finished request with id tournament: {}", request.getIdTournament());
-        if (battleService.canCloseTournament(request.getIdTournament())) {
+        log.info("[API REQUEST] Battle finished request with id tournament: {}", request.getTournamentID());
+        if (battleService.canCloseTournament(request.getTournamentID())) {
             return new ResponseEntity<>(true, getHeaders(), HttpStatus.OK);
         }
         return ResponseEntity.badRequest().body(false);

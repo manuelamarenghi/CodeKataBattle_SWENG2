@@ -9,14 +9,14 @@ import ckb.BattleManager.model.Team;
 import ckb.BattleManager.repository.BattleRepository;
 import ckb.BattleManager.repository.ParticipationRepository;
 import ckb.BattleManager.repository.TeamRepository;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.ResponseEntity;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -28,25 +28,34 @@ class JoinLeaveBattleControllerTest {
     private final BattleRepository battleRepository;
     private final TeamRepository teamRepository;
     private final ParticipationRepository participationRepository;
-    private Battle battle;
 
     @Autowired
-    public JoinLeaveBattleControllerTest(JoinLeaveBattleController joinLeaveBattleController, BattleRepository battleRepository, TeamRepository teamRepository, ParticipationRepository participationRepository) {
+    public JoinLeaveBattleControllerTest(JoinLeaveBattleController joinLeaveBattleController,
+                                         BattleRepository battleRepository, TeamRepository teamRepository,
+                                         ParticipationRepository participationRepository) {
         this.joinLeaveBattleController = joinLeaveBattleController;
         this.battleRepository = battleRepository;
         this.teamRepository = teamRepository;
         this.participationRepository = participationRepository;
     }
 
-    @BeforeAll
-    public void setUp() {
-        battle = new Battle();
-        battle.setRepositoryLink("link");
-        battleRepository.save(battle);
-    }
-
     @Test
     public void joinBattleLeaveBattle() {
+        Battle battle = Battle.builder()
+                .tournamentId(1L)
+                .name("Battle test")
+                .authorId(1L)
+                .minStudents(1)
+                .maxStudents(1)
+                .battleToEval(false)
+                .regDeadline(LocalDateTime.now().plusHours(10))
+                .subDeadline(LocalDateTime.now().minusHours(20))
+                .hasStarted(false)
+                .hasEnded(false)
+                .isClosed(false)
+                .build();
+        battleRepository.save(battle);
+
         // Join
         Long idStudent = 1L;
         ResponseEntity<Object> response = joinLeaveBattleController.joinBattle(new JoinRequest(idStudent, battle.getBattleId()));
@@ -67,7 +76,58 @@ class JoinLeaveBattleControllerTest {
         assertTrue(optionalTeam.isEmpty());
     }
 
-    @AfterAll
+    @Test
+    public void wrongJoinAfterRegDeadline() {
+        Battle battle = Battle.builder()
+                .tournamentId(1L)
+                .name("Battle test")
+                .authorId(1L)
+                .minStudents(1)
+                .maxStudents(1)
+                .battleToEval(false)
+                .regDeadline(LocalDateTime.now().minusHours(10))
+                .subDeadline(LocalDateTime.now().minusHours(20))
+                .hasStarted(false)
+                .hasEnded(false)
+                .isClosed(false)
+                .build();
+        battleRepository.save(battle);
+
+        // Join
+        Long idStudent = 1L;
+        ResponseEntity<Object> response = joinLeaveBattleController.joinBattle(new JoinRequest(idStudent, battle.getBattleId()));
+        assertTrue(response.getStatusCode().is4xxClientError());
+
+        Optional<Team> optionalTeam = teamRepository.findTeamByStudentIdAndBattle(idStudent, battle);
+
+        assertTrue(optionalTeam.isEmpty());
+    }
+
+    @Test
+    public void wrongLeftWithoutJoin() {
+        Battle battle = Battle.builder()
+                .tournamentId(1L)
+                .name("Battle test")
+                .authorId(1L)
+                .minStudents(1)
+                .maxStudents(1)
+                .battleToEval(false)
+                .regDeadline(LocalDateTime.now().minusHours(10))
+                .subDeadline(LocalDateTime.now().minusHours(20))
+                .hasStarted(false)
+                .hasEnded(false)
+                .isClosed(false)
+                .build();
+        battleRepository.save(battle);
+
+        long idStudent = 1L;
+
+        // Leave
+        ResponseEntity<Object> response = joinLeaveBattleController.leaveBattle(new LeaveRequest(idStudent, battle.getBattleId()));
+        assertTrue(response.getStatusCode().is4xxClientError());
+    }
+
+    @AfterEach
     void tearDown() {
         participationRepository.deleteAll();
         teamRepository.deleteAll();
