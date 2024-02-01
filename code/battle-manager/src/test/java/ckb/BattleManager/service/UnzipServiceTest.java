@@ -2,6 +2,7 @@ package ckb.BattleManager.service;
 
 import ckb.BattleManager.dto.output.CreateRepositoryRequest;
 import ckb.BattleManager.model.WorkingPair;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -22,6 +23,10 @@ public class UnzipServiceTest {
     private final int STRING_LENGTH = 20;
 
     @Test
+    @Disabled
+    // can only work if a repo.zip is in the home directory
+    // this method should only be tested manually and locally, otherwise it will fail
+    // files will be put in the home directory automatically by rest controllers when the application is running
     public void unzipTest() throws IOException {
         List<WorkingPair<String, String>> files = unzipService.unzip("repo.zip", getRandomString());
 
