@@ -22,14 +22,10 @@ public class UnzipServiceTest {
     @Test
     public void unzipTest() throws IOException {
         List<WorkingPair<String, String>> files = unzipService.unzip("repo_dir.zip");
-        for (WorkingPair<String, String> file : files) {
-            System.out.println("path: " + file.getLeft());
-            System.out.println("content: " + file.getRight());
-        }
 
         CreateRepositoryRequest repoRequest = CreateRepositoryRequest.builder()
                 .files(files)
-                .repoName("porcoDigel")
+                .repoName("porcoDigel-pt4")
                 .build();
 
         ResponseEntity<String> response = webClient.post()

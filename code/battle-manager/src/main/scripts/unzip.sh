@@ -1,16 +1,16 @@
 #!/usr/bin/bash
 
-cd
+cd || exit 1
 
 zipFileName="$1"
 
-unzip $zipFileName
+unzip "$zipFileName"
 
 unzipDir="${zipFileName%.*}"
 
-echo $unzipDir
+echo "$unzipDir"
 
-cd $unzipDir || exit 1
+cd "$unzipDir" || exit 1
 
 rm -rf .git/
 
@@ -20,15 +20,10 @@ echo
 echo "Unzip completed"
 
 for path in "${paths[@]}"; do
-	fileName=${path##*/}
-	echo $path
-	
-	string=$(printf "%s" "$(cat $path)")
-	echo $string
+	echo "$path"
 done
 
-cd
-rm -rf "$unzipDir"
+cd || exit 1
 # rm -rf "$zipFileName" # comment for testing
 
 exit
