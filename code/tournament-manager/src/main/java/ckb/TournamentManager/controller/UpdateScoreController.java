@@ -13,16 +13,15 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/tournament/update-score")
 @RequiredArgsConstructor
 @CrossOrigin(origins = "*")
-
-public class UpdateScoreController extends Controller{
+public class UpdateScoreController extends Controller {
     private final TournamentService tournamentService;
 
     @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<Object> UpdateScore(@RequestBody UpdateScoreRequest request) {
-        if(tournamentService.updateScore(request)){
-        return new ResponseEntity<>("Scores updated", getHeaders(), HttpStatus.CREATED);
-        }else{
-        return new ResponseEntity<>("Error occurred", getHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);
-    }}
+    public ResponseEntity<Object> updateScore(@RequestBody UpdateScoreRequest request) {
+        if (tournamentService.updateScore(request)) {
+            return new ResponseEntity<>("Scores updated", getHeaders(), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>("Error occurred", getHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 }

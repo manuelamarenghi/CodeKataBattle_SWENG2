@@ -77,7 +77,9 @@ class CreateBattleRequestControllerTest {
 
         mockServerGithubManager
                 .when(request().withMethod("POST").withPath("/api/github/create-repo"))
-                .respond(response().withStatusCode(200));
+                .respond(response().withStatusCode(200)
+                        .withBody("https://github.com/Code-Kata-Battle/Test-Battle-xvmudweqnxshqtehmcgq")
+                        .withContentType(MediaType.TEXT_PLAIN));
     }
 
     @Test

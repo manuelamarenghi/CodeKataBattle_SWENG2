@@ -52,11 +52,11 @@ public class CloseTournamentController extends Controller {
                 .content("Tournament " + tournamentName + "has ended")
                 .build();
 
-        ResponseEntity<Object> response = webClient.post()
+        ResponseEntity<String> response = webClient.post()
                 .uri(mailServiceUri + "/api/mail/direct")
                 .bodyValue(request)
                 .retrieve()
-                .toEntity(Object.class)
+                .toEntity(String.class)
                 .block();
 
         if (response != null && response.getStatusCode().is2xxSuccessful()) {

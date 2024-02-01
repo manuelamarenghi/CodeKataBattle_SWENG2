@@ -4,6 +4,7 @@ import ckb.TournamentManager.dto.incoming.*;
 import ckb.TournamentManager.model.Permission;
 import ckb.TournamentManager.model.Tournament;
 import ckb.TournamentManager.model.TournamentRanking;
+import ckb.TournamentManager.model.WorkingPair;
 import ckb.TournamentManager.repo.PermissionRepo;
 import ckb.TournamentManager.repo.TournamentRankingRepo;
 import ckb.TournamentManager.repo.TournamentRepo;
@@ -11,7 +12,9 @@ import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -39,8 +42,8 @@ public class TournamentService {
         return tournamentRepo.findByTournamentID(id).orElse(null);
     }
 
-    public boolean isSubscribed(Long tournamentID, Long userID){
-        return tournamentRankingRepo.findByTournamentIDAndUserID(tournamentID,userID).isPresent();
+    public boolean isSubscribed(Long tournamentID, Long userID) {
+        return tournamentRankingRepo.findByTournamentIDAndUserID(tournamentID, userID).isPresent();
     }
 
     public void addSubscription(@NotNull SubscriptionRequest request) {
@@ -59,15 +62,14 @@ public class TournamentService {
         if (t.getCreatorID().equals(request.getCreatorID())) {
             permissionRepo.save(p);
             return "http://tournament-service/tournaments/" + request.getTournamentID();
-        }
-        else return null;
+        } else return null;
     }
 
     public List<TournamentRanking> getTournamentPage(GetTournamentPageRequest request) {
         return tournamentRankingRepo.findAllByTournamentIDOrderByScoreDesc(request.getTournamentID());
     }
 
-    public List<Tournament> getAllTournaments(){
+    public List<Tournament> getAllTournaments() {
         return tournamentRepo.findAll();
     }
 
@@ -81,26 +83,33 @@ public class TournamentService {
                 permissionRepo.delete(permission);
             }
             return true;
-        }
-        else return false;
+        } else return false;
     }
 
     public boolean permissionExists(Long tournamentID, Long userID) {
         return permissionRepo.findByTournamentIDAndUserID(tournamentID, userID).isPresent();
     }
 
-    public boolean updateScore(UpdateScoreRequest request){
+    public boolean updateScore(UpdateScoreRequest request) {
         List<TournamentRanking> records = tournamentRankingRepo.findAllByTournamentID(request.getTournamentID());
-        System.out.println("before: "+records);
-        if(records == null) return false;
-        for(TournamentRanking student : records){
-            if(request.getScores().containsKey(student.getUserID())){
-                student.setScore(student.getScore() + request.getScores().get(student.getUserID()));
+        System.out.println("before: " + records);
+        if (records == null) return false;
+
+        Map<Long, Integer> scores = new HashMap<>();
+        List<WorkingPair<Long, Integer>> scoresList = request.getScores();
+
+        for (WorkingPair<Long, Integer> score : scoresList) {
+            scores.put(score.getLeft(), score.getRight());
+        }
+
+        for (TournamentRanking student : records) {
+            if (scores.containsKey(student.getUserID())) {
+                student.setScore(student.getScore() + scores.get(student.getUserID()));
                 tournamentRankingRepo.save(student);
             }
         }
         records = tournamentRankingRepo.findAllByTournamentID(request.getTournamentID());
-        System.out.println("after : "+records);
+        System.out.println("after : " + records);
         return true;
     }
 

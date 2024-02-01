@@ -37,6 +37,7 @@ public class MakePublicControllerTest {
         createRepositoryController.createBattleRepository(createRequest);
         String nameFromUrl = "Code-Kata-Battle/" + repoName;
 
+        System.out.println(nameFromUrl);
         assertEquals(githubService.getRepo(nameFromUrl).getVisibility(), GHRepository.Visibility.PRIVATE);
 
         MakePublicRequest makePublicRequest = MakePublicRequest.builder()

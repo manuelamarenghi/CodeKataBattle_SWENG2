@@ -18,8 +18,8 @@ import static org.mockserver.model.HttpResponse.response;
 @SpringBootTest
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class CloseBattleControllerTest {
-
     private final ClientAndServer mockServerMailService = ClientAndServer.startClientAndServer(8085);
+    private final ClientAndServer mockServerTournamentService = ClientAndServer.startClientAndServer(8087);
     @Autowired
     private CloseBattleController closeBattleController;
     @Autowired
@@ -30,6 +30,10 @@ class CloseBattleControllerTest {
         closeBattleController.initTestMode();
         mockServerMailService
                 .when(request().withMethod("POST").withPath("/api/mail/direct"))
+                .respond(response().withStatusCode(200));
+
+        mockServerTournamentService
+                .when(request().withMethod("POST").withPath("/api/tournament/update-score"))
                 .respond(response().withStatusCode(200));
     }
 
