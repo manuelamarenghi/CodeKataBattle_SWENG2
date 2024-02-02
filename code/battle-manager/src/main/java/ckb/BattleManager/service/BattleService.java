@@ -145,6 +145,14 @@ public class BattleService {
             throw new Exception("The battle " + battle.getName() + " is already closed");
         }
 
+        List<Team> teamsRegistered = battle.getTeamsRegistered();
+        for (Team team : teamsRegistered) {
+            if (team.getCanParticipateToBattle().equals(true) && team.getEduEvaluated().equals(false)) {
+                log.error("The battle {} cannot be closed because the team {} has not been evaluated", battle.getName(), team.getTeamId());
+                throw new Exception("The battle " + battle.getName() + " cannot be closed because the team " + team.getTeamId() + " has not been evaluated");
+            }
+        }
+
         if (educatorId.equals(battle.getAuthorId())) {
             battle.setIsClosed(true);
             battleRepository.save(battle);

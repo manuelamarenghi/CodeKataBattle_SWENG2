@@ -18,6 +18,7 @@ import java.util.List;
 @Slf4j
 public class BattleScheduledService {
     private final BattleRepository battleRepository;
+    private final BattleService battleService;
     private final TeamService teamService;
     private final MakeRepositoryPublicController makeRepositoryPublicController;
     private final SendTeamsPointsController sendTeamsPointsController;
@@ -27,8 +28,10 @@ public class BattleScheduledService {
     public BattleScheduledService(BattleRepository battleRepository, TeamService teamService,
                                   MakeRepositoryPublicController makeRepositoryPublicController,
                                   SendTeamsPointsController sendTeamsPointsController,
-                                  SendMailsToParticipants sendMailsToParticipants) {
+                                  SendMailsToParticipants sendMailsToParticipants,
+                                  BattleService battleService) {
         this.battleRepository = battleRepository;
+        this.battleService = battleService;
         this.teamService = teamService;
         this.makeRepositoryPublicController = makeRepositoryPublicController;
         this.sendTeamsPointsController = sendTeamsPointsController;
@@ -54,6 +57,19 @@ public class BattleScheduledService {
 
             battle.setHasStarted(true);
             battleRepository.save(battle);
+
+            try {
+                sendMailsToParticipants.send(
+                        battleService.getBattleParticipants(battle),
+                        "The battle " + battle.getName() + " is started.\nCheck out the code kata following the link: "
+                                + "https://github.com/" + battle.getRepositoryLink(),
+                        battle.getName()
+                );
+            } catch (Exception e) {
+                log.error("Error sending emails to the participant of the battle {}. Error {}", battle.getName(), e.getMessage());
+            }
+
+
             log.info("Starting battle with name: {}", battle.getName());
 
             try {
@@ -66,7 +82,7 @@ public class BattleScheduledService {
     }
 
     @Scheduled(fixedRate = 3000) // 3 Seconds
-    public void closeBattles() throws Exception {
+    public void closeBattles() {
         log.info("Date of now: {}", LocalDateTime.now());
         List<Battle> battlesToEnd = battleRepository.
                 findBattlesByHasEndedIsFalseAndSubDeadlineIsBefore(LocalDateTime.now());
@@ -81,7 +97,11 @@ public class BattleScheduledService {
                 log.info("The battle {} has been closed", battle.getName());
                 battleRepository.save(battle);
                 try {
-                    sendMailsToParticipants.send(battle);
+                    sendMailsToParticipants.send(
+                            battleService.getBattleParticipants(battle),
+                            "The battle " + battle.getName() + " is finished.\nCheck out the ranking on the website",
+                            battle.getName()
+                    );
                 } catch (Exception e) {
                     log.error("Error sending emails to the participant of the battle {}. Error {}", battle.getName(), e.getMessage());
                 }

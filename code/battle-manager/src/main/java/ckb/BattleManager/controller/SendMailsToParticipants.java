@@ -1,13 +1,14 @@
 package ckb.BattleManager.controller;
 
 import ckb.BattleManager.dto.output.DirectMailRequest;
-import ckb.BattleManager.model.Battle;
 import ckb.BattleManager.service.BattleService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
+
+import java.util.List;
 
 @Slf4j
 @Service
@@ -21,16 +22,15 @@ public class SendMailsToParticipants extends Controller {
         this.webClient = WebClient.create();
     }
 
-    public void send(Battle battle) throws Exception {
+    public void send(List<Long> participantIds, String content, String battleName) throws Exception {
         ResponseEntity<String> response = webClient.post()
                 .uri(mailServiceUri + "/api/mail/direct")
                 .bodyValue(
                         new DirectMailRequest(
-                                battleService.getBattleParticipants(battle).stream()
+                                participantIds.stream()
                                         .map(Object::toString)
                                         .toList(),
-                                "The battle " + battle.getName() + " is finished.\n" +
-                                        "Check out the ranking on the website"
+                                content
                         )
                 )
                 .retrieve()
@@ -38,10 +38,10 @@ public class SendMailsToParticipants extends Controller {
                 .block();
 
         if (response == null || response.getStatusCode().is4xxClientError()) {
-            log.error("Error sending emails to the participant of the battle {}", battle.getName());
-            throw new Exception("Error sending emails to the participant of the battle " + battle.getName());
+            log.error("Error sending emails to the participant of the battle {}", battleName);
+            throw new Exception("Error sending emails to the participant of the battle " + battleName);
         }
 
-        log.info("Successfully sent emails to the participant of the battle {}", battle.getName());
+        log.info("Successfully sent emails to the participant of the battle {}", battleName);
     }
 }
