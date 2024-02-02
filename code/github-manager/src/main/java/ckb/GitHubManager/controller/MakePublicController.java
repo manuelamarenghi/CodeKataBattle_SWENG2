@@ -20,7 +20,14 @@ public class MakePublicController extends Controller {
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<Object> makePublic(@RequestBody MakePublicRequest request) {
         try {
-            githubService.makeRepositoryPublic(request.getRepoName());
+            String repoUrl = request.getRepoName();
+            log.info("Changing repository visibility for {}", repoUrl);
+            String repoName = repoUrl
+                    .replace("https://github.com/", "")
+                    .replace(".git", "");
+            log.info("name: {}", repoName);
+
+            githubService.makeRepositoryPublic(repoName);
             return new ResponseEntity<>("Repository set to public", getHeaders(), HttpStatus.OK);
         } catch (Exception e) {
             log.error("Error while changing repository visibility for {}\n", request.getRepoName());
