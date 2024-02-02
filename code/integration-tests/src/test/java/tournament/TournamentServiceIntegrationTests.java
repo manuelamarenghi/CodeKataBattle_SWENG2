@@ -1,13 +1,17 @@
 package tournament;
 
+import ckb.ContainerHandler;
 import ckb.dto.account.Role;
 import ckb.dto.account.SignUpRequest;
 import ckb.dto.tournament.NewTournamentRequest;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import java.io.IOException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Random;
@@ -22,6 +26,18 @@ public class TournamentServiceIntegrationTests {
     private final String tournamentManagerUri = "http://localhost:8087";
     private final WebTestClient webTestClient = WebTestClient.bindToServer().build();
 
+
+    @BeforeAll
+    public static void init() throws IOException, InterruptedException {
+        ContainerHandler.stop();
+        Thread.sleep(10000);
+        ContainerHandler.start();
+    }
+
+    @AfterAll
+    public static void close() throws IOException {
+        ContainerHandler.stop();
+    }
 
     @Test
     public void createTournamentTest() {

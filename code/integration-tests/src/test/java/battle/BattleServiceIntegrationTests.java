@@ -1,5 +1,6 @@
 package battle;
 
+import ckb.ContainerHandler;
 import ckb.dto.account.Role;
 import ckb.dto.account.SignUpRequest;
 import ckb.dto.battle.*;
@@ -9,6 +10,7 @@ import ckb.dto.tournament.SubscriptionRequest;
 import ckb.model.Battle;
 import ckb.model.Tournament;
 import ckb.model.WorkingPair;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
@@ -16,6 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import java.io.IOException;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -36,8 +39,16 @@ public class BattleServiceIntegrationTests {
     private static Long cattaId;
 
     @BeforeAll
-    public static void init() {
+    public static void init() throws IOException, InterruptedException {
+        ContainerHandler.stop();
+        Thread.sleep(10000);
+        ContainerHandler.start();
         cattaId = createStudentCatta();
+    }
+
+    @AfterAll
+    public static void close() throws IOException {
+        ContainerHandler.stop();
     }
 
     private static Long createStudentCatta() {

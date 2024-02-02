@@ -1,6 +1,6 @@
 package mail;
 
-import ckb.dto.ContainerHandler;
+import ckb.ContainerHandler;
 import ckb.dto.account.Role;
 import ckb.dto.account.SignUpRequest;
 import ckb.dto.mail.AllStudentsMailRequest;
@@ -28,13 +28,16 @@ public class MailServiceIntegrationTests {
     private final String mailServiceURI = "http://localhost:8085";
     private final WebTestClient webTestClient = WebTestClient.bindToServer().build();
 
+
     @BeforeAll
-    public static void setUp() {
+    public static void init() throws IOException, InterruptedException {
+        ContainerHandler.stop();
+        Thread.sleep(10000);
         ContainerHandler.start();
     }
 
     @AfterAll
-    public static void tearDown() throws IOException {
+    public static void close() throws IOException {
         ContainerHandler.stop();
     }
     @Test

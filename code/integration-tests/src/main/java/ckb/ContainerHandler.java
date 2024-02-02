@@ -1,4 +1,4 @@
-package ckb.dto;
+package ckb;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -42,8 +42,12 @@ public class ContainerHandler {
     }
 
     public static void stop() throws IOException{
+        String script = SCRIPTS_PATH + "stop-containers.sh";
         try {
-            new ProcessBuilder(SCRIPTS_PATH + "stop-containers.sh").start();
+            new ProcessBuilder(
+                    script,
+                    SCRIPTS_PATH.substring(0, SCRIPTS_PATH.indexOf("/integration-tests"))
+            ).start();
         } catch (Exception e) {
             new ProcessBuilder()
                     .command("powershell", "-Command", "docker compose stop")
