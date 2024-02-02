@@ -18,7 +18,7 @@ function createTournament() {
     };
     fetch("http://localhost:8087/api/tournament/new-tournament",fetchOptions)
         .then(function (response) {
-            if (response.status === "success") {
+            if (response.status <300) {
                 alert("Torneo creato con successo.");
                 window.location.href = "tournaments.html";
             } else {
@@ -54,7 +54,7 @@ function grantPermission(){
     };
     fetch("http://localhost:8087/api/tournament/permission", fetchOptions)
             .then(function (response) {
-                if (response.status === "success") {
+                if (response.status <300) {
                     alert("Permesso creato.");
                     window.location.href = "tournaments.html";
                 } else {
@@ -84,17 +84,18 @@ function updateUserInfo(){
                 email: document.getElementById("email").value,
                 fullName: document.getElementById("fullName").value,
                 password: document.getElementById("password").value,
-                role: localStorage.getItem("role"),
+                role: localStorage.getItem("user_role"),
             }),
     }
+    console.log(fetchOptions);
     fetch("http://localhost:8086/api/account/update", fetchOptions)
         .then(function (response) {
-            if (response.status === "success") {
+            if (response.status <300) {
                 alert("Informazioni aggiornate con successo.");
-                localStorage.removeItem("logged_in");
-                localStorage.removeItem("user_id");
-                localStorage.removeItem("user_email");
-                localStorage.removeItem("user_role");
+                localStorage.removeItem("logged_in", localStorage.getItem("logged_in"));
+            localStorage.removeItem("user_id", localStorage.getItem("user_id"));
+            localStorage.removeItem("user_email", localStorage.getItem("user_email"));
+            localStorage.removeItem("user_role", localStorage.getItem("user_role"));
                 window.location.href = "login.html";
             } else {
                 alert("Errore durante l'aggiornamento delle informazioni. Riprova.");
