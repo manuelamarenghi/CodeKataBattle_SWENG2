@@ -1,4 +1,4 @@
-package ckb.dto.battle;
+package ckb.dto.solution;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class GetTeamStudentRequest {
-    private Long battleId;
-    private Long studentId;
+public class EvaluationRequest {
+    String repoUrl;
+    Long teamId;
 }
