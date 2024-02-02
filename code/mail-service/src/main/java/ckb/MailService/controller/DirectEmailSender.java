@@ -27,7 +27,19 @@ public class DirectEmailSender extends EmailSender {
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<Object> sendEmail(@RequestBody DirectMailRequest request) {
 
+        try {
+            if(request.getContent() == null || request.getUserIDs() == null) throw new Exception("Invalid request");
+        } catch (Exception e) {
+            log.error("Invalid request\n");
+            return new ResponseEntity<>("invalid request, expected fields content and userIDs", getHeaders(), HttpStatus.BAD_REQUEST);
+        }
+
         List<String> userIDs = request.getUserIDs();
+        if (userIDs.isEmpty()) {
+            log.info("No user id provided, exiting...");
+            return new ResponseEntity<>("no user id provided", getHeaders(), HttpStatus.OK);
+        }
+
         List<String> addresses;
         try {
             addresses = getEmailAddresses(userIDs);

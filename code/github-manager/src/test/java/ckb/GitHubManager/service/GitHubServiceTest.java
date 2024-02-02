@@ -1,6 +1,6 @@
 package ckb.GitHubManager.service;
 
-import org.apache.commons.lang3.tuple.ImmutablePair;
+import ckb.GitHubManager.model.WorkingPair;
 import org.junit.jupiter.api.Test;
 import org.kohsuke.github.GHContent;
 import org.kohsuke.github.GHRepository;
@@ -51,9 +51,9 @@ public class GitHubServiceTest {
     @Test
     public void firstCommitTest() throws IOException {
         GHRepository repo = null;
-        List<ImmutablePair<String, String>> files = List.of(
-                new ImmutablePair<>("README.md", "This is a test file"),
-                new ImmutablePair<>("directory/TEST.md", "This is a test file in a directory")
+        List<WorkingPair<String, String>> files = List.of(
+                new WorkingPair<>("README.md", "This is a test file"),
+                new WorkingPair<>("directory/TEST.md", "This is a test file in a directory")
         );
         try {
             repo = gitHubService.createRepository(getRandomString());
@@ -66,10 +66,10 @@ public class GitHubServiceTest {
         }
     }
 
-    private void checkCorrectness(GHRepository repo, List<ImmutablePair<String, String>> files) throws IOException, InterruptedException {
+    private void checkCorrectness(GHRepository repo, List<WorkingPair<String, String>> files) throws IOException, InterruptedException {
         Thread.sleep(20000); // wait for GitHub to update
 
-        for (ImmutablePair<String, String> file : files) {
+        for (WorkingPair<String, String> file : files) {
             GHContent content;
             content = gitHubService.fetchSources(repo, file.getLeft());
             assertNotNull(content);

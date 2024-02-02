@@ -16,6 +16,30 @@ services:
     command: --default-authentication-plugin=mysql_native_password
     restart: always
 
+  mysql-tournament-manager:
+    container_name: mysql-tournament-manager
+    image: mysql
+    environment:
+      MYSQL_ROOT_USER: root
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: tournament_schema
+    volumes:
+      - ./db-dump:/docker-entrypoint-initdb.d
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+
+  mysql-battle-manager:
+    container_name: mysql-battle-manager
+    image: mysql
+    environment:
+      MYSQL_ROOT_USER: root
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: battle_schema
+    volumes:
+      - ./db-dump:/docker-entrypoint-initdb.d
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+
   account-manager:
     container_name: account-manager
     image: ${ID:-codekatabattle}/account-manager
@@ -39,3 +63,27 @@ services:
     image: ${ID:-codekatabattle}/github-manager
     ports:
       - "8083:8083"
+
+  tournament-manager:
+    container_name: tournament-manager
+    image: ${ID:-codekatabattle}/tournament-manager
+    depends_on:
+      - mysql-tournament-manager
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql-tournament-manager:3306/tournament_schema
+    ports:
+      - "8087:8087"
+    restart: always
+
+  battle-manager:
+    container_name: battle-manager
+    image: ${ID:-codekatabattle}/battle-manager
+    depends_on:
+      - mysql-battle-manager
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql-battle-manager:3306/battle_schema
+    ports:
+      - "8082:8082"
+    restart: always

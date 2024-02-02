@@ -1,10 +1,10 @@
 package ckb.GitHubManager.dto;
 
+import ckb.GitHubManager.model.WorkingPair;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.apache.commons.lang3.tuple.ImmutablePair;
 
 import java.util.List;
 
@@ -14,7 +14,7 @@ import java.util.List;
 @NoArgsConstructor
 public class CreateRepositoryRequest {
     private String repoName;
-    private List<ImmutablePair<String, String>> files;
+    private List<WorkingPair<String, String>> files;
     /*
     content in the list should be in the following format:
 

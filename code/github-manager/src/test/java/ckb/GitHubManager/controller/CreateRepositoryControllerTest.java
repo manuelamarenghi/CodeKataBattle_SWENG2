@@ -1,7 +1,7 @@
 package ckb.GitHubManager.controller;
 
 import ckb.GitHubManager.dto.CreateRepositoryRequest;
-import org.apache.commons.lang3.tuple.ImmutablePair;
+import ckb.GitHubManager.model.WorkingPair;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -23,8 +23,8 @@ public class CreateRepositoryControllerTest {
 
     @Test
     public void createRepositoryTest() throws IOException {
-        List<ImmutablePair<String, String>> files = new ArrayList<>();
-        files.add(new ImmutablePair<>("test_file", "test_content"));
+        List<WorkingPair<String, String>> files = new ArrayList<>();
+        files.add(new WorkingPair<>("test_file", "test_content"));
 
         CreateRepositoryRequest request = CreateRepositoryRequest.builder()
                 .repoName(getRandomString())
