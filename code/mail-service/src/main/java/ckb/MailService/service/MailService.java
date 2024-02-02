@@ -25,7 +25,7 @@ public class MailService {
             message.setBcc(addresses.subList(1, addresses.size()).toArray(new String[0]));
         }
 
-        message.setTo(addresses.getFirst()); // must set the To field
+        message.setTo(addresses.get(0)); // must set the To field
         message.setSubject("CKB - Notification");
         message.setText(content);
 

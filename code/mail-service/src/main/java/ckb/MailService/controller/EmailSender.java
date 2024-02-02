@@ -3,7 +3,7 @@ package ckb.MailService.controller;
 import org.springframework.http.HttpHeaders;
 
 public abstract class EmailSender {
-    String accountManagerUrl = "http://account-manager:8086";
+    String accountManagerUrl = "http://account-manager";
     HttpHeaders getHeaders() {
         HttpHeaders headers = new HttpHeaders();
         headers.add("Access-Control-Allow-Methods", "POST, GET, OPTIONS, DELETE");
