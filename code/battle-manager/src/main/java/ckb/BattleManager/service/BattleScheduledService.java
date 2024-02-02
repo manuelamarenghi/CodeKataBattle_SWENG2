@@ -4,6 +4,7 @@ import ckb.BattleManager.controller.MakeRepositoryPublicController;
 import ckb.BattleManager.controller.SendMailsToParticipants;
 import ckb.BattleManager.controller.SendTeamsPointsController;
 import ckb.BattleManager.model.Battle;
+import ckb.BattleManager.model.Team;
 import ckb.BattleManager.repository.BattleRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +41,17 @@ public class BattleScheduledService {
                 .findBattlesByHasStartedIsFalseAndRegDeadlineIsBefore(LocalDateTime.now());
 
         for (Battle battle : battlesToStart) {
+            List<Team> teamsRegistered = battle.getTeamsRegistered();
+            for (Team teamRegistered : teamsRegistered) {
+                int numberStudents = teamRegistered.getParticipation().size();
+                if (numberStudents < battle.getMinStudents() || numberStudents > battle.getMaxStudents()) {
+                    log.error("The number of students in the team {} is {}: not in the range of {} and {}",
+                            teamRegistered.getTeamId(), teamsRegistered.size(), battle.getMinStudents(), battle.getMaxStudents());
+
+                    teamRegistered.setCanParticipateToBattle(false);
+                }
+            }
+
             battle.setHasStarted(true);
             battleRepository.save(battle);
             log.info("Starting battle with name: {}", battle.getName());

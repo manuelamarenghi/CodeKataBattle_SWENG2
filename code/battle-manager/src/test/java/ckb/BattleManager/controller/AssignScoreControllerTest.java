@@ -54,6 +54,7 @@ class AssignScoreControllerTest {
         team.setRepositoryLink("team_link");
         team.setScore(0);
         team.setEduEvaluated(false);
+        team.setCanParticipateToBattle(true);
 
         battle.setTeamsRegistered(List.of(team));
 
@@ -76,20 +77,20 @@ class AssignScoreControllerTest {
     @Test
     public void assignPersonalScore() {
         ResponseEntity<Object> response = assignScoreController.assignPersonalScore(
-                new AssignPersonalScoreRequest(team.getTeamId(), 50, 1L));
+                new AssignPersonalScoreRequest(team.getTeamId(), 10, 1L));
 
         Optional<Team> teamRetrieved = teamRepository.findById(team.getTeamId());
         assertNotNull(response);
         assertTrue(response.getStatusCode().is2xxSuccessful());
         assertNotNull(teamRetrieved);
         assertTrue(teamRetrieved.isPresent());
-        assertEquals(50, teamRetrieved.get().getScore());
+        assertEquals(10, teamRetrieved.get().getScore());
         assertTrue(teamRetrieved.get().getEduEvaluated());
     }
 
     @Test
     public void assignScoreAndPersonalScore() {
-        int scoreSubmission = 60, scorePersonal = 100;
+        int scoreSubmission = 60, scorePersonal = 5;
         ResponseEntity<Object> response1 = assignScoreController.assignScore(
                 new AssignScoreRequest(team.getTeamId(), scoreSubmission));
         ResponseEntity<Object> response2 = assignScoreController.assignPersonalScore(

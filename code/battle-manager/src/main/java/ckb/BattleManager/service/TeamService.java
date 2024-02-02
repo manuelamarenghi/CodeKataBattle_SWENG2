@@ -53,7 +53,7 @@ public class TeamService {
                 .repositoryLink("")
                 .eduEvaluated(false)
                 .score(0)
-                .isEmpty(false)
+                .canParticipateToBattle(true)
                 .build();
 
         Participation participation = new Participation();
@@ -91,7 +91,7 @@ public class TeamService {
             //participationService.deleteParticipationById(idStudent, studentTeam);
             //participationService.deleteParticipationById(participation.getId());
             //teamRepository.deleteById(studentTeam.getTeamId());
-            studentTeam.setIsEmpty(true);
+            studentTeam.setCanParticipateToBattle(false);
             log.info("Team deleted with id: {}", studentTeam.getTeamId());
         } else {
             participationService.deleteParticipationById(idStudent, studentTeam);
@@ -112,6 +112,11 @@ public class TeamService {
         Team team = getTeam(idTeam);
         Battle battleOfTeam = team.getBattle();
 
+        if (team.getCanParticipateToBattle().equals(false)) {
+            log.error("Team score cannot be updated because the team cannot participate");
+            throw new Exception("Team score cannot be updated because the team cannot participate");
+        }
+
         if (battleOfTeam.getSubDeadline().isBefore(LocalDateTime.now())) {
             log.error("Team score cannot be updated because the tournament is closed");
             throw new Exception("Team score cannot be updated because the tournament is closed");
@@ -129,15 +134,15 @@ public class TeamService {
             throw new Exception("Score cannot be negative");
         }
 
-        if (score > 100) {
-            log.info("Score cannot be greater than 100");
-            throw new Exception("Score cannot be greater than 100");
+        if (score > 10) {
+            log.info("Score cannot be greater than 10");
+            throw new Exception("Score cannot be greater than 10");
         }
 
         Team team = getTeam(idTeam);
         Battle battleOfTeam = team.getBattle();
 
-        if (battleOfTeam.getHasEnded()) {
+        if (battleOfTeam.getIsClosed()) {
             log.error("Team score cannot be updated because the battle is closed");
             throw new Exception("Team score cannot be updated because the battle is closed");
         }
@@ -157,11 +162,11 @@ public class TeamService {
             throw new Exception("Team personal score cannot be updated because the team has already been evaluated");
         }
 
-        team.setScore(team.getScore() + score);
+        team.setScore(Math.min(team.getScore() + score, 100));
         team.setEduEvaluated(true);
         teamRepository.save(team);
 
-        log.info("Team personal score updated with id {} and score: {}", idTeam, score);
+        log.info("Score of the team with id {} has been updated, score: {}", idTeam, score);
     }
 
     public void registerStudentToTeam(Long idStudent, Long idNewTeam) throws Exception {
