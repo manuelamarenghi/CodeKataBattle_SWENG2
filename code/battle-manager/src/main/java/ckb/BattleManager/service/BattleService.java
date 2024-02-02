@@ -116,6 +116,7 @@ public class BattleService {
         Comparator<WorkingPair<Long, Integer>> scoreComparator = Comparator.comparingInt(WorkingPair::getRight);
 
         return battle.getTeamsRegistered().stream()
+                .filter(team -> team.getIsEmpty().equals(false))
                 .map(team -> new WorkingPair<>(team.getTeamId(), team.getScore()))
                 .sorted(scoreComparator.reversed())
                 .toList();

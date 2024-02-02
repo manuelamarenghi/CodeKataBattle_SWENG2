@@ -21,7 +21,7 @@ public class Team {
     @ManyToOne
     private Battle battle;
 
-    @OneToMany(mappedBy = "participationId.team", fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+    @OneToMany(mappedBy = "team", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Participation> participation;
 
     private String repositoryLink;
@@ -29,4 +29,6 @@ public class Team {
     private Integer score;
 
     private Boolean eduEvaluated;
+
+    private Boolean isEmpty;
 }

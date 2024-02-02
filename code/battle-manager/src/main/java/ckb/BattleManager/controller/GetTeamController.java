@@ -53,7 +53,7 @@ public class GetTeamController extends Controller {
                                     return getNameOfStudent(participation);
                                 } catch (Exception e) {
                                     log.error("[EXCEPTION] Error occurred while getting name of student {} : {}",
-                                            participation.getParticipationId().getStudentId(), e.getMessage());
+                                            participation.getStudentId(), e.getMessage());
                                     return null;
                                 }
                             }
@@ -68,7 +68,7 @@ public class GetTeamController extends Controller {
                     participantNames.add(getNameOfStudent(participation));
                 } catch (Exception e) {
                     log.error("[EXCEPTION] Error occurred while getting name of student {} : {}",
-                            participation.getParticipationId().getStudentId(), e.getMessage());
+                            participation.getStudentId(), e.getMessage());
                     errors++;
                 }
             }
@@ -110,15 +110,15 @@ public class GetTeamController extends Controller {
                 .post()
                 .uri(accountManagerUri + "/api/account/user")
                 .bodyValue(
-                        participation.getParticipationId().getStudentId()
+                        participation.getStudentId()
                 )
                 .retrieve()
                 .toEntity(User.class)
                 .block();
 
         if (user == null || user.getBody() == null) {
-            log.error("User not found for id {}", participation.getParticipationId().getStudentId());
-            throw new Exception("User not found for id " + participation.getParticipationId().getStudentId());
+            log.error("User not found for id {}", participation.getStudentId());
+            throw new Exception("User not found for id " + participation.getStudentId());
         }
 
         return user.getBody().getFullName();

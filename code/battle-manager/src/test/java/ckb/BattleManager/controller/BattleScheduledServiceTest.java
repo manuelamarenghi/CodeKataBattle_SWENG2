@@ -2,7 +2,6 @@ package ckb.BattleManager.controller;
 
 import ckb.BattleManager.model.Battle;
 import ckb.BattleManager.model.Participation;
-import ckb.BattleManager.model.ParticipationId;
 import ckb.BattleManager.model.Team;
 import ckb.BattleManager.repository.BattleRepository;
 import ckb.BattleManager.repository.ParticipationRepository;
@@ -110,12 +109,12 @@ class BattleScheduledServiceTest {
         team.setRepositoryLink("linkTeam");
         teamRepository.save(team);
 
+        Participation participation = new Participation();
+        participation.setStudentId(1L);
+        participation.setTeam(team);
+
         participationRepository.save(
-                new Participation(
-                        new ParticipationId(
-                                1L, team
-                        )
-                )
+                participation
         );
 
         Optional<Battle> optionalRetrievedBattle = battleRepository.findById(battleToClose.getBattleId());

@@ -1,10 +1,15 @@
 package ckb.BattleManager.service;
 
-import ckb.BattleManager.model.*;
+import ckb.BattleManager.model.Battle;
+import ckb.BattleManager.model.Participation;
+import ckb.BattleManager.model.Team;
+import ckb.BattleManager.model.WorkingPair;
+import ckb.BattleManager.repository.ParticipationRepository;
 import ckb.BattleManager.repository.TeamRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.Collection;
@@ -14,12 +19,14 @@ import java.util.List;
 @Slf4j
 public class TeamService {
     private final TeamRepository teamRepository;
+    private final ParticipationRepository participationRepository;
     private final ParticipationService participationService;
 
     @Autowired
-    public TeamService(TeamRepository teamRepository, ParticipationService participationService) {
+    public TeamService(TeamRepository teamRepository, ParticipationRepository participationRepository, ParticipationService participationService) {
         this.teamRepository = teamRepository;
         this.participationService = participationService;
+        this.participationRepository = participationRepository;
     }
 
     public Team getTeam(Long idTeam) throws Exception {
@@ -46,13 +53,15 @@ public class TeamService {
                 .repositoryLink("")
                 .eduEvaluated(false)
                 .score(0)
+                .isEmpty(false)
                 .build();
 
+        Participation participation = new Participation();
+        participation.setTeam(team);
+        participation.setStudentId(studentId);
         team.setParticipation(
                 List.of(
-                        new Participation(
-                                new ParticipationId(studentId, team)
-                        )
+                        participation
                 )
         );
         teamRepository.save(team);
@@ -70,15 +79,22 @@ public class TeamService {
         );
     }
 
+    @Transactional
     public void deleteParticipation(Long idStudent, Battle battle) throws Exception {
         Team studentTeam = getTeamByStudentIdAndBattle(idStudent, battle);
 
         if (studentTeam.getParticipation().size() == 1) {
-            participationService.deleteParticipationHavingIdStudentAndTeam(idStudent, studentTeam);
-            teamRepository.delete(studentTeam);
+            Participation participation = studentTeam.getParticipation().getFirst();
+            studentTeam.getParticipation().remove(participation);
+
+            //participationRepository.deleteAll(studentTeam.getParticipation());
+            //participationService.deleteParticipationById(idStudent, studentTeam);
+            //participationService.deleteParticipationById(participation.getId());
+            //teamRepository.deleteById(studentTeam.getTeamId());
+            studentTeam.setIsEmpty(true);
             log.info("Team deleted with id: {}", studentTeam.getTeamId());
         } else {
-            participationService.deleteParticipationHavingIdStudentAndTeam(idStudent, studentTeam);
+            participationService.deleteParticipationById(idStudent, studentTeam);
         }
     }
 
@@ -181,7 +197,7 @@ public class TeamService {
         return teamRepository.findTeamsByBattle(battle).stream()
                 .map(Team::getParticipation)
                 .flatMap(Collection::stream)
-                .map(participation -> participation.getParticipationId().getStudentId())
+                .map(Participation::getStudentId)
                 .toList();
     }
 }

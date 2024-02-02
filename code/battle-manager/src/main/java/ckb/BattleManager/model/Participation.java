@@ -1,7 +1,6 @@
 package ckb.BattleManager.model;
 
-import jakarta.persistence.EmbeddedId;
-import jakarta.persistence.Entity;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,11 +12,17 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Participation {
-    @EmbeddedId
-    private ParticipationId participationId;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    private Long studentId;
+
+    @ManyToOne
+    private Team team;
 
     @Override
     public String toString() {
-        return participationId.getStudentId().toString();
+        return studentId.toString();
     }
 }

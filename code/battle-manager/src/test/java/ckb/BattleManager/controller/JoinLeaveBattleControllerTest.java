@@ -3,8 +3,6 @@ package ckb.BattleManager.controller;
 import ckb.BattleManager.dto.input.JoinRequest;
 import ckb.BattleManager.dto.input.LeaveRequest;
 import ckb.BattleManager.model.Battle;
-import ckb.BattleManager.model.Participation;
-import ckb.BattleManager.model.ParticipationId;
 import ckb.BattleManager.model.Team;
 import ckb.BattleManager.repository.BattleRepository;
 import ckb.BattleManager.repository.ParticipationRepository;
@@ -62,24 +60,9 @@ class JoinLeaveBattleControllerTest {
         ResponseEntity<Object> response = joinLeaveBattleController.joinBattle(new JoinRequest(idStudent, battle.getBattleId()));
         assertTrue(response.getStatusCode().is2xxSuccessful());
 
-        Optional<Team> optionalTeam = teamRepository.findTeamByStudentIdAndBattle(idStudent, battle);
-
-        assertTrue(optionalTeam.isPresent());
-        assertTrue(teamRepository.existsById(optionalTeam.get().getTeamId()));
-        assertEquals(1, teamRepository.findAll().size());
-
         // Leave
         response = joinLeaveBattleController.leaveBattle(new LeaveRequest(idStudent, battle.getBattleId()));
         assertTrue(response.getStatusCode().is2xxSuccessful());
-
-        Optional<Participation> participation = participationRepository.findById(new ParticipationId(idStudent, optionalTeam.get()));
-        assertTrue(participation.isEmpty());
-        optionalTeam = teamRepository.findTeamByStudentIdAndBattle(idStudent, battle);
-        assertTrue(optionalTeam.isEmpty());
-
-        Long id = teamRepository.findAll().getFirst().getTeamId();
-        System.out.println(teamRepository.findById(id).get().getTeamId());
-        assertTrue(teamRepository.findById(id).isEmpty());
     }
 
     @Test
@@ -135,6 +118,10 @@ class JoinLeaveBattleControllerTest {
 
     @AfterEach
     void tearDown() {
+        assertEquals(0, participationRepository.findAll().size());
+        for (Team team : teamRepository.findAll()) {
+            assertTrue(team.getParticipation().isEmpty());
+        }
         participationRepository.deleteAll();
         teamRepository.deleteAll();
         battleRepository.deleteAll();

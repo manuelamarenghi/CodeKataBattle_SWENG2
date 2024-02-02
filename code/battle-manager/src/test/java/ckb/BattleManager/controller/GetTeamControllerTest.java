@@ -4,7 +4,10 @@ import ckb.BattleManager.dto.input.GetTeamStudentRequest;
 import ckb.BattleManager.dto.input.GetTeamsRequest;
 import ckb.BattleManager.dto.output.TeamInfoMessage;
 import ckb.BattleManager.dto.output.TeamsRankingMessage;
-import ckb.BattleManager.model.*;
+import ckb.BattleManager.model.Battle;
+import ckb.BattleManager.model.Participation;
+import ckb.BattleManager.model.Team;
+import ckb.BattleManager.model.WorkingPair;
 import ckb.BattleManager.repository.BattleRepository;
 import ckb.BattleManager.repository.ParticipationRepository;
 import ckb.BattleManager.repository.TeamRepository;
@@ -35,7 +38,7 @@ class GetTeamControllerTest {
     private final ParticipationRepository participationRepository;
     private ClientAndServer mockServerAccountManager;
     private Battle battle;
-    private Team team1, team2;
+    private Team team1, team2, team3;
 
     @Autowired
     public GetTeamControllerTest(GetTeamController getTeamController, TeamRepository teamRepository,
@@ -58,39 +61,41 @@ class GetTeamControllerTest {
         team1.setRepositoryLink("team_link");
         team1.setScore(0);
         team1.setEduEvaluated(false);
+        team1.setIsEmpty(false);
 
         team2 = new Team();
         team2.setBattle(battle);
         team2.setRepositoryLink("team_link2");
         team2.setScore(20);
         team2.setEduEvaluated(false);
+        team2.setIsEmpty(false);
 
         battle.setTeamsRegistered(List.of(team1, team2));
         battleRepository.save(battle);
 
-        participationRepository.save(
-                new Participation(
-                        new ParticipationId(
-                                1L, team1
-                        )
-                )
-        );
+        Participation participation1 = new Participation();
+        participation1.setStudentId(1L);
+        participation1.setTeam(team1);
 
-        participationRepository.save(
-                new Participation(
-                        new ParticipationId(
-                                2L, team1
-                        )
-                )
-        );
+        participationRepository.save(participation1);
 
-        participationRepository.save(
-                new Participation(
-                        new ParticipationId(
-                                3L, team2
-                        )
-                )
-        );
+        Participation participation2 = new Participation();
+        participation2.setStudentId(2L);
+        participation2.setTeam(team1);
+
+        participationRepository.save(participation2);
+
+        Participation participation3 = new Participation();
+        participation3.setStudentId(3L);
+        participation3.setTeam(team2);
+        participationRepository.save(participation3);
+
+        team3 = new Team();
+        team3.setBattle(battle);
+        team3.setRepositoryLink("team_link3");
+        team3.setScore(20);
+        team3.setEduEvaluated(false);
+        team3.setIsEmpty(true);
 
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("id", 1);

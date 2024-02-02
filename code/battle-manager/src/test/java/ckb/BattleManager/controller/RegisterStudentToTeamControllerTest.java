@@ -3,7 +3,6 @@ package ckb.BattleManager.controller;
 import ckb.BattleManager.dto.input.AcceptStudentTeamRequest;
 import ckb.BattleManager.model.Battle;
 import ckb.BattleManager.model.Participation;
-import ckb.BattleManager.model.ParticipationId;
 import ckb.BattleManager.model.Team;
 import ckb.BattleManager.repository.BattleRepository;
 import ckb.BattleManager.repository.ParticipationRepository;
@@ -28,6 +27,7 @@ class RegisterStudentToTeamControllerTest {
     private final TeamRepository teamRepository;
     private final ParticipationRepository participationRepository;
     private Team newTeam;
+    private Participation participationOld;
 
     @Autowired
     public RegisterStudentToTeamControllerTest(RegisterStudentToTeamController registerStudentToTeamController,
@@ -47,15 +47,11 @@ class RegisterStudentToTeamControllerTest {
 
         Team oldTeam = new Team();
         oldTeam.setBattle(battle);
+        participationOld = new Participation();
+        participationOld.setStudentId(1L);
+        participationOld.setTeam(oldTeam);
         oldTeam.setParticipation(
-                List.of(
-                        new Participation(
-                                new ParticipationId(
-                                        1L,
-                                        oldTeam
-                                )
-                        )
-                )
+                List.of(participationOld)
         );
         teamRepository.save(oldTeam);
 
@@ -71,8 +67,9 @@ class RegisterStudentToTeamControllerTest {
         );
 
         assertTrue(response.getStatusCode().is2xxSuccessful());
-        assertTrue(participationRepository.existsById(new ParticipationId(1L, newTeam)));
+        assertTrue(participationRepository.existsById(participationOld.getId()));
     }
+
     @Test
     void registerStudentToNonExistingTeam() {
         ResponseEntity<Object> response = registerStudentToTeamController.registerStudentToTeam(
@@ -81,6 +78,7 @@ class RegisterStudentToTeamControllerTest {
 
         assertTrue(response.getStatusCode().is4xxClientError());
     }
+
     @Test
     void registerNonExistingStudent() {
         ResponseEntity<Object> response = registerStudentToTeamController.registerStudentToTeam(
