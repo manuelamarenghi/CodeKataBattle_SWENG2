@@ -14,24 +14,26 @@ import java.util.List;
 @Slf4j
 public class EvaluationService {
 
-    private final String SCRIPTS_PATH = getScriptsPath();
-
     private final int ERROR_DEDUCTION = 30;
     private final int WARNING_DEDUCTION = 5;
     private final int STYLE_DEDUCTION = 2;
 
     public String pullRepo(String repoUrl) {
-        String script = SCRIPTS_PATH + "pull-repo.sh";
+        // get repo name
+        String name = repoUrl.substring(0, repoUrl.lastIndexOf("."))
+                .replace("https://", "")
+                .substring(repoUrl.replace("https://", "").indexOf("/") + 1)
+                .replace("/", "_");
+
+        String script = "cd || exit 1;\n" +
+                "rm -rf " + name + ";" + // delete any repo with the same name that was for some reason left behind
+                "git clone " + repoUrl + " " + name + " || exit 1;\n" +
+                "cd " + name + " || exit 1;\n" +
+                "pwd\n";
 
         try {
-            // get repo name
-            String name = repoUrl.substring(0, repoUrl.lastIndexOf("."))
-                    .replace("https://", "")
-                    .substring(repoUrl.replace("https://", "").indexOf("/") + 1)
-                    .replace("/", "_");
-
             // start process
-            ProcessBuilder processBuilder = new ProcessBuilder(script, repoUrl, name).redirectErrorStream(true);
+            ProcessBuilder processBuilder = new ProcessBuilder("/bin/bash", "-c", script).redirectErrorStream(true);
             Process process = processBuilder.start();
 
             // read output
@@ -46,64 +48,16 @@ public class EvaluationService {
             if (process.waitFor() == 1) throw new RuntimeException("Error pulling repo: " + repoUrl);
             return output.getLast();
         } catch (Exception e) {
-            log.error("Error pulling repo: " + repoUrl);
+            log.error("Error pulling repo: " + repoUrl + " " + e.getMessage());
             return "ERR";
         }
     }
 
-    public int executeStaticAnalysis(String language, String path) {
-        String script = SCRIPTS_PATH + "analysis/" + language + "-static-analysis.sh";
-        ProcessBuilder processBuilder = new ProcessBuilder(script, path).redirectErrorStream(true);
-        Process process;
-        List<String> output = new ArrayList<>();
-        try {
-            process = processBuilder.start();
-            BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-            String line;
-            while ((line = reader.readLine()) != null) {
-                output.add(line);
-            }
-            reader.close();
-            log.info("analysis completed, calculating points deduction...");
-        } catch (Exception e) {
-            log.error("Error executing static analysis: " + e.getMessage());
-            return -1;
-        }
-        return calculateDeduction(output);
-    }
-
-    public boolean compile(String language, String path) {
-        String script = SCRIPTS_PATH + "compilation/" + language + "-compiling.sh";
-        ProcessBuilder processBuilder = new ProcessBuilder(script, path).redirectErrorStream(true);
-        try {
-            return processBuilder.start().waitFor() == 0;
-        } catch (Exception e) {
-            log.error("Internal error occurred during compilation at " + path + ": " + e.getMessage());
-            return false;
-        }
-    }
-
-    public int executeTests(String language, String path, String officialRepoUrl) {
-        String script = SCRIPTS_PATH + "test-execution/" + language + "-test-execution.sh";
-        ProcessBuilder processBuilder = new ProcessBuilder(script, path, officialRepoUrl).redirectErrorStream(true);
-        try {
-            Process process = processBuilder.start();
-            BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-            String line;
-            while ((line = reader.readLine()) != null) {
-                log.info(line);
-            }
-            reader.close();
-            return process.waitFor();
-        } catch (Exception e) {
-            log.error("Error executing tests: " + e.getMessage());
-            return -1;
-        }
-    }
-
     public void cleanUp(String path) {
-        String script = SCRIPTS_PATH + "cleanup.sh";
-        ProcessBuilder processBuilder = new ProcessBuilder(script, path).redirectErrorStream(true);
+        String script =
+                "rm -rf " + path + ";\n" +
+                        "echo \"clean up successful\"";
+        ProcessBuilder processBuilder = new ProcessBuilder("/bin/bash", "-c", script).redirectErrorStream(true);
         try {
             Process process = processBuilder.start();
             BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
@@ -118,16 +72,11 @@ public class EvaluationService {
         }
     }
 
-    private int calculateDeduction(List<String> output) {
+    public int calculateDeduction(List<String> output) {
         int totalDeduction = 0;
         totalDeduction += Integer.valueOf(output.get(output.indexOf("errors") + 1)) * ERROR_DEDUCTION;
         totalDeduction += Integer.valueOf(output.get(output.indexOf("warnings") + 1)) * WARNING_DEDUCTION;
         totalDeduction += Integer.valueOf(output.get(output.indexOf("style") + 1)) * STYLE_DEDUCTION;
         return totalDeduction;
-    }
-
-    private static String getScriptsPath() {
-        String path = EvaluationService.class.getProtectionDomain().getCodeSource().getLocation().getPath();
-        return path.substring(0, path.indexOf("/solution-evaluation-service")) + "/solution-evaluation-service/src/main/scripts/";
     }
 }

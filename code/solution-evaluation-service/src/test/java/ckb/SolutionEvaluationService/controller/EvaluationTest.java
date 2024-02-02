@@ -54,9 +54,15 @@ public class EvaluationTest {
         battleMockServer.when(request().withMethod("POST").withPath("/api/battle/official-repo-url"))
                 .respond(response().withStatusCode(200).withBody("https://github.com/SigCatta/WordChecker.git"));
 
+        battleMockServer.when(request().withMethod("POST").withPath("/api/battle/official-repo-url"))
+                .respond(response().withStatusCode(200).withBody("https://github.com/SigCatta/WordChecker.git"));
+
         EvaluationRequest request = EvaluationRequest.builder()
                 .teamId(1L)
-                .repoUrl("https://github.com/doesNotExist/SomeRepoThatIsNotTHere.miaooo")
+                // .repoUrl("https://github.com/doesNotExist/SomeRepoThatIsNotTHere.miaooo")
+                // The above line is the original line, but it is commented out because it is not a valid URL
+                // and will cause mvn clean install to stop waiting for input, workflows will not complete
+                // it can be demonstrated by running a docker container that it won't actually stop...
                 .build();
         ResponseEntity<Object> response = evaluateController.evaluate(request);
         assertFalse(response.getStatusCode().is2xxSuccessful());
@@ -77,12 +83,12 @@ public class EvaluationTest {
         assertFalse(response.getStatusCode().is2xxSuccessful());
     }
     @Test
-    public void failedToCloneOfficialRepoTest() {
+    public void failedToFetchOfficialRepoTest() {
         battleMockServer.when(request().withMethod("POST").withPath("/api/battle/assign-score"))
                 .respond(response().withStatusCode(200));
 
         battleMockServer.when(request().withMethod("POST").withPath("/api/battle/official-repo-url"))
-                .respond(response().withStatusCode(200).withBody("https://github.com/doesNotExist/SomeRepoThatIsNotTHere.miaooo"));
+                .respond(response().withStatusCode(500));
 
         EvaluationRequest request = EvaluationRequest.builder()
                 .teamId(1L)
