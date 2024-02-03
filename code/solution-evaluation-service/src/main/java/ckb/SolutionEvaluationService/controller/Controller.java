@@ -30,7 +30,13 @@ public abstract class Controller {
                 .retrieve()
                 .toEntity(String.class)
                 .block();
-        if (response == null || !response.getStatusCode().is2xxSuccessful() || response.getBody() == null) {
+
+        if (response == null || response.getStatusCode().is4xxClientError()){
+            log.error("Error getting the repo url, {}" , response != null ? response.getBody() : null);
+            throw new RuntimeException("Repo is private, battle not started yet");
+        }
+
+        if (!response.getStatusCode().is2xxSuccessful() || response.getBody() == null) {
             log.error("Error getting official repo url");
             throw new RuntimeException("Error getting official repo url");
         } else {

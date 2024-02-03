@@ -27,7 +27,7 @@ public class CEvaluationController extends Controller {
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<Object> evaluate(@RequestBody EvaluationRequest request) {
         String repoUrl = request.getRepoUrl();
-        if (repoUrl == null){
+        if (repoUrl == null) {
             log.error("Received evaluation request with null repoUrl");
             return new ResponseEntity<>("Received evaluation request with null repoUrl", getHeaders(), HttpStatus.BAD_REQUEST);
         }
@@ -57,7 +57,16 @@ public class CEvaluationController extends Controller {
             String officialRepoUrl = getOfficialRepoUrl(request);
             testsDeduction = runTests(path, officialRepoUrl);
         } catch (Exception e) {
-            log.error("Error executing tests " + e.getMessage());
+            if (e.getMessage().equals("Repo is private, battle not started yet")) {
+                log.error("Cannot clone a private repository");
+                evaluationService.cleanUp(path);
+                return new ResponseEntity<>("Official repository is private, battle not started yet", getHeaders(), HttpStatus.BAD_REQUEST);
+            }
+            log.error("Error executing tests: " + e.getMessage());
+            if (e.getMessage().contains("/api/battle/official-repo-url")) {
+                log.error("Error getting official repo url, maybe the battle hasn't started yet ?");
+                return new ResponseEntity<>("Cannot find official repository for testing, try again later", getHeaders(), HttpStatus.BAD_REQUEST);
+            }
             evaluationService.cleanUp(path);
             return new ResponseEntity<>("Error executing tests", getHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
