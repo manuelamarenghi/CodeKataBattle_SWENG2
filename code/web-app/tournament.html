@@ -33,24 +33,25 @@
             console.log(data);
             var Rtable = document.getElementById('battle_table').querySelector('table');
             var battles = data.battles;
-            for(var i in battles){
-            var row = Rtable.insertRow();
-            var keyCell = row.insertCell(0);
-            var link = document.createElement('a');
-            link.href = "battle.html?idB="+i+"&idT="+paramValue;
-            link.textContent = i;
-            keyCell.appendChild(link);
+            console.log(data.battles[0]);
+            for(var i = 0; i < battles.length; i++){
+                var row = Rtable.insertRow();
+                var keyCell = row.insertCell(0);
+                var link = document.createElement('a');
+                link.href = "battle.html?idB="+ data.battles[i] +"&idT="+paramValue;
+                link.textContent = data.battles[i];
+                keyCell.appendChild(link);
             }
             var Ttable = document.getElementById('tournament_ranking').querySelector('table');
             var tournamentRankings = data.tournamentRankings;
             for(var i = 0; i < tournamentRankings.length; i++){
-            var row = Ttable.insertRow();
-            var place = row.insertCell(0);
-            var userid  = row.insertCell(1);
-            var score = row.insertCell(2);
-            place.innerHTML = i+1;
-            userid.innerHTML = tournamentRankings[i].userID;
-            score.innerHTML = tournamentRankings[i].score;
+                var row = Ttable.insertRow();
+                var place = row.insertCell(0);
+                var userid  = row.insertCell(1);
+                var score = row.insertCell(2);
+                place.innerHTML = i+1;
+                userid.innerHTML = tournamentRankings[i].userID;
+                score.innerHTML = tournamentRankings[i].score;
         }})
         .catch(function(error) {
                 console.log(error);
@@ -293,6 +294,14 @@
             const queryString = window.location.search;
             const params = new URLSearchParams(queryString);
             const tournamentID = params.get('id');
+            if(!battleName || !teamParticipant_min || !teamParticipant_max || !evaluation || !deadlineSubmission || !registrationSubmission || !codeKataUpload){
+                alert("All fields are required!");
+                return;
+            }
+            if(teamParticipant_min > teamParticipant_max){
+                alert("Min participant can't be greater than max participant!");
+                return;
+            }
             var formData = new FormData();
             formData.append("zipFile", codeKataUpload);
             formData.append("tournamentId", tournamentID);

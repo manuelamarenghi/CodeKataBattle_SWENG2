@@ -9,8 +9,8 @@ function GetTeam(){
             "Content-Type": "application/json",
         },
         body: JSON.stringify({
-            studentId : localStorage.getItem("user_id"),
             battleId : battleID,
+            studentId : localStorage.getItem("user_id"),
         })
     };
     fetch("http://localhost:8080/api/battle/get-team",fetchOptions)
@@ -54,9 +54,9 @@ function SendEval(){
             "Content-Type": "application/json",
         },
         body: JSON.stringify({
-            studentId : localStorage.getItem("user_id"),
             idTeam : document.getElementById("team_ID").value,
             score : document.getElementById("score").value,
+            idEducator : localStorage.getItem("user_id"),
         })
     };
     fetch("http://localhost:8080/api/battle/assign-personal-score",fetchOptions)
