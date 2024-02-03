@@ -17,12 +17,14 @@ function GetTeam(){
         .then(response => {
         if (response.status >= 300 ) {
             console.error('Errore durante la richiesta HTTP:', response.status, response.statusText);
-            window.location.href = "index.html";
+            console.log(response.json());
+           // window.location.href = "index.html";
         }
+        else{ return response.json();}
         })
         .then(data => {
         console.log(data);
-        var members = data.members;
+        var members = data.participantsName;
         openModal('TeamModal');
         var teamSection = document.getElementById('team-sec');  
         teamSection.innerHTML = '';
@@ -30,20 +32,19 @@ function GetTeam(){
         teamMemberDiv.className = 'team-member';
         
         teamMemberDiv.innerHTML = `
-            <div>ID Team: ${data.teamID}</div>
+            <div>ID Team: ${data.teamId}</div>
         `;
-        
-        for (var i = 0; i < members.length; i++) {
+        for (var i=0;i<members.length;i++) {
             var teamNameDiv = document.createElement('div');
             teamNameDiv.className = 'member-name';
-            teamNameDiv.textContent = `USERID: ${members[i].userID}     |     Name: ${members[i].fullName}`;
+            teamNameDiv.textContent = `Name: ${members[i]}`;
             teamMemberDiv.appendChild(teamNameDiv);                    
         }  
         teamSection.appendChild(teamMemberDiv);
         })
         .catch(error => {
             console.error('Errore durante la richiesta HTTP:', error);
-            window.location.href = "index.html";
+           // window.location.href = "index.html";
         });
        }
 
@@ -64,7 +65,7 @@ function SendEval(){
             if (response.status >= 300 ) {
                 console.error('Errore durante la richiesta HTTP:', response.status, response.statusText);
                 window.location.href = "index.html";
-            }
+            }else{ alert('Score assigned');}
             closeModal('EvalModal');
           })
 }
@@ -80,7 +81,7 @@ function registerBattle(){
         },
         body: JSON.stringify({
             idStudent : localStorage.getItem("user_id"),
-            idBattle : document.getElementById("battleID").value,
+            idBattle : battleID,
         })
     };
     fetch("http://localhost:8080/api/battle/join-battle",fetchOptions)
@@ -88,6 +89,7 @@ function registerBattle(){
             if (response.status >= 300 ) {
                 console.error('Errore durante la richiesta HTTP:', response.status, response.statusText);
                 alert('Errore nella richiesta al server');            }
+            else{ alert('You have been registered to the battle');}    
           })
 }
 
@@ -109,7 +111,7 @@ function InvitesStudent(){
                 console.error('Errore durante la richiesta HTTP:', response.status, response.statusText);
                 alert('Errore nella richiesta al server');            
                 window.location.href = "index.html";
-            }
+            }else{ alert('Invitation sent');}
           })
     closeModal('InvitesModal');
 }

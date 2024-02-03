@@ -126,6 +126,10 @@ function sendSignUpReq() {
             return data;
         })
         .catch(function (err) {
+            localStorage.removeItem("logged_in",localStorage.getItem("logged_in"));
+            localStorage.removeItem("user_id",localStorage.getItem("user_id"));
+            localStorage.removeItem("user_email",localStorage.getItem("user_email") );
+            localStorage.removeItem("user_role",localStorage.getItem("user_role") );
             alert("Errore durante la richiesta.");
                 window.location.href = "index.html";
         })
