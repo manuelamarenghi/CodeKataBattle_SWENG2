@@ -1,19 +1,19 @@
-<mxfile host="app.diagrams.net" modified="2023-12-21T07:59:25.180Z" agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36" etag="-iBF8h7Hc_owny_Qg7eB" version="22.1.11" type="device">
+<mxfile host="app.diagrams.net" modified="2024-02-03T10:59:06.021Z" agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36" etag="8sUjRvwsEduCW9BT8lT6" version="23.1.1" type="device">
   <diagram name="Page-1" id="mY2qEUiJJ0d8Bb2Bn6oM">
-    <mxGraphModel dx="1364" dy="759" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+    <mxGraphModel dx="1604" dy="759" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
         <mxCell id="HLvmK3gKc-qKrwKRqR3V-1" value="GitHub&lt;br&gt;Manager" style="dashed=0;outlineConnect=0;html=1;align=center;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;shape=mxgraph.weblogos.github;aspect=fixed;" parent="1" vertex="1">
           <mxGeometry x="100" y="450" width="90" height="90" as="geometry" />
         </mxCell>
-        <mxCell id="UdPTgswuNxX8Aap3oMoW-2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;curved=1;" edge="1" parent="1" source="HLvmK3gKc-qKrwKRqR3V-2" target="HLvmK3gKc-qKrwKRqR3V-9">
+        <mxCell id="UdPTgswuNxX8Aap3oMoW-2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;curved=1;" parent="1" source="HLvmK3gKc-qKrwKRqR3V-2" target="HLvmK3gKc-qKrwKRqR3V-9" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="HLvmK3gKc-qKrwKRqR3V-2" value="Mail Service" style="shape=mxgraph.signs.tech.mail;html=1;pointerEvents=1;fillColor=#000000;strokeColor=none;verticalLabelPosition=bottom;verticalAlign=top;align=center;aspect=fixed;labelBackgroundColor=default;" parent="1" vertex="1">
           <mxGeometry x="510" y="510" width="90" height="67.5" as="geometry" />
         </mxCell>
-        <mxCell id="HLvmK3gKc-qKrwKRqR3V-14" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;curved=1;" parent="1" source="HLvmK3gKc-qKrwKRqR3V-4" target="HLvmK3gKc-qKrwKRqR3V-6" edge="1">
+        <mxCell id="HLvmK3gKc-qKrwKRqR3V-14" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;curved=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="1" source="HLvmK3gKc-qKrwKRqR3V-4" target="HLvmK3gKc-qKrwKRqR3V-6" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="HLvmK3gKc-qKrwKRqR3V-20" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;curved=1;" parent="1" source="HLvmK3gKc-qKrwKRqR3V-4" target="HLvmK3gKc-qKrwKRqR3V-1" edge="1">
@@ -40,7 +40,7 @@
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="HLvmK3gKc-qKrwKRqR3V-6" value="Battle&lt;br&gt;Manager" style="shape=image;html=1;verticalAlign=top;verticalLabelPosition=bottom;labelBackgroundColor=#ffffff;imageAspect=0;aspect=fixed;image=https://cdn1.iconfinder.com/data/icons/competitive-strategy-and-corporate-training/512/561_battle_emblem_game_label_swords_cyber_spot_security-128.png;strokeWidth=6;" parent="1" vertex="1">
-          <mxGeometry x="270" y="300" width="90" height="90" as="geometry" />
+          <mxGeometry x="300" y="290" width="90" height="90" as="geometry" />
         </mxCell>
         <mxCell id="HLvmK3gKc-qKrwKRqR3V-11" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;curved=1;" parent="1" source="HLvmK3gKc-qKrwKRqR3V-7" target="HLvmK3gKc-qKrwKRqR3V-5" edge="1">
           <mxGeometry relative="1" as="geometry" />
@@ -53,6 +53,26 @@
         </mxCell>
         <mxCell id="HLvmK3gKc-qKrwKRqR3V-9" value="Account&lt;br&gt;Manager" style="sketch=0;pointerEvents=1;shadow=0;dashed=0;html=1;strokeColor=none;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;align=center;fillColor=#000000;shape=mxgraph.mscae.intune.user_group;aspect=fixed;" parent="1" vertex="1">
           <mxGeometry x="430" y="680" width="90" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="Dbj4mTX0UR7VMcegZ-Tu-1" value="" style="curved=1;endArrow=classic;html=1;rounded=0;exitX=1;exitY=0.25;exitDx=0;exitDy=0;entryX=1.022;entryY=0.4;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="HLvmK3gKc-qKrwKRqR3V-6" target="HLvmK3gKc-qKrwKRqR3V-9">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="400" y="440" as="sourcePoint" />
+            <mxPoint x="450" y="390" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="550" y="320" />
+              <mxPoint x="680" y="600" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Dbj4mTX0UR7VMcegZ-Tu-3" value="" style="curved=1;endArrow=classic;html=1;rounded=0;entryX=1;entryY=0.75;entryDx=0;entryDy=0;exitX=1;exitY=0.25;exitDx=0;exitDy=0;" edge="1" parent="1" source="HLvmK3gKc-qKrwKRqR3V-7" target="HLvmK3gKc-qKrwKRqR3V-6">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="400" y="520" as="sourcePoint" />
+            <mxPoint x="450" y="470" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="450" y="440" />
+              <mxPoint x="440" y="390" />
+            </Array>
+          </mxGeometry>
         </mxCell>
       </root>
     </mxGraphModel>
