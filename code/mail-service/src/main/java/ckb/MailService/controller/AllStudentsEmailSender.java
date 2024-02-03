@@ -30,16 +30,20 @@ public class AllStudentsEmailSender extends EmailSender {
         try {
             addresses = getEmailAddresses();
         } catch (Exception e) {
-            log.error("Error while retrieving email address for students\n");
+            log.error("Error while retrieving email address for students");
             return new ResponseEntity<>("cannot find email address(es)", getHeaders(), HttpStatus.BAD_REQUEST);
         }
 
+        if (addresses.isEmpty()){
+            log.warn("No email address found for students");
+            return new ResponseEntity<>("no email address found", getHeaders(), HttpStatus.OK);
+        }
         if (mailService.sendEmail(addresses, request.getContent())) {
-            log.info("Email sent to {}\n", addresses);
+            log.info("Email sent to {}", addresses);
             return new ResponseEntity<>("OK", getHeaders(), HttpStatus.OK);
         }
 
-        log.error("No valid address found students\n");
+        log.error("No valid address found students");
         return new ResponseEntity<>("no valid address found", getHeaders(), HttpStatus.BAD_REQUEST);
     }
 

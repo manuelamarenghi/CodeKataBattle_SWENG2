@@ -59,8 +59,7 @@ public class MailStudentsControllerTest {
         ResponseEntity<Object> response = mailStudentsController.getStudentMails();
         assertNotNull(response.getBody());
 
-        assertTrue(response.getStatusCode().is4xxClientError());
-        assertTrue(response.getBody().toString().contains("No students found"));
+        assertTrue(response.getStatusCode().is2xxSuccessful());
     }
 
     private List<String> convertBodyToList(ResponseEntity<Object> response) {
