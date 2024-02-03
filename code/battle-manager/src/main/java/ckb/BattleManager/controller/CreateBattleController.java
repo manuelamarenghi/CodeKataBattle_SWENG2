@@ -72,7 +72,11 @@ public class CreateBattleController extends Controller {
             @RequestParam("name") String name) {
         try {
             // convert the zip file into a List<WorkingPair<String, String>>
-            String fileName = zipFile.getOriginalFilename();
+            if (zipFile == null || zipFile.isEmpty() || zipFile.getOriginalFilename() == null){
+                log.error("Zip file is null");
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Zip file is null");
+            }
+            String fileName = zipFile.getOriginalFilename().replace(" ", "-");
             String home = System.getProperty("user.home");
             String filePath = home + fileName; // zip file will be put in the home directory
 
