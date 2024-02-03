@@ -314,7 +314,7 @@
             console.log(fetchOptions);
             fetch("http://localhost:8080/api/battle/create-battle",fetchOptions)
                 .then(function(response){
-                    if(response.status === "success"){
+                    if(response.ok){
                         alert("Battle created!");
                     } else {
                         alert("Errore durante la richiesta.");

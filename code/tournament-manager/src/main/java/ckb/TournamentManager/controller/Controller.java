@@ -3,9 +3,9 @@ package ckb.TournamentManager.controller;
 import org.springframework.http.HttpHeaders;
 
 public abstract class Controller {
-    String mailServiceUri = "http://mail-service";
-    String accountManagerUri = "http://account-manager";
-    String battleManagerUri = "http://battle-manager";
+    String mailServiceUri = "http://mail-service:8085";
+    String accountManagerUri = "http://account-manager:8086";
+    String battleManagerUri = "http://battle-manager:8082";
 
     HttpHeaders getHeaders() {
         HttpHeaders headers = new HttpHeaders();

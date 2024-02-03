@@ -19,7 +19,6 @@ import java.util.List;
 @RequestMapping("/api/solution-evaluation/c")
 @Slf4j
 @RequiredArgsConstructor
-@CrossOrigin(origins = "*")
 public class CEvaluationController extends Controller {
     private final EvaluationService evaluationService;
     private final WebClient webClient;

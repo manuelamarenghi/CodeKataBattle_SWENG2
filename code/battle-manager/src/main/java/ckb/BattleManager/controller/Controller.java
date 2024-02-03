@@ -1,10 +1,10 @@
 package ckb.BattleManager.controller;
 
 public abstract class Controller {
-    static String githubManagerUri = "http://github-manager";
-    static String mailServiceUri = "http://mail-service";
-    static String accountManagerUri = "http://account-manager";
-    static String tournamentManagerUri = "http://tournament-manager";
+    static String githubManagerUri = "http://github-manager:8083";
+    static String mailServiceUri = "http://mail-service:8085";
+    static String accountManagerUri = "http://account-manager:8086";
+    static String tournamentManagerUri = "http://tournament-manager:8087";
 
     void initTestMode() {
         githubManagerUri = "http://localhost:8083";

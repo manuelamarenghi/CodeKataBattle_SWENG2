@@ -9,7 +9,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 
 @Slf4j
 public abstract class Controller {
-    String battleManagerUrl = "http://battle-manager";
+    String battleManagerUrl = "http://battle-manager:8082";
     private final WebClient webClient = WebClient.create();
 
     public abstract ResponseEntity<Object> evaluate(EvaluationRequest request);

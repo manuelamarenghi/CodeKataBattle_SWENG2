@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/github/make-public")
 @RequiredArgsConstructor
 @Slf4j
-@CrossOrigin(origins = "*")
 public class MakePublicController extends Controller {
     private final GitHubService githubService;
 

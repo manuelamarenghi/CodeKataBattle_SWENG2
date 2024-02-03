@@ -12,8 +12,6 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 @RequestMapping("/api/tournament/check-permission")
 @RequiredArgsConstructor
-@CrossOrigin(origins = "*")
-
 public class CheckPermissionController {
     @Autowired
     private TournamentService tournamentService;
