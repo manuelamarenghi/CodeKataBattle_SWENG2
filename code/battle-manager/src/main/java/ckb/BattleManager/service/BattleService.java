@@ -51,21 +51,19 @@ public class BattleService {
                 .hasEnded(false)
                 .isClosed(false)
                 .build();
-        battleRepository.save(battle);
-        log.info("Battle saved in the database: {}", battle);
+        log.info("Battle built: {}", battle);
 
         try {
             String repoLink = createGHRepositoryBattleController
                     .createGHRepository(battle, battleRequest.getFiles());
             battle.setRepositoryLink(repoLink);
             battleRepository.save(battle);
+            log.info("Battle saved in the database: {}", battle);
         } catch (Exception e) {
-            log.error("Error creating repo in GitHub. Error {}", e.getMessage());
-            battleRepository.delete(battle);
+            log.error("Error creating repo in GitHub, the battle {} will not saved in the database. Error {}", battle.getName(), e.getMessage());
             throw new Exception("Error creating repo in GitHub");
         }
 
-        log.info("Set the name of the repository of the battle: {}", battle.getRepositoryLink());
         return battle;
     }
 
