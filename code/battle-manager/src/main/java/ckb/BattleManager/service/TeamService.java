@@ -12,12 +12,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.Collection;
 import java.util.List;
 
 @Service
 @Slf4j
 public class TeamService {
+    private final int MAX_TIME_DEDUCTION = 50;
     private final TeamRepository teamRepository;
     private final ParticipationRepository participationRepository;
     private final ParticipationService participationService;
@@ -122,10 +124,25 @@ public class TeamService {
             throw new Exception("Team score cannot be updated because the tournament is closed");
         }
 
+        int timeDeduction = computeTimeDeduction(battleOfTeam);
+        log.info("Time deduction for team with id {}: {}", idTeam, timeDeduction);
+        score = score - timeDeduction;
+
         team.setScore(Math.max(score, team.getScore()));
         teamRepository.save(team);
 
         log.info("Team score updated with id {} and score: {}", idTeam, score);
+    }
+
+    private Integer computeTimeDeduction(Battle battleOfTeam) {
+        LocalDateTime subDeadline = battleOfTeam.getSubDeadline();
+        LocalDateTime registrationDeadline = battleOfTeam.getRegDeadline();
+        LocalDateTime now = LocalDateTime.now();
+
+        long battleMinutes = ChronoUnit.MINUTES.between(registrationDeadline, subDeadline);
+        long minutesPassed = ChronoUnit.MINUTES.between(registrationDeadline, now);
+
+        return MAX_TIME_DEDUCTION *( (int) (minutesPassed / battleMinutes));
     }
 
     public void assignPersonalScore(Long idTeam, Integer score, Long idEducator) throws Exception {

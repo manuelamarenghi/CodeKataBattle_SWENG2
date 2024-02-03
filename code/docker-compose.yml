@@ -63,6 +63,12 @@ services:
     image: ${ID:-codekatabattle}/github-manager
     ports:
       - "8083:8083"
+      
+  solution-evaluation-service:
+    container_name: solution-evaluation-service
+    image: ${ID:-codekatabattle}/solution-evaluation-service
+    ports:
+      - "8081:8081"
 
   tournament-manager:
     container_name: tournament-manager

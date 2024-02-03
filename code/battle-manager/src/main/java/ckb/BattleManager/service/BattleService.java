@@ -57,9 +57,6 @@ public class BattleService {
         try {
             String repoLink = createGHRepositoryBattleController
                     .createGHRepository(battle, battleRequest.getFiles());
-            // https://github.com/Code-Kata-Battle/Test-Battle-xvmudweqnxshqtehmcgq
-            // 19 => because I want to erase the first 19 chars
-            repoLink = repoLink.substring(19);
             battle.setRepositoryLink(repoLink);
             battleRepository.save(battle);
         } catch (Exception e) {
