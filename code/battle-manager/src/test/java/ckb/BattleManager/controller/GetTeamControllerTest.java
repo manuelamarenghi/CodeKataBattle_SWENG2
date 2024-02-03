@@ -58,14 +58,12 @@ class GetTeamControllerTest {
 
         team1 = new Team();
         team1.setBattle(battle);
-        team1.setRepositoryLink("team_link");
         team1.setScore(0);
         team1.setEduEvaluated(false);
         team1.setCanParticipateToBattle(true);
 
         team2 = new Team();
         team2.setBattle(battle);
-        team2.setRepositoryLink("team_link2");
         team2.setScore(20);
         team2.setEduEvaluated(false);
         team2.setCanParticipateToBattle(true);
@@ -92,7 +90,6 @@ class GetTeamControllerTest {
 
         team3 = new Team();
         team3.setBattle(battle);
-        team3.setRepositoryLink("team_link3");
         team3.setScore(20);
         team3.setEduEvaluated(false);
         team3.setCanParticipateToBattle(false);

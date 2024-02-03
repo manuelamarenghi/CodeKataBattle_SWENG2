@@ -4,7 +4,6 @@ import ckb.BattleManager.model.Battle;
 import ckb.BattleManager.model.Participation;
 import ckb.BattleManager.model.Team;
 import ckb.BattleManager.model.WorkingPair;
-import ckb.BattleManager.repository.ParticipationRepository;
 import ckb.BattleManager.repository.TeamRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,14 +18,12 @@ import java.util.List;
 @Slf4j
 public class TeamService {
     private final TeamRepository teamRepository;
-    private final ParticipationRepository participationRepository;
     private final ParticipationService participationService;
 
     @Autowired
-    public TeamService(TeamRepository teamRepository, ParticipationRepository participationRepository, ParticipationService participationService) {
+    public TeamService(TeamRepository teamRepository, ParticipationService participationService) {
         this.teamRepository = teamRepository;
         this.participationService = participationService;
-        this.participationRepository = participationRepository;
     }
 
     public Team getTeam(Long idTeam) throws Exception {
@@ -50,7 +47,6 @@ public class TeamService {
         // TODO: how to set the repository link?
         Team team = Team.builder()
                 .battle(battle)
-                .repositoryLink("")
                 .eduEvaluated(false)
                 .score(0)
                 .canParticipateToBattle(true)
