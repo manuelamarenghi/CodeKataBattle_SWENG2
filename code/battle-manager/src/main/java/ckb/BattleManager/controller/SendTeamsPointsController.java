@@ -13,14 +13,10 @@ import java.util.List;
 @RestController
 @Slf4j
 public class SendTeamsPointsController extends Controller {
-    private final WebClient.Builder webClientBuilder;
-    public SendTeamsPointsController() {
-        this.webClientBuilder = WebClient.builder();
-    }
+    private final WebClient webClient = WebClient.create();
 
     public void sendIdUsersPointsFinishedBattle(Battle battle, List<WorkingPair<Long, Integer>> pairsIdUserPoints) {
-        ResponseEntity<String> response = webClientBuilder.build()
-                .post()
+        ResponseEntity<String> response = webClient.post()
                 .uri(tournamentManagerUri + "/api/tournament/update-score")
                 .bodyValue(
                         new UpdateScoreRequest(

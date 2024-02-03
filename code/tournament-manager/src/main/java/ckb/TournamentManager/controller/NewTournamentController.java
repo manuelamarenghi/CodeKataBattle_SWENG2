@@ -52,6 +52,7 @@ public class NewTournamentController extends Controller {
                 .block();
 
         if (answer == null || answer.getStatusCode().is4xxClientError()) {
+            log.error("Error while sending mail to all students");
             throw new Exception();
         }
     }

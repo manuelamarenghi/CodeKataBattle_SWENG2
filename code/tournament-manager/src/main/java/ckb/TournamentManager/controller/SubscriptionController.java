@@ -44,7 +44,7 @@ public class SubscriptionController extends Controller{
             log.error("User already subscribed");
             return new ResponseEntity<>("User already subscribed", getHeaders(), HttpStatus.BAD_REQUEST);
         }
-        if(tournamentService.getTournament(request.getTournamentID()).getStatus() == false){
+        if (!tournamentService.getTournament(request.getTournamentID()).getStatus()) {
             log.error("Tournament already ended");
             return new ResponseEntity<>("Tournament already ended", getHeaders(), HttpStatus.BAD_REQUEST);
         }

@@ -3,6 +3,7 @@ package ckb.BattleManager.service;
 import ckb.BattleManager.controller.CreateGHRepositoryBattleController;
 import ckb.BattleManager.dto.input.CreateBattleRequest;
 import ckb.BattleManager.model.Battle;
+import ckb.BattleManager.model.Participation;
 import ckb.BattleManager.model.Team;
 import ckb.BattleManager.model.WorkingPair;
 import ckb.BattleManager.repository.BattleRepository;
@@ -78,12 +79,23 @@ public class BattleService {
     public void joinBattle(Long idStudent, Long idBattle) throws Exception {
         Battle battle = getBattle(idBattle);
 
-        if (LocalDateTime.now().isBefore(battle.getRegDeadline())) {
-            teamService.createTeam(idStudent, battle);
-        } else {
+        if (LocalDateTime.now().isAfter(battle.getRegDeadline())) {
             log.error("The registration deadline has passed");
             throw new Exception("The registration deadline has passed");
         }
+
+        List<Long> listStudentIdSubscribedToBattle = battle.getTeamsRegistered()
+                .stream()
+                .flatMap(team -> team.getParticipation().stream())
+                .map(Participation::getStudentId)
+                .toList();
+
+        if (listStudentIdSubscribedToBattle.contains(idStudent)) {
+            log.error("The student {} is already registered in the battle {}", idStudent, idBattle);
+            throw new Exception("The student is already registered in the battle");
+        }
+
+        teamService.createTeam(idStudent, battle);
     }
 
     public void leaveBattle(Long idStudent, Long idBattle) throws Exception {

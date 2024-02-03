@@ -47,7 +47,7 @@ public class InformStudentsController extends Controller {
                 .block();
 
         if (response == null || response.getStatusCode().is4xxClientError()) {
-            log.error("[ERROR] Error while informing students of a tournament: {}", request.getTournamentId());
+            log.error("Error while informing students of a tournament: {}", request.getTournamentId());
             return ResponseEntity.badRequest().build();
         }
 
