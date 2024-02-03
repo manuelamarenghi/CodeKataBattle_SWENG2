@@ -30,5 +30,5 @@ public class Team {
 
     private Boolean eduEvaluated;
 
-    private Boolean isEmpty;
+    private Boolean canParticipateToBattle;
 }

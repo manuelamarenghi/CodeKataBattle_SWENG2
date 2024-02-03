@@ -61,14 +61,14 @@ class GetTeamControllerTest {
         team1.setRepositoryLink("team_link");
         team1.setScore(0);
         team1.setEduEvaluated(false);
-        team1.setIsEmpty(false);
+        team1.setCanParticipateToBattle(true);
 
         team2 = new Team();
         team2.setBattle(battle);
         team2.setRepositoryLink("team_link2");
         team2.setScore(20);
         team2.setEduEvaluated(false);
-        team2.setIsEmpty(false);
+        team2.setCanParticipateToBattle(true);
 
         battle.setTeamsRegistered(List.of(team1, team2));
         battleRepository.save(battle);
@@ -95,7 +95,7 @@ class GetTeamControllerTest {
         team3.setRepositoryLink("team_link3");
         team3.setScore(20);
         team3.setEduEvaluated(false);
-        team3.setIsEmpty(true);
+        team3.setCanParticipateToBattle(false);
 
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("id", 1);

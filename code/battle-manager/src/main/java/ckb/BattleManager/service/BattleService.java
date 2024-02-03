@@ -116,7 +116,7 @@ public class BattleService {
         Comparator<WorkingPair<Long, Integer>> scoreComparator = Comparator.comparingInt(WorkingPair::getRight);
 
         return battle.getTeamsRegistered().stream()
-                .filter(team -> team.getIsEmpty().equals(false))
+                .filter(team -> team.getCanParticipateToBattle().equals(true))
                 .map(team -> new WorkingPair<>(team.getTeamId(), team.getScore()))
                 .sorted(scoreComparator.reversed())
                 .toList();
@@ -143,6 +143,14 @@ public class BattleService {
         if (battle.getIsClosed().equals(true)) {
             log.error("The battle {} is already closed", battle.getName());
             throw new Exception("The battle " + battle.getName() + " is already closed");
+        }
+
+        List<Team> teamsRegistered = battle.getTeamsRegistered();
+        for (Team team : teamsRegistered) {
+            if (team.getCanParticipateToBattle().equals(true) && team.getEduEvaluated().equals(false)) {
+                log.error("The battle {} cannot be closed because the team {} has not been evaluated", battle.getName(), team.getTeamId());
+                throw new Exception("The battle " + battle.getName() + " cannot be closed because the team " + team.getTeamId() + " has not been evaluated");
+            }
         }
 
         if (educatorId.equals(battle.getAuthorId())) {

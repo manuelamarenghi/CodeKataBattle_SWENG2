@@ -37,7 +37,10 @@ public class CloseBattleController extends Controller {
 
             sendTeamsPointsController
                     .sendIdUsersPointsFinishedBattle(battle, teamService.getListPairIdUserPoints(battle));
-            sendMailsToParticipants.send(battle);
+            sendMailsToParticipants.send(
+                    battleService.getBattleParticipants(battle),
+                    "The battle " + battle.getName() + " is finished.\nCheck out the ranking on the website",
+                    battle.getName());
             return ResponseEntity.ok().build();
         } catch (Exception e) {
             log.error("Error closing battle: {}", e.getMessage());
