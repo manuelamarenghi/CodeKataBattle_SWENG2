@@ -16,9 +16,11 @@ import java.util.List;
 public class UnzipService {
     public List<WorkingPair<String, String>> unzip(String zipFileName, String randomName) throws IOException {
         Process process;
+        zipFileName = "/root" + zipFileName;
+        log.info("Unzipping {} ...", zipFileName);
         String script =
                 // create a directory with random name where to unzip the files
-                "cd || exit 1\n" +
+                "cd || exit 1;\n" +
                         "zipFilePath=" + zipFileName + ";\n" +
                         "mkdir " + randomName + ";\n" +
                         "mv " + zipFileName + " " + randomName + ";\n" +
@@ -48,6 +50,7 @@ public class UnzipService {
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
             String line;
             while ((line = reader.readLine()) != null) {
+                log.info(line);
                 if (line.equals("Unzip completed")) break;
             }
             log.info("Unzip completed for {}", zipFileName);
