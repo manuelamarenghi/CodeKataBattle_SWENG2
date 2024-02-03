@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+   <script>
+        const queryString = window.location.search;
+        const params = new URLSearchParams(queryString);
+        const param_team = params.get('idTeam');
+        const param_user = params.get('idUser');
+        if(!param_team || !param_user){
+            alert("Error while retreiving resources");
+        }
+   </script>
+
+    <title>Invite | CodeKataBattle</title>
+    <link rel="icon" href="public\images\iconCKB.png" type="image/x-icon">
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Jura', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh; /* 100% dell'altezza della viewport */
+        }
+
+    </style>
+    <link rel="stylesheet" href="public\css\navbar.css" type="text/css">
+    <link rel="stylesheet" href="public\css\login.css" type="text/css">
+    <link rel="stylesheet" href="public\css\header.css" type="text/css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Jura&display=swap">
+    <script src="utility\login.js"></script>
+</head>
+
+<body>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+    <div class="top-header">
+        <div class="left-content">
+            <img src="public\images\iconCKB.png" class="sw-image">
+            <div class="sw-title"> CodeKataBattle </div>
+        </div>
+    </div>
+
+    <!-- Aggiunto il form di login -->
+    <div class="login-form" >
+        <label for="evaluation">Are you sure you want to enter the TEAM:</label>
+            <div>
+                <input type="radio" id="evaluationYes" name="enterteam" value="yes">
+                <label for="evaluationYes">Yes</label>
+    
+                <input type="radio" id="evaluationNo" name="enterteam" value="no">
+                <label for="evaluationNo">No</label>
+            </div>
+
+        <button type="submit" onclick="sendAcceptedInviteReq()">Submit</button>
+    </div>
+    
+    <script>
+        function sendAcceptedInviteReq(){
+            const queryString = window.location.search;
+            const params = new URLSearchParams(queryString);
+            const param_team = params.get('idTeam');
+            const param_user = params.get('idUser');
+            var enterteam = document.querySelector('input[name="enterteam"]:checked');
+            if(enterteam == "yes"){
+            var fetchOptions = {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                idStudent : param_user,
+                idTeam : param_team
+            })};
+            fetch("http://localhost:8080/api/battle/register-student-team", fetchOptions)
+            .then(function (response) {
+                if (response.ok) {
+                    alert("You have been added to the team");
+                    window.location.href = "index.html";
+                } else {
+                    alert("Error while adding student to the team");
+                }
+            })
+            .catch(function (error) {
+                console.log(error);
+                alert("Error while connecting to the server");
+            });
+        }}
+    </script>
+</body>
+
+</html>
