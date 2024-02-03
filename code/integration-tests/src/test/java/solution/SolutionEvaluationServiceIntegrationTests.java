@@ -3,7 +3,10 @@ package solution;
 import ckb.ContainerHandler;
 import ckb.dto.account.Role;
 import ckb.dto.account.SignUpRequest;
-import ckb.dto.battle.*;
+import ckb.dto.battle.CreateBattleRequest;
+import ckb.dto.battle.GetTeamStudentRequest;
+import ckb.dto.battle.JoinRequest;
+import ckb.dto.battle.TeamInfoMessage;
 import ckb.dto.solution.EvaluationRequest;
 import ckb.dto.tournament.NewTournamentRequest;
 import ckb.dto.tournament.SubscriptionRequest;
@@ -35,11 +38,18 @@ public class SolutionEvaluationServiceIntegrationTests {
 
     private final int STRING_LENGTH = 20;
 
+    @BeforeAll
+    public static void setUp() throws IOException, InterruptedException {
+        ContainerHandler.stop();
+        Thread.sleep(10000);
+        ContainerHandler.start();
+    }
 
     @AfterAll
     public static void tearDown() throws IOException {
         ContainerHandler.stop();
     }
+
     @Test
     public void solutionEvaluationTest() throws InterruptedException {
         // create a tournament
@@ -100,7 +110,7 @@ public class SolutionEvaluationServiceIntegrationTests {
                         LocalDateTime.now().plusHours(1),
                         List.of(
                                 new WorkingPair<>("tests/input_1.txt", "5\n" + "8dafs\n" + "5sjaH\n" + "KS06l\n" + "si83H\n" + "laj74\n" + "-s9k0\n" + "sm_ks\n" + "okauE\n" + "+nuova_partita\n" + "5sjaH\n" + "1\n" + "+stampa_filtrate\n" + "+inserisci_inizio\n" + "AAAAA\n" + "BBBBB\n" + "CCCCC\n" + "+inserisci_fine\n" + "+stampa_filtrate\n" + "5sjaH\n" + "+inserisci_inizio\n" + "DDDDD\n" + "EEEEE\n" + "FFFFF\n" + "+inserisci_fine\n" + "+nuova_partita\n" + "EEEEE\n" + "1\n" + "+stampa_filtrate\n" + "EEEEE"),
-                                new WorkingPair<>("tests/output_1.txt", "-s9k0\n" + "5sjaH\n" + "8dafs\n" + "KS06l\n" + "laj74\n" + "okauE\n" + "si83H\n" + "sm_ks\n" + "-s9k0\n" + "5sjaH\n" + "8dafs\n" + "AAAAA\n" + "BBBBB\n" + "CCCCC\n" + "KS06l\n" + "laj74\n" + "okauE\n" + "si83H\n" + "sm_ks\n" + "ok\n" + "-s9k0\n" + "5sjaH\n" + "8dafs\n" + "AAAAA\n" + "BBBBB\n" + "CCCCC\n" + "DDDDD\n" + "EEEEE\n" + "FFFFF\n" + "KS06l\n" + "laj74\n" + "okauE\n" + "si83H\n" + "sm_ks\n" + "ok")
+                                new WorkingPair<>("tests/output_1.txt", "-s9k0\n" + "5sjaH\n" + "8dafs\n" + "KS06l\n" + "laj74\n" + "okauE\n" + "si83H\n" + "sm_ks\n" + "-s9k0\n" + "5sjaH\n" + "8dafs\n" + "AAAAA\n" + "BBBBB\n" + "CCCCC\n" + "KS06l\n" + "laj74\n" + "okauE\n" + "si83H\n" + "sm_ks\n" + "ok\n" + "-s9k0\n" + "5sjaH\n" + "8dafs\n" + "AAAAA\n" + "BBBBB\n" + "CCCCC\n" + "DDDDD\n" + "EEEEE\n" + "FFFFF\n" + "KS06l\n" + "laj74\n" + "okauE\n" + "si83H\n" + "sm_ks\n" + "ok\n")
                         )
                 ))
                 .accept(MediaType.APPLICATION_JSON)
@@ -222,7 +232,7 @@ public class SolutionEvaluationServiceIntegrationTests {
             assertTrue(evaluationResponse.getStatusCode().is2xxSuccessful());
         } else fail();
         System.out.println(evaluationResponse.getBody());
-        
+
         // check if the score has been updated
 
     }

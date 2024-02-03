@@ -146,7 +146,7 @@ public class CEvaluationController extends Controller {
                         "rm -rf tests/;\n" + // have to remove any tests/ directories
                         "git clone " + officialRepoUrl + " \"official_repo\" || exit 255;\n" +
                         "readarray -t officialTestDir < <(find . -wholename \"./official_repo/tests\");\n" +
-                        "if (( ${#officialTestDir[@]} == 0 )); then;\n" +
+                        "if (( ${#officialTestDir[@]} == 0 )); then\n" +
                         "    echo \"No tests found in official repo, exiting...\";\n" +
                         "    exit 255;\n" +
                         "fi\n" +
@@ -207,7 +207,6 @@ public class CEvaluationController extends Controller {
                         "grep -E -cc '(severity=\"warning\")' \"error-log\";\n" +
                         "echo \"style\";\n" +
                         "grep -E -cc '(severity=\"style\")' \"error-log\";\n";
-
 
         ProcessBuilder processBuilder = new ProcessBuilder("/bin/bash", "-c", script).redirectErrorStream(true);
         Process process;
