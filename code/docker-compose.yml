@@ -40,6 +40,36 @@ services:
     command: --default-authentication-plugin=mysql_native_password
     restart: always
 
+  solution-evaluation-service:
+    container_name: solution-evaluation-service
+    image: ${ID:-codekatabattle}/solution-evaluation-service
+    ports:
+      - "8081:8081"
+
+  battle-manager:
+    container_name: battle-manager
+    image: ${ID:-codekatabattle}/battle-manager
+    depends_on:
+      - mysql-battle-manager
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql-battle-manager:3306/battle_schema
+    ports:
+      - "8082:8082"
+    restart: always
+
+  github-manager:
+    container_name: github-manager
+    image: ${ID:-codekatabattle}/github-manager
+    ports:
+      - "8083:8083"
+
+  mail-service:
+    container_name: mail-service
+    image: ${ID:-codekatabattle}/mail-service
+    ports:
+      - "8085:8085"
+
   account-manager:
     container_name: account-manager
     image: ${ID:-codekatabattle}/account-manager
@@ -52,24 +82,6 @@ services:
       - "8086:8086"
     restart: always
 
-  mail-service:
-    container_name: mail-service
-    image: ${ID:-codekatabattle}/mail-service
-    ports:
-      - "8085:8085"
-
-  github-manager:
-    container_name: github-manager
-    image: ${ID:-codekatabattle}/github-manager
-    ports:
-      - "8083:8083"
-      
-  solution-evaluation-service:
-    container_name: solution-evaluation-service
-    image: ${ID:-codekatabattle}/solution-evaluation-service
-    ports:
-      - "8081:8081"
-
   tournament-manager:
     container_name: tournament-manager
     image: ${ID:-codekatabattle}/tournament-manager
@@ -80,16 +92,4 @@ services:
       - SPRING_DATASOURCE_URL=jdbc:mysql://mysql-tournament-manager:3306/tournament_schema
     ports:
       - "8087:8087"
-    restart: always
-
-  battle-manager:
-    container_name: battle-manager
-    image: ${ID:-codekatabattle}/battle-manager
-    depends_on:
-      - mysql-battle-manager
-    environment:
-      - SPRING_PROFILES_ACTIVE=docker
-      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql-battle-manager:3306/battle_schema
-    ports:
-      - "8082:8082"
     restart: always

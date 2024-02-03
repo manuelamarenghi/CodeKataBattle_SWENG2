@@ -1,5 +1,6 @@
 package battle;
 
+import ckb.ContainerHandler;
 import ckb.dto.account.Role;
 import ckb.dto.account.SignUpRequest;
 import ckb.dto.battle.*;
@@ -39,15 +40,15 @@ public class BattleServiceIntegrationTests {
 
     @BeforeAll
     public static void init() throws IOException, InterruptedException {
-        //    ContainerHandler.stop();
-        //  Thread.sleep(10000);
-        //ContainerHandler.start();
+        ContainerHandler.stop();
+        Thread.sleep(10000);
+        ContainerHandler.start();
         cattaId = createStudentCatta();
     }
 
     @AfterAll
     public static void close() throws IOException {
-        //ContainerHandler.stop();
+        ContainerHandler.stop();
     }
 
     private static Long createStudentCatta() {

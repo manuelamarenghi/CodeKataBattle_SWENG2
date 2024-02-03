@@ -3,7 +3,10 @@ package solution;
 import ckb.ContainerHandler;
 import ckb.dto.account.Role;
 import ckb.dto.account.SignUpRequest;
-import ckb.dto.battle.*;
+import ckb.dto.battle.CreateBattleRequest;
+import ckb.dto.battle.GetTeamStudentRequest;
+import ckb.dto.battle.JoinRequest;
+import ckb.dto.battle.TeamInfoMessage;
 import ckb.dto.solution.EvaluationRequest;
 import ckb.dto.tournament.NewTournamentRequest;
 import ckb.dto.tournament.SubscriptionRequest;
@@ -34,6 +37,18 @@ public class SolutionEvaluationServiceIntegrationTests {
     private final String tournamentManagerUrl = "http://localhost:8087/";
 
     private final int STRING_LENGTH = 20;
+
+    @BeforeAll
+    public static void setUp() throws IOException, InterruptedException {
+        ContainerHandler.stop();
+        Thread.sleep(10000);
+        ContainerHandler.start();
+    }
+
+    @AfterAll
+    public static void tearDown() throws IOException {
+        ContainerHandler.stop();
+    }
 
     @Test
     public void solutionEvaluationTest() throws InterruptedException {
@@ -217,7 +232,7 @@ public class SolutionEvaluationServiceIntegrationTests {
             assertTrue(evaluationResponse.getStatusCode().is2xxSuccessful());
         } else fail();
         System.out.println(evaluationResponse.getBody());
-        
+
         // check if the score has been updated
 
     }
