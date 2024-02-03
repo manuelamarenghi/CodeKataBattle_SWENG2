@@ -67,9 +67,9 @@ public class CreateBattleController extends Controller {
             @RequestParam("maxStudents") Integer maxStudents,
             @RequestParam("regDeadline") LocalDateTime regDeadline,
             @RequestParam("subDeadline") LocalDateTime subDeadline,
+            @RequestParam("battleToEval") Boolean battleToEval,
             @RequestParam("name") String name) {
         try {
-
             // convert the zip file into a List<WorkingPair<String, String>>
             String fileName = zipFile.getOriginalFilename();
             String home = System.getProperty("user.home");
