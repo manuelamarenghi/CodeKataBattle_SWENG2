@@ -51,7 +51,6 @@ class AssignScoreControllerTest {
 
         team = new Team();
         team.setBattle(battle);
-        team.setRepositoryLink("team_link");
         team.setScore(0);
         team.setEduEvaluated(false);
         team.setCanParticipateToBattle(true);

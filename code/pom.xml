@@ -22,6 +22,7 @@
         <module>github-manager</module>
         <module>tournament-manager</module>
         <module>battle-manager</module>
+        <module>solution-evaluation-service</module>
     </modules>
 
     <properties>

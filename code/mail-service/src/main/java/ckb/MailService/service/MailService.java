@@ -33,7 +33,7 @@ public class MailService {
             mailSender.send(message);
             return true;
         } catch (Exception e) {
-            log.error("Error while sending email to {}\n", addresses);
+            log.error("Error while sending email to {}", addresses);
             return false;
         }
     }

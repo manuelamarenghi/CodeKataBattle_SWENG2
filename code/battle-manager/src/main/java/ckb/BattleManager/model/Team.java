@@ -24,8 +24,6 @@ public class Team {
     @OneToMany(mappedBy = "team", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Participation> participation;
 
-    private String repositoryLink;
-
     private Integer score;
 
     private Boolean eduEvaluated;
