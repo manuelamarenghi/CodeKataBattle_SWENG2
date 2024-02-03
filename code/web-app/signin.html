@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>SignIn | CodeKataBattle</title>
+    <link rel="icon" href="public\images\iconCKB.png" type="image/x-icon">
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Jura', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh; /* 100% dell'altezza della viewport */
+        }
+
+    
+    </style>
+    <link rel="stylesheet" href="public\css\navbar.css" type="text/css">
+    <link rel="stylesheet" href="public\css\sign.css" type="text/css">
+    <link rel="stylesheet" href="public\css\header.css" type="text/css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Jura&display=swap">
+    <script src="utility\login.js"></script>
+</head>
+
+<body>
+
+    <div class="top-header">
+        <div class="left-content">
+            <img src="public\images\iconCKB.png" class="sw-image">
+            <div class="sw-title"> CodeKataBattle </div>
+        </div>
+    </div>
+
+    <!-- Aggiunto il form di registrazione -->
+    <div class="signup-form">
+        <label for="name">Nome:</label>
+        <input type="text" id="name" name="name" required>
+
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required>
+
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required>
+
+        <label for="accountType">Tipo di account:</label>
+        <select id="accountType" name="accountType">
+            <option value="EDUCATOR">Educator</option>
+            <option value="STUDENT">Student</option>
+        </select>
+
+        <button id="signin" type="submit" onclick="sendSignUpReq()">Registrati</button>
+    </div>
+
+</body>
+
+</html>
