@@ -4,7 +4,6 @@ import ckb.BattleManager.model.Battle;
 import ckb.BattleManager.model.Participation;
 import ckb.BattleManager.model.Team;
 import ckb.BattleManager.model.WorkingPair;
-import ckb.BattleManager.repository.ParticipationRepository;
 import ckb.BattleManager.repository.TeamRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,21 +11,21 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.Collection;
 import java.util.List;
 
 @Service
 @Slf4j
 public class TeamService {
+    private final int MAX_TIME_DEDUCTION = 50;
     private final TeamRepository teamRepository;
-    private final ParticipationRepository participationRepository;
     private final ParticipationService participationService;
 
     @Autowired
-    public TeamService(TeamRepository teamRepository, ParticipationRepository participationRepository, ParticipationService participationService) {
+    public TeamService(TeamRepository teamRepository, ParticipationService participationService) {
         this.teamRepository = teamRepository;
         this.participationService = participationService;
-        this.participationRepository = participationRepository;
     }
 
     public Team getTeam(Long idTeam) throws Exception {
@@ -50,7 +49,6 @@ public class TeamService {
         // TODO: how to set the repository link?
         Team team = Team.builder()
                 .battle(battle)
-                .repositoryLink("")
                 .eduEvaluated(false)
                 .score(0)
                 .canParticipateToBattle(true)
@@ -122,10 +120,25 @@ public class TeamService {
             throw new Exception("Team score cannot be updated because the tournament is closed");
         }
 
+        int timeDeduction = computeTimeDeduction(battleOfTeam);
+        log.info("Time deduction for team with id {}: {}", idTeam, timeDeduction);
+        score = score - timeDeduction;
+
         team.setScore(Math.max(score, team.getScore()));
         teamRepository.save(team);
 
         log.info("Team score updated with id {} and score: {}", idTeam, score);
+    }
+
+    private Integer computeTimeDeduction(Battle battleOfTeam) {
+        LocalDateTime subDeadline = battleOfTeam.getSubDeadline();
+        LocalDateTime registrationDeadline = battleOfTeam.getRegDeadline();
+        LocalDateTime now = LocalDateTime.now();
+
+        long battleMinutes = ChronoUnit.MINUTES.between(registrationDeadline, subDeadline);
+        long minutesPassed = ChronoUnit.MINUTES.between(registrationDeadline, now);
+
+        return MAX_TIME_DEDUCTION *( (int) (minutesPassed / battleMinutes));
     }
 
     public void assignPersonalScore(Long idTeam, Integer score, Long idEducator) throws Exception {

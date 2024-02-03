@@ -113,7 +113,6 @@ class BattleScheduledServiceTest {
         Team team1 = new Team();
         team1.setBattle(battleToStart);
         team1.setScore(10);
-        team1.setRepositoryLink("linkTeam");
         team1.setCanParticipateToBattle(true);
 
         Participation participation1 = new Participation();
@@ -132,7 +131,6 @@ class BattleScheduledServiceTest {
         Team team2 = new Team();
         team2.setBattle(battleToStart);
         team2.setScore(10);
-        team2.setRepositoryLink("linkTeam");
         team2.setCanParticipateToBattle(false);
         teamRepository.save(team2);
 
@@ -179,7 +177,6 @@ class BattleScheduledServiceTest {
         Team team3 = new Team();
         team3.setBattle(battleToStart);
         team3.setScore(10);
-        team3.setRepositoryLink("linkTeam");
         team3.setCanParticipateToBattle(true);
         teamRepository.save(team3);
 
@@ -214,7 +211,6 @@ class BattleScheduledServiceTest {
         Team team = new Team();
         team.setBattle(battleToClose);
         team.setScore(10);
-        team.setRepositoryLink("linkTeam");
         team.setCanParticipateToBattle(true);
         teamRepository.save(team);
 

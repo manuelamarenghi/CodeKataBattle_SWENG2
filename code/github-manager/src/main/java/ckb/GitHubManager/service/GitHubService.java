@@ -35,7 +35,7 @@ public class GitHubService {
         try {
             return GitHub.connectUsingOAuth(token).getRepository(repoName);
         } catch (Exception e) {
-            log.error("Error while getting repository {}\n", repoName);
+            log.error("Error while getting repository {}", repoName);
             throw new RuntimeException("Could not find repository");
         }
     }
