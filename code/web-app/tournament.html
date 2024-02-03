@@ -287,8 +287,8 @@
             var evaluation = document.querySelector('input[name="evaluation"]:checked').value;
             if(evaluation === "yes"){ evaluation = true; }
             else evaluation = false;
-            var deadlineSubmission = document.getElementById('deadlineSubmission').value;
-            var registrationSubmission = document.getElementById('registrationSubmission').value;
+            var deadlineSubmission = document.getElementById('deadlineSubmission').value + "T23:59:59.999Z";
+            var registrationSubmission = document.getElementById('registrationSubmission').value + "T23:59:59.999Z";
             var codeKataUpload = document.getElementById('codeKataUpload').files[0];
             const queryString = window.location.search;
             const params = new URLSearchParams(queryString);
@@ -306,9 +306,6 @@
 
             var fetchOptions = {
                 method: "POST",
-                headers: {
-                    "Content-Type": "multipart/form-data",
-                },
                 body: formData
             };
             console.log(fetchOptions);
