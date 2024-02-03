@@ -39,7 +39,7 @@ public class GetTeamController extends Controller {
      * @param request id of the team
      * @return a ResponseEntity with the team or a not found status
      */
-    @GetMapping("/get-team")
+    @PostMapping("/get-team")
     public ResponseEntity<TeamInfoMessage> getTeam(@RequestBody GetTeamStudentRequest request) {
         log.info("[API REQUEST] Get team request with id: {}", request.getBattleId());
         try {

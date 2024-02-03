@@ -62,7 +62,7 @@ public class BattleScheduledService {
                 sendMailsToParticipants.send(
                         battleService.getBattleParticipants(battle),
                         "The battle " + battle.getName() + " is started.\nCheck out the code kata following the link: "
-                                + "https://github.com/" + battle.getRepositoryLink(),
+                                + battle.getRepositoryLink(),
                         battle.getName()
                 );
             } catch (Exception e) {

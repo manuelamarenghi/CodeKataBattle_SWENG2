@@ -35,19 +35,22 @@ public class MakePublicControllerTest {
                 .files(List.of(new WorkingPair<>("README.md", "This is a test")))
                 .build();
         createRepositoryController.createBattleRepository(createRequest);
-        String nameFromUrl = "Code-Kata-Battle/" + repoName;
+        String nameFromUrl = "https://github.com/Code-Kata-Battle/" + repoName + ".git";
 
         System.out.println(nameFromUrl);
-        assertEquals(githubService.getRepo(nameFromUrl).getVisibility(), GHRepository.Visibility.PRIVATE);
+
+        String fullName = nameFromUrl.replace("https://github.com/", "").replace(".git", "");
+        // full name should just be Code-Kata-Battle/<random string>
+        assertEquals(githubService.getRepo(fullName).getVisibility(), GHRepository.Visibility.PRIVATE);
 
         MakePublicRequest makePublicRequest = MakePublicRequest.builder()
                 .repoName(nameFromUrl)
                 .build();
         makePublicController.makePublic(makePublicRequest);
 
-        assertEquals(githubService.getRepo(nameFromUrl).getVisibility(), GHRepository.Visibility.PUBLIC);
+        assertEquals(githubService.getRepo(fullName).getVisibility(), GHRepository.Visibility.PUBLIC);
 
-        githubService.getRepo(nameFromUrl).delete();
+        githubService.getRepo(fullName).delete();
     }
 
     @Test

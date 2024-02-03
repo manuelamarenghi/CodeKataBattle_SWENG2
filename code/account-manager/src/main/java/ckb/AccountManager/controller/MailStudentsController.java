@@ -29,8 +29,8 @@ public class MailStudentsController extends Controller {
                 .toString();
 
         if (mailAddresses.isEmpty()) {
-            log.error("No students found");
-            return new ResponseEntity<>("No students found", getHeaders(), HttpStatus.NOT_FOUND);
+            log.warn("No students found, maybe the database is empty?");
+            return new ResponseEntity<>("", getHeaders(), HttpStatus.OK);
         }
 
         List<String> addresses = Arrays.stream(mailAddresses.split(","))
