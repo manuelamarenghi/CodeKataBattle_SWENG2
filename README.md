@@ -1,6 +1,13 @@
 # CodeKataBattle
 ## Warning
-We've provided this project with a an access token to a github account created exclusively for the purpose of this porject, you may be encountering some problems with creatinig github repositories. If you encounter any problems, modify the [GitHubService.java](./code/github-manager/src/main/java/ckb/GitHubManager/service/GitHubService.java) class and provide it with your own access token (you then need to rebuild the project as eplained below), the same problem can be experienced with the SMTP token used to send emails to users, save the mail-service [applicatoin.properties](./code/mail-service/src/main/resources/application.properties)
+We've provided this project with a an access token to a github account created exclusively for the purpose of this porject, you may be encountering some problems with creatinig github repositories. If you encounter any problems, modify the [GitHubService.java](./code/github-manager/src/main/java/ckb/GitHubManager/service/GitHubService.java) class and provide it with your own access token (you then need to rebuild the project as eplained below), the same problem can be experienced with the SMTP token used to send emails to users, save the mail-service [applicatoin.properties](./code/mail-service/src/main/resources/application.properties) <br>
+Since GitHub actions cannot be used for lack of a static address, the following command can be used to simulate the behavior:
+```
+curl -X POST -H "Content-Type: application/json" \
+             -d '{"teamId":<your-team-id>, "repoUrl":"<repository-link-to-clone-the-repo-ending-in-.git>"}' \
+             http://localhost:8081/api/solution-evaluation/c
+
+```
 
 ## About
 The objective of this project is to apply in practice what is taught in the Software Engineering 2 course at Politecnico di Milano, with the purpose of becoming familiar with software engineering practices and able to address software engineering issues in a rigorous way. To this extent, the following problem is provided: <br> <br>
