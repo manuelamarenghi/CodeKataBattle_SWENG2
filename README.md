@@ -14,28 +14,29 @@ The score is a natural number between 0 and 100 determined by considering some m
   * personal score assigned by the educator, who checks and evaluates the work done by students (which will need to checkout the students repositories by looking at who forked the repository created by CKB)
  The CKB platform automatically updates the battle score of a team as soon as new push actions on GitHub are performed. So, both students and educators involved in the battle can see the current rank evolving during the battle. When the submission deadline expires, there is a consolidation stage in which, if manual evaluation is required, the educator uses the CKB platform to go through the sources produced by each team to assign his/her score. Once the consolidation stage finishes, all students participating in the battle are notified when the final battle rank becomes available.
 <br>
-Lastly, more documentation can be found the in the DirectoryFolder
+
+Lastly, more documentation can be found the in the [DeliveryFolder](./DeliveryFolder/)
 
 ## How to install
 ### Backend
-The only requirement to run the application backend is to have docker compose V2 installed on your system. The whole backend infrastructure can be easily and platform-independently installed and run by exploiting docker containers, in the code directory of the project, a docker-compose.yml can be used to start the application both with official and unofficial images:
+The only requirement to run the application backend is to have docker compose V2 installed on your system. The whole backend infrastructure can be easily and platform-independently installed and run by exploiting docker containers, in the code directory of the project, a [docker-compose.yml](./code/docker-compoe.yml) can be used to start the application both with official and unofficial images:
 * Official images
-  * To run the official images it’s sufficient to open a command line interface in the code directory and run the docker compose up command
+  * To run the official images it’s sufficient to open a command line interface in the [code](./code/) directory and run the ```docker compose up``` command
   * After having run the command, docker will start pulling the official images of the application from DockerHub
   * After a few minutes, when all images have been downloaded, docker will run all images
-  * As the application is starting, you can check which services have started by connecting to localhost:8761 which is the address of the discovery server, once all the 6 services services and the api gateway are listed there, the backend is finally running
+  * As the application is starting, you can check which services have started by connecting to ```localhost:8761``` which is the address of the discovery server, once all the 6 services services and the api gateway are listed there, the backend is finally running
 * Unofficial images
-  * You can apply any modifications to the sources and build your own images by following the next few steps, which are supposed to be performed on a system that has a running version of docker and maven, all commands are to be run in the code directory
-  * Build and package the application by running the mvn clean install -DskipTests command
-  * If you can run bash scripts, run the docker-build.sh script present in the code directory by running ./docker-build.sh {your-test-tag} this will build all docker of the project’s images, and name them {your-test-tag}/{service-name}
-  * The only thing left is to actually run the new images! To do that you can run the ID=[your-test-tag] docker compose up command in the code directory or modifying the docker compose file to user the images you’ve just built
+  * You can apply any modifications to the sources and build your own images by following the next few steps, which are supposed to be performed on a system that has a running version of docker and maven, all commands are to be run in the [code](./code/) directory
+  * Build and package the application by running the ```mvn clean install -DskipTests``` command
+  * If you can run bash scripts, run the [docker-build.sh](./code/docker-build.sh) script present in the code directory by running ```./docker-build.sh {your-test-tag}``` this will build all docker of the project’s images, and name them ```{your-test-tag}/{service-name}```
+  * The only thing left is to actually run the new images! To do that you can run the ```ID={your-test-tag} docker compose up``` command in the [code](./code/) directory or modifying the docker compose file to user the images you’ve just built
 
 ### Frontend
 To use the application, after having run the docker compose file, you need to host an http server in the web app directory to be able to fetch the necessary files, the following steps are to be run in a linux distribution, or a WSL instance
-1. Run the sudo apt install npm command to download the Node Package Manager (if you do not have apt on your machine, substitute it with a package manager of your preference, e.g., yum, pacman, …)
-2. After having installed npm, you’ll need to install the http-server command by running the sudo npm install --global http-server command
-3. Now you are all set to host an http-server on your machine, go in the code/web-app directory of the project and run the http-server ./ -p 3000 command
-4. You can now finally search for localhost:3000 in your browser to use the frontend of the application
+1. Run the ```sudo apt install npm``` command to download the Node Package Manager (if you do not have apt on your machine, substitute it with a package manager of your preference, e.g., yum, pacman, …)
+2. After having installed npm, you’ll need to install the http-server command by running the ```sudo npm install --global http-server``` command
+3. Now you are all set to host an http-server on your machine, go in the code/web-app directory of the project and run the ```http-server ./ -p 3000``` command
+4. You can now finally search for ```localhost:3000``` in your browser to use the frontend of the application
 
 
 
