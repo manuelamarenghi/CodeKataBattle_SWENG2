@@ -24,9 +24,9 @@ Account DB-->Account Manager:       4. success
 Account Manager-->API Gateway:     5. result
 API Gateway-->WebApp:        6.  result
 
-WebApp->API Gateway:     7. changeInformations( fullName, email, password )       
+WebApp->API Gateway:     7. update( fullName, email, password )       
 
-API Gateway->Account Manager:   8. changeInformations(fullName, email, password )    
+API Gateway->Account Manager:   8. update(fullName, email, password )    
 Account Manager->Account DB:            9. executeQuery(fullName, email, password)   
 
 Account DB-->Account Manager:       10. success 

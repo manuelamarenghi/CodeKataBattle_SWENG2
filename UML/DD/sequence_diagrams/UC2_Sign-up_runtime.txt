@@ -6,10 +6,10 @@ database Account DB
 participantspacing 7
 
 activate WebApp
-WebApp->API Gateway:   1.  createNewUser(fullName, email, password, type)         
+WebApp->API Gateway:   1.  signUp(fullName, email, password, type)         
 
 activate API Gateway
-API Gateway->Account Manager:   2.  createNewUser(fullName, email, password, type)  
+API Gateway->Account Manager:   2.  signUp(fullName, email, password, type)  
 activate Account Manager
 Account Manager->Account DB:      3. executeQuery(fullName, email, password, type)
 activate Account DB

@@ -9,10 +9,10 @@ database Tournament DB
 
 frame   Browse the platform (checkout tournament rankings) 
 activate WebApp
-WebApp ->API Gateway:          1. getRanking(id)         
+WebApp ->API Gateway:          1. getTournamentPage(id)         
 activate API Gateway
 
-API Gateway->Tournament Manager: 2. getRanking(id)
+API Gateway->Tournament Manager: 2. getTournamentPage(id)
 activate Tournament Manager
 
 Tournament Manager->Tournament DB:  3. executeQuery(id)

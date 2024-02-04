@@ -8,9 +8,9 @@ participant Account Manager
 frame Sign in
 database Account DB
 activate WebApp
-WebApp ->API Gateway:       1. logUser(email, password)           
+WebApp ->API Gateway:       1. signIn(email, password)           
 activate API Gateway
-API Gateway ->Account Manager:          2. logUser(email, password)           
+API Gateway ->Account Manager:          2. signIn(email, password)           
 
 activate Account Manager
 Account Manager->Account DB:            3. executeQuery(user,password)        
