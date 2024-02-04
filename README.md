@@ -1,4 +1,7 @@
 # CodeKataBattle
+## Warning
+We've provided this project with a an access token to a github account created exclusively for the purpose of this porject, you may be encountering some problems with creatinig github repositories. If you encounter any problems, modify the [GitHubService.java](./code/github-manager/src/main/java/ckb/GitHubManager/service/GitHubService.java) class and provide it with your own access token (you then need to rebuild the project as eplained below)
+
 ## About
 The objective of this project is to apply in practice what is taught in the Software Engineering 2 course at Politecnico di Milano, with the purpose of becoming familiar with software engineering practices and able to address software engineering issues in a rigorous way. To this extent, the following problem is provided: <br> <br>
 CodeKataBattle (CKB) is a new platform that helps students improve their software development skills by training with peers on code kata1 . Educators use the platform to challenge students by creating code kata battles in which teams of students can compete against each other, thus proving (and improving) their skills. <br>
