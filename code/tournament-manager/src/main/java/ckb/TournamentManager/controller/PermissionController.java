@@ -67,7 +67,8 @@ public class PermissionController extends Controller {
                     .bodyValue(new UserRequest(request.getUserID()))
                     .retrieve()
                     .onStatus(HttpStatusCode::is4xxClientError, clientResponse -> Mono.error(new RuntimeException("Error during the HTTP call")))
-                    .bodyToMono(String.class).block();
+                    .bodyToMono(String.class)
+                    .block();
             if (c != null) {
                 ObjectMapper objectMapper = new ObjectMapper();
                 return objectMapper.readValue(c, User.class);

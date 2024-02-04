@@ -35,20 +35,21 @@ public class PermissionControllerTest {
     @Autowired
     private PermissionRepo permissionRepo;
 
-    private static ClientAndServer mockServermail;
+    private static ClientAndServer mockServerMail;
 
-    private static ClientAndServer mockServeraccount;
+    private static ClientAndServer mockServerAccount;
 
     @BeforeEach
     public void setUpServer() {
-        mockServeraccount = ClientAndServer.startClientAndServer(8086);
-        mockServermail = ClientAndServer.startClientAndServer(8085);
+        permissionController.initTestMode();
+        mockServerAccount = ClientAndServer.startClientAndServer(8086);
+        mockServerMail = ClientAndServer.startClientAndServer(8085);
     }
 
     @AfterEach
     public void tearDownServer() {
-        mockServeraccount.stop();
-        mockServermail.stop();
+        mockServerAccount.stop();
+        mockServerMail.stop();
         permissionRepo.deleteAll();
         tournamentRepo.deleteAll();
     }
@@ -109,10 +110,10 @@ public class PermissionControllerTest {
         user.setRole(Role.STUDENT);
         user.setId(1L);
         String userJson = new ObjectMapper().writeValueAsString(user);
-        mockServeraccount
+        mockServerAccount
                 .when(request().withMethod("POST").withPath("/api/account/user"))
                 .respond(response().withStatusCode(200).withBody(userJson));
-        mockServermail
+        mockServerMail
                 .when(request().withMethod("POST").withPath("/api/mail/direct"))
                 .respond(response().withStatusCode(200).withBody("OK"));
 
@@ -137,10 +138,10 @@ public class PermissionControllerTest {
         user.setRole(Role.EDUCATOR);
         user.setId(1L);
         String userJson = new ObjectMapper().writeValueAsString(user);
-        mockServeraccount
+        mockServerAccount
                 .when(request().withMethod("POST").withPath("/api/account/user"))
                 .respond(response().withStatusCode(200).withBody(userJson));
-        mockServermail
+        mockServerMail
                 .when(request().withMethod("POST").withPath("/api/mail/direct"))
                 .respond(response().withStatusCode(200));
 
@@ -165,10 +166,10 @@ public class PermissionControllerTest {
         user.setRole(Role.EDUCATOR);
         user.setId(1L);
         String userJson = new ObjectMapper().writeValueAsString(user);
-        mockServeraccount
+        mockServerAccount
                 .when(request().withMethod("POST").withPath("/api/account/user"))
                 .respond(response().withStatusCode(200).withBody(userJson));
-        mockServermail
+        mockServerMail
                 .when(request().withMethod("POST").withPath("/api/mail/direct"))
                 .respond(response().withStatusCode(200).withBody("OK"));
 
