@@ -17,8 +17,6 @@ activate API Gateway
 API Gateway->Tournament Manager: 2: closeTournament(id_tournament, id_user)
 activate Tournament Manager
 
-alt is_creator == id_user && all_battles_finished == true
-
 Tournament Manager->Battle Manager: 3: canCloseTournament(id_tournament)
 activate Battle Manager
 
@@ -31,6 +29,7 @@ deactivate Battle DB
 Battle Manager-->Tournament Manager: 6: result
 deactivate Battle Manager
 
+alt is_creator == id_user && all_battles_finished == true
 Tournament Manager->Tournament DB: 7: executeQuery(id_tournament)
 activate Tournament DB
 Tournament DB-->Tournament Manager: 8: success

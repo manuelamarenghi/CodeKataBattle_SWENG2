@@ -3,7 +3,9 @@ frame Grant permission to colleagues
 fontawesome6solid f390 WebApp
 participant API Gateway
 participant Tournament Manager
-participant Mail Manager
+database Tournament DB
+participant Account Manager
+
 
 participantspacing 5
 
@@ -13,18 +15,26 @@ activate API Gateway
 API Gateway->Tournament Manager: 2: grantPermission(id_tournament, id_user, id_educator)
 activate Tournament Manager
 
+Tournament Manager->Account Manager: 3: getUser(id_user)
+activate Account Manager
+
+Account Manager-->Tournament Manager: 4: result
+
+deactivate Account Manager
+
 alt id_educator == id_tournament_creator
-Tournament Manager->Mail Manager: 3: sendEmail(id_educator, content)
-activate Mail Manager
-Mail Manager-->Tournament Manager: 4: result
-deactivate Mail Manager
+Tournament Manager->Tournament DB: 5: executeQuery(id_tournament, id_user)
+activate Tournament DB
+Tournament DB-->Tournament Manager: 6: result
+deactivate Tournament DB
+
 else 
 Tournament Manager->Tournament Manager: error()
 end
 
-Tournament Manager-->API Gateway: 5: result
+Tournament Manager-->API Gateway: 7: result
 deactivate Tournament Manager
-API Gateway-->WebApp: 6: result
+API Gateway-->WebApp: 8: result
 deactivate WebApp
 deactivate API Gateway
 

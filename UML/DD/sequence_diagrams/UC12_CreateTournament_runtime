@@ -26,7 +26,7 @@ Tournament Manager->Mail Manager: 6: mailAllStudents(content)
 activate Mail Manager
 Mail Manager-->Tournament Manager: 7: result
 deactivate Mail Manager
-Tournament Manager->Badges Manager: 8: createBadges(badges)
+Tournament Manager->Badges Manager: 8: createBadges(id_tournament, badges)
 activate Badges Manager
 
 // Insert new badges
