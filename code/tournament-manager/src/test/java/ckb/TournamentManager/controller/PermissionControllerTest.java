@@ -78,7 +78,6 @@ public class PermissionControllerTest {
         Long creatorID = 1L;
         PermissionRequest request = new PermissionRequest(tournamentID, userID,creatorID);
         ResponseEntity<Object> response = permissionController.createPermission(request);
-
         assertTrue(response.getStatusCode().is4xxClientError());
     }
 
