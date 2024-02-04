@@ -79,15 +79,6 @@ class RegisterStudentToTeamControllerTest {
         assertTrue(response.getStatusCode().is4xxClientError());
     }
 
-    @Test
-    void registerNonExistingStudent() {
-        ResponseEntity<Object> response = registerStudentToTeamController.registerStudentToTeam(
-                new AcceptStudentTeamRequest(0L, newTeam.getTeamId())
-        );
-
-        assertTrue(response.getStatusCode().is4xxClientError());
-    }
-
     @AfterEach
     void tearDown() {
         participationRepository.deleteAll();

@@ -9,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.reactive.function.client.WebClient;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
@@ -188,17 +189,19 @@ public class TeamService {
 
         // Check if the student is registered to the battle
         if (teamRepository.findTeamByStudentIdAndBattle(idStudent, battleRegistered).isEmpty()) {
-            log.error("Student {} is not registered to the battle {}", idStudent, battleRegistered.getName());
-            throw new Exception("Student " + idStudent + " is not registered to the battle " + battleRegistered.getName());
+            // create a new participation
+            participationService.createParticipation(
+                    idStudent,
+                    teamToSubscribe
+            );
+        } else{
+            deleteParticipation(idStudent, battleRegistered);
+            // create a new participation
+            participationService.createParticipation(
+                    idStudent,
+                    teamToSubscribe
+            );
         }
-
-        deleteParticipation(idStudent, battleRegistered);
-
-        // create a new participation
-        participationService.createParticipation(
-                idStudent,
-                teamToSubscribe
-        );
 
         log.info("Student {} registered to team {}", idStudent, idNewTeam);
     }

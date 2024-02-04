@@ -63,8 +63,7 @@
         const params = new URLSearchParams(queryString);
         const param_team = params.get('idTeam');
         const param_user = params.get('idUser');
-        var enterteam = document.querySelector('input[name="enterteam"]:checked');
-        if(enterteam == "yes"){
+        if(document.getElementById("evaluationYes").checked){
             var fetchOptions = {
                 method: "POST",
                 headers: {
