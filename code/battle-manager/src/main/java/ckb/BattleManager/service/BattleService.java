@@ -3,6 +3,7 @@ package ckb.BattleManager.service;
 import ckb.BattleManager.controller.CreateGHRepositoryBattleController;
 import ckb.BattleManager.controller.SendTeamsPointsController;
 import ckb.BattleManager.dto.input.CreateBattleRequest;
+import ckb.BattleManager.dto.output.EvaluationParamsResponse;
 import ckb.BattleManager.model.Battle;
 import ckb.BattleManager.model.Participation;
 import ckb.BattleManager.model.Team;
@@ -55,6 +56,9 @@ public class BattleService {
                 .hasStarted(false)
                 .hasEnded(false)
                 .isClosed(false)
+                .security(battleRequest.getSecurity())
+                .reliability(battleRequest.getReliability())
+                .maintainability(battleRequest.getMaintainability())
                 .build();
         log.info("Battle built: {}", battle);
 
@@ -133,13 +137,20 @@ public class BattleService {
                 .toList();
     }
 
-    public String getOfficialRepo(Long teamId) throws Exception {
+    public EvaluationParamsResponse getBattleParams(Long teamId) throws Exception {
         Team team = teamService.getTeam(teamId);
         if (!team.getBattle().getHasStarted()) {
             log.error("The battle {} has not started yet", team.getBattle().getName());
             throw new RuntimeException("The battle " + team.getBattle().getName() + " has not started");
         }
-        return team.getBattle().getRepositoryLink();
+
+        Battle battle = team.getBattle();
+        return EvaluationParamsResponse.builder()
+                .repoLink(battle.getRepositoryLink())
+                .security(battle.getSecurity())
+                .reliability(battle.getReliability())
+                .maintainability(battle.getMaintainability())
+                .build();
     }
 
     public Team getListParticipation(Long battleId, Long studentId) throws Exception {
@@ -172,10 +183,6 @@ public class BattleService {
             battle.setIsClosed(true);
             battleRepository.save(battle);
             log.info("Battle {} is closed", battle.getName());
-            sendTeamsPointsController.sendIdUsersPointsFinishedBattle(
-                    battle,
-                    teamService.getListPairIdUserPoints(battle)
-            );
         } else {
             log.error("The educator {} is not the author of the battle {}", educatorId, battle.getName());
             throw new Exception("The educator " + educatorId + " is not the author of the battle " + battle.getName());

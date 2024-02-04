@@ -99,7 +99,10 @@ class CreateBattleRequestControllerTest {
                                 "tests/input_",
                                 "1010001"
                         )
-                )
+                ),
+                true,
+                true,
+                true
         );
 
         ResponseEntity<Object> retrievedBattle = createBattleController.createBattle(battle);
@@ -128,7 +131,10 @@ class CreateBattleRequestControllerTest {
                                 "tests/input_",
                                 "1010001"
                         )
-                )
+                ),
+                true,
+                true,
+                true
         );
 
         ResponseEntity<Object> retrievedBattle = createBattleController.createBattle(battle);
@@ -150,8 +156,10 @@ class CreateBattleRequestControllerTest {
                 new WorkingPair<>(
                         "tests/input_",
                         "1010001"
-                )
-        )
+                )),
+                true,
+                true,
+                true
 
         );
 
@@ -172,7 +180,10 @@ class CreateBattleRequestControllerTest {
                                 "tests/input_",
                                 "1010001"
                         )
-                )
+                ),
+                true,
+                true,
+                true
         );
 
         retrievedBattle = createBattleController.createBattle(battle2);
@@ -195,7 +206,10 @@ class CreateBattleRequestControllerTest {
                                 "tests/input_",
                                 "1010001"
                         )
-                )
+                ),
+                true,
+                true,
+                true
         );
 
         ResponseEntity<Object> retrievedBattle = createBattleController.createBattle(battle);
@@ -218,7 +232,10 @@ class CreateBattleRequestControllerTest {
                                 "tests/input_",
                                 "1010001"
                         )
-                )
+                ),
+                true,
+                true,
+                true
         );
 
         ResponseEntity<Object> retrievedBattle = createBattleController.createBattle(battle);

@@ -1,6 +1,7 @@
 package ckb.BattleManager.controller;
 
 import ckb.BattleManager.dto.input.OfficialRepoRequest;
+import ckb.BattleManager.dto.output.EvaluationParamsResponse;
 import ckb.BattleManager.service.BattleService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,17 +20,17 @@ public class GetOfficialRepoUrlController {
         this.battleService = battleService;
     }
 
-    @PostMapping("/api/battle/official-repo-url")
-    public ResponseEntity<String> getOfficialRepoUrl(@RequestBody OfficialRepoRequest officialRepoRequest) {
+    @PostMapping("/api/battle/evaluation-params")
+    public ResponseEntity<Object> evaluationParams(@RequestBody OfficialRepoRequest officialRepoRequest) {
         log.info("[API REQUEST] Official repo request with team id: {}", officialRepoRequest.getTeamId());
 
         try {
-            String officialRepo = battleService.getOfficialRepo(officialRepoRequest.getTeamId());
-            log.info("Official repo of the team id {} is {}", officialRepoRequest.getTeamId(), officialRepo);
-            return ResponseEntity.ok(officialRepo);
+            EvaluationParamsResponse paramsResponse = battleService.getBattleParams(officialRepoRequest.getTeamId());
+            log.info("Battle params: {}", paramsResponse.toString());
+            return ResponseEntity.ok(paramsResponse);
         } catch (Exception e) {
             log.error("[EXCEPTION] {}", e.getMessage());
-            return ResponseEntity.badRequest().body(e.getMessage());
+            return ResponseEntity.badRequest().build();
         }
     }
 }

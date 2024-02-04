@@ -47,4 +47,10 @@ public class Battle {
     private Boolean hasEnded;
 
     private Boolean isClosed;
+
+    private Boolean security;
+
+    private Boolean reliability;
+
+    private Boolean maintainability;
 }

@@ -69,7 +69,10 @@ public class CreateBattleController extends Controller {
             @RequestParam("regDeadline") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime regDeadline,
             @RequestParam("subDeadline") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime subDeadline,
             @RequestParam("battleToEval") Boolean battleToEval,
-            @RequestParam("name") String name) {
+            @RequestParam("name") String name,
+            @RequestParam("security") Boolean security,
+            @RequestParam("reliability") Boolean reliability,
+            @RequestParam("maintainability") Boolean maintainability) {
         try {
             // convert the zip file into a List<WorkingPair<String, String>>
             if (zipFile == null || zipFile.isEmpty() || zipFile.getOriginalFilename() == null){
@@ -107,6 +110,9 @@ public class CreateBattleController extends Controller {
                     .regDeadline(regDeadline)
                     .subDeadline(subDeadline)
                     .battleToEval(battleToEval)
+                    .security(security)
+                    .reliability(reliability)
+                    .maintainability(maintainability)
                     .build();
             return createBattle(battle);
         } catch (Exception e) {
