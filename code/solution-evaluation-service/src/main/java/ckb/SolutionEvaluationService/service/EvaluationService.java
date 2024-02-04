@@ -1,5 +1,6 @@
 package ckb.SolutionEvaluationService.service;
 
+import ckb.SolutionEvaluationService.dto.in.EvaluationParamsResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -72,11 +73,11 @@ public class EvaluationService {
         }
     }
 
-    public int calculateDeduction(List<String> output) {
+    public int calculateDeduction(List<String> output, EvaluationParamsResponse evaluationParamsResponse) {
         int totalDeduction = 0;
-        totalDeduction += Integer.valueOf(output.get(output.indexOf("errors") + 1)) * ERROR_DEDUCTION;
-        totalDeduction += Integer.valueOf(output.get(output.indexOf("warnings") + 1)) * WARNING_DEDUCTION;
-        totalDeduction += Integer.valueOf(output.get(output.indexOf("style") + 1)) * STYLE_DEDUCTION;
+        if (evaluationParamsResponse.isReliability()) totalDeduction += Integer.valueOf(output.get(output.indexOf("errors") + 1)) * ERROR_DEDUCTION;
+        if (evaluationParamsResponse.isSecurity()) totalDeduction += Integer.valueOf(output.get(output.indexOf("warnings") + 1)) * WARNING_DEDUCTION;
+        if (evaluationParamsResponse.isMaintainability()) totalDeduction += Integer.valueOf(output.get(output.indexOf("style") + 1)) * STYLE_DEDUCTION;
         return totalDeduction;
     }
 }

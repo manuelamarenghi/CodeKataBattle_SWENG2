@@ -1,11 +1,14 @@
 package ckb.SolutionEvaluationService.controller;
 
 import ckb.SolutionEvaluationService.dto.in.EvaluationRequest;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.mockserver.integration.ClientAndServer;
+import org.mockserver.model.MediaType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.ResponseEntity;
@@ -35,12 +38,18 @@ public class EvaluationTest {
     }
 
     @Test
-    public void correctBehaviorTest() {
+    public void correctBehaviorTest() throws JSONException {
         battleMockServer.when(request().withMethod("POST").withPath("/api/battle/assign-score"))
                 .respond(response().withStatusCode(200));
 
+        JSONObject evaluationParamResponse = new JSONObject();
+        evaluationParamResponse.put("repoLink", "https://github.com/SigCatta/WordChecker.git");
+        evaluationParamResponse.put("security", true);
+        evaluationParamResponse.put("reliability", true);
+        evaluationParamResponse.put("maintainability", false);
+
         battleMockServer.when(request().withMethod("POST").withPath("/api/battle/official-repo-url"))
-                .respond(response().withStatusCode(200).withBody("https://github.com/SigCatta/WordChecker.git"));
+                .respond(response().withContentType(MediaType.APPLICATION_JSON).withStatusCode(200).withBody(evaluationParamResponse.toString()));
 
         EvaluationRequest request = EvaluationRequest.builder()
                 .teamId(1L)
@@ -50,15 +59,19 @@ public class EvaluationTest {
         assertTrue(response.getStatusCode().is2xxSuccessful());
     }
     @Test
-    public void nonExistingRepoTest() {
+    public void nonExistingRepoTest() throws JSONException {
         battleMockServer.when(request().withMethod("POST").withPath("/api/battle/assign-score"))
                 .respond(response().withStatusCode(200));
 
-        battleMockServer.when(request().withMethod("POST").withPath("/api/battle/official-repo-url"))
-                .respond(response().withStatusCode(200).withBody("https://github.com/SigCatta/WordChecker.git"));
+
+        JSONObject evaluationParamResponse = new JSONObject();
+        evaluationParamResponse.put("repoLink", "https://github.com/SigCatta/WordChecker.git");
+        evaluationParamResponse.put("security", true);
+        evaluationParamResponse.put("reliability", true);
+        evaluationParamResponse.put("maintainability", true);
 
         battleMockServer.when(request().withMethod("POST").withPath("/api/battle/official-repo-url"))
-                .respond(response().withStatusCode(200).withBody("https://github.com/SigCatta/WordChecker.git"));
+                .respond(response().withContentType(MediaType.APPLICATION_JSON).withStatusCode(200).withBody(evaluationParamResponse.toString()));
 
         EvaluationRequest request = EvaluationRequest.builder()
                 .teamId(1L)
@@ -71,12 +84,18 @@ public class EvaluationTest {
         assertFalse(response.getStatusCode().is2xxSuccessful());
     }
     @Test
-    public void failedToScoreTest() {
+    public void failedToScoreTest() throws JSONException {
         battleMockServer.when(request().withMethod("POST").withPath("/api/battle/assign-score"))
                 .respond(response().withStatusCode(500));
 
+        JSONObject evaluationParamResponse = new JSONObject();
+        evaluationParamResponse.put("repoLink", "https://github.com/SigCatta/WordChecker.git");
+        evaluationParamResponse.put("security", true);
+        evaluationParamResponse.put("reliability", true);
+        evaluationParamResponse.put("maintainability", true);
+
         battleMockServer.when(request().withMethod("POST").withPath("/api/battle/official-repo-url"))
-                .respond(response().withStatusCode(200).withBody("https://github.com/SigCatta/WordChecker.git"));
+                .respond(response().withContentType(MediaType.APPLICATION_JSON).withStatusCode(200).withBody(evaluationParamResponse.toString()));
 
         EvaluationRequest request = EvaluationRequest.builder()
                 .teamId(1L)
