@@ -150,12 +150,17 @@ public class TeamService {
         Team team = getTeam(idTeam);
         Battle battleOfTeam = team.getBattle();
 
+        if (battleOfTeam.getHasEnded().equals(false)) {
+            log.error("Team score cannot be updated because the battle is not ended");
+            throw new Exception("Team score cannot be updated because the battle is not ended");
+        }
+
         if (battleOfTeam.getIsClosed()) {
             log.error("Team score cannot be updated because the battle is closed");
             throw new Exception("Team score cannot be updated because the battle is closed");
         }
 
-        if (!battleOfTeam.getBattleToEval()) {
+        if (battleOfTeam.getBattleToEval().equals(false)) {
             log.error("Team personal score cannot be updated because the battle can not be evaluated by an educator");
             throw new Exception("Team personal score cannot be updated because the battle can not be evaluated by an educator");
         }

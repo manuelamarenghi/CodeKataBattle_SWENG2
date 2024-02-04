@@ -3,7 +3,7 @@
 
 <head>
     <script>
-     /*   const queryString = window.location.search;
+        const queryString = window.location.search;
         const params = new URLSearchParams(queryString);
         const paramValue = params.get('id');
         if(!paramValue ){
@@ -57,9 +57,7 @@
                 console.log(error);
                 alert("An error occur while connecting to the server: "+ error);
                 window.location.href = "index.html";
-            });*/
-            localStorage.setItem("logged_in", "true");
-            localStorage.setItem("user_role", "EDUCATOR");
+            });
     </script>
     <title>Tournament | CodeKataBattle</title>
     <link rel="icon" href="public\images\iconCKB.png" type="image/x-icon">
@@ -309,8 +307,8 @@
             var security = document.getElementById("security").checked;
             var maintainability = document.getElementById("mantainability").checked;
             var reliability = document.getElementById("reliability").checked;
-            var deadlineSubmission = document.getElementById('deadlineSubmission').value + "T23:59:59.999+01:00";
-            var registrationSubmission = document.getElementById('registrationSubmission').value + "T23:59:59.999+01:00";
+            var deadlineSubmission = document.getElementById('deadlineSubmission').value + "T19:54:59.999+01:00";
+            var registrationSubmission = document.getElementById('registrationSubmission').value + "T19:53:59.999+01:00";
             var codeKataUpload = document.getElementById('codeKataUpload').files[0];
             const queryString = window.location.search;
             const params = new URLSearchParams(queryString);
