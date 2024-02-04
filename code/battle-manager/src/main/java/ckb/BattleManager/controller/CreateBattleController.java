@@ -106,6 +106,7 @@ public class CreateBattleController extends Controller {
                     .maxStudents(maxStudents)
                     .regDeadline(regDeadline)
                     .subDeadline(subDeadline)
+                    .battleToEval(battleToEval)
                     .build();
             return createBattle(battle);
         } catch (Exception e) {
