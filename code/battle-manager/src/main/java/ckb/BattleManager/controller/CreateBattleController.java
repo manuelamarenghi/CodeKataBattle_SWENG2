@@ -12,6 +12,7 @@ import ckb.BattleManager.service.BattleService;
 import ckb.BattleManager.service.UnzipService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -65,13 +66,17 @@ public class CreateBattleController extends Controller {
             @RequestParam("authorId") Long authorId,
             @RequestParam("minStudents") Integer minStudents,
             @RequestParam("maxStudents") Integer maxStudents,
-            @RequestParam("regDeadline") LocalDateTime regDeadline,
-            @RequestParam("subDeadline") LocalDateTime subDeadline,
+            @RequestParam("regDeadline") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime regDeadline,
+            @RequestParam("subDeadline") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime subDeadline,
+            @RequestParam("battleToEval") Boolean battleToEval,
             @RequestParam("name") String name) {
         try {
-
             // convert the zip file into a List<WorkingPair<String, String>>
-            String fileName = zipFile.getOriginalFilename();
+            if (zipFile == null || zipFile.isEmpty() || zipFile.getOriginalFilename() == null){
+                log.error("Zip file is null");
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Zip file is null");
+            }
+            String fileName = zipFile.getOriginalFilename().replace(" ", "-");
             String home = System.getProperty("user.home");
             String filePath = home + fileName; // zip file will be put in the home directory
 

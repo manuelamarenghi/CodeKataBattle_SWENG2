@@ -6,10 +6,7 @@ import ckb.BattleManager.service.BattleService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -31,7 +28,7 @@ public class GetBattleController {
      * @param request id of the tournament
      * @return a ResponseEntity with the list of ids of the battles
      */
-    @GetMapping("/get-battles-tournament")
+    @PostMapping("/get-battles-tournament")
     public ResponseEntity<ListBattlesResponse> getBattlesOfTournament(@RequestBody GetBattlesRequest request) {
         log.info("[API REQUEST] Get battles of tournament request with id: {}", request.getTournamentID());
         List<Long> battleIds = battleService.getBattlesTournament(request.getTournamentID());

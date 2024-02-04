@@ -18,8 +18,6 @@ import java.util.List;
 @Slf4j
 @RequestMapping("/api/tournament/get-tournament-page")
 @RequiredArgsConstructor
-@CrossOrigin(origins = "*")
-
 public class GetTournamentPageController extends Controller {
     private final TournamentService tournamentService;
 

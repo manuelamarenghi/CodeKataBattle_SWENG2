@@ -18,7 +18,6 @@ import org.springframework.web.reactive.function.client.WebClient;
 @Slf4j
 @RequestMapping("/api/tournament/new-tournament")
 @RequiredArgsConstructor
-@CrossOrigin(origins = "*")
 public class NewTournamentController extends Controller {
     private final TournamentService tournamentService;
     private final WebClient webClient = WebClient.create();

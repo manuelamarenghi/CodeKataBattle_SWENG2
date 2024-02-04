@@ -16,8 +16,6 @@ import java.util.List;
 @Slf4j
 @RequestMapping("/api/tournament/get-all-tournaments")
 @RequiredArgsConstructor
-@CrossOrigin(origins = "*")
-
 public class GetAllTournamentsController extends Controller {
     private final TournamentService tournamentService;
 
@@ -25,11 +23,14 @@ public class GetAllTournamentsController extends Controller {
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<Object> getTournaments(@RequestBody GetAllTournamentsRequest request) {
         // check if the request has valid data
+        System.out.println("sending information");
         List<Tournament> t = tournamentService.getAllTournaments();
         HashMap<Long, String> answer = new HashMap<>();
         for (Tournament tournament : t) {
             answer.put(tournament.getTournamentID(), tournament.getName());
         }
+        System.out.println(answer);
         return new ResponseEntity<>(answer, getHeaders(), HttpStatus.CREATED);
     }
+
 }

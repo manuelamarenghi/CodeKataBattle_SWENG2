@@ -17,7 +17,6 @@ import java.util.List;
 @RequestMapping("/api/mail/direct")
 @RequiredArgsConstructor
 @Slf4j
-@CrossOrigin(origins = "*")
 public class DirectEmailSender extends EmailSender {
 
     private final WebClient webClient;

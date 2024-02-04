@@ -1,0 +1,45 @@
+.modal {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 20px;
+    background-color: #fff;
+    z-index: 1000;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+.overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 900;
+}
+button {
+    background-color: #487595;
+    color: #fff;
+    padding: 10px;
+    border: none;
+    cursor: pointer;
+    min-width: 100%;
+}
+
+button:hover {
+    background-color: #2980b9;
+}
+* Add some spacing between modal fields */
+#CreateBattleModal .team-section label,
+#CreateBattleModal .team-section input,
+#CreateBattleModal .team-section div {
+    margin-bottom: 30px;
+    margin-top: 45px;
+}
+
+#CreateBattleModal .team-section button {
+    margin-top: 15px;
+}

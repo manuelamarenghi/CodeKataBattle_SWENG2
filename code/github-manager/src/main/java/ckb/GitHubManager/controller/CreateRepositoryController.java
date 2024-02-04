@@ -16,7 +16,6 @@ import java.util.List;
 @RequestMapping("/api/github/create-repo")
 @RequiredArgsConstructor
 @Slf4j
-@CrossOrigin(origins = "*")
 public class CreateRepositoryController extends Controller {
 
     private final GitHubService gitHubService;

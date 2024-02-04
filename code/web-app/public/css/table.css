@@ -1,0 +1,53 @@
+.page-container {
+    text-align: center;
+}
+
+.table-container {
+    width: 50%;
+    max-height: 300px;
+    overflow: auto;
+    margin: 80px auto 0; /* Aumentato il margine superiore */
+}
+
+.tb-title {
+    position: fixed;
+    width: 100%;
+    background-color: #fff; /* Colore di sfondo per coprire la tabella quando si scorre */
+    padding: 10px;
+    margin-bottom: 30px; /* Aggiunto margine inferiore per spazio tra il titolo e la tabella */
+    z-index: 1; /* Assicura che la scritta sia sopra la tabella */
+}
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+    margin-top: 20px; /* Aumentato il margine superiore per spazio tra il titolo e la tabella */
+}
+
+th, td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
+th {
+    background-color: #f2f2f2;
+}
+
+td.large-column {
+    width: 70%;
+}
+
+.battle-container {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 20%;
+    max-height: 300px;
+    overflow: auto;
+    background-color: #fff;
+    padding: 10px;
+    border-top: 1px solid #ddd;
+    margin: 40px auto; /* Aumentato il valore per più spazio sopra e sotto */
+}
+

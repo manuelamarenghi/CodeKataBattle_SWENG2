@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 @RequestMapping("/api/tournament/update-score")
 @RequiredArgsConstructor
-@CrossOrigin(origins = "*")
 public class UpdateScoreController extends Controller {
     private final TournamentService tournamentService;
 
