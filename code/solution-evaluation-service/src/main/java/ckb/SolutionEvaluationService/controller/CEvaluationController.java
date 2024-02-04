@@ -235,10 +235,10 @@ public class CEvaluationController extends Controller {
         return evaluationService.calculateDeduction(output);
     }
 
-    boolean compile(String path) {
+    boolean compile(String path) { // doesn't support multiple files, only compiles *.c
         String script =
                 "cd " + path + " || exit 1\n" +
-                        "gcc -o executable main.c -O2\n" +
+                        "gcc -o executable *.c -O2\n" +
                         "readarray -t array < <(find . -type f -name \"executable\")\n" +
                         "if (( ${#array[@]} )); then\n" +
                         "    echo \"Compilation successful\"\n" +
