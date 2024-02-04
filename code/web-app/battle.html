@@ -21,28 +21,26 @@
                 battleId : battleID
             })
         };
-        fetch("http://localhost:8080/api/battle/get-teams-battle",fetchOptions)
+        fetch("http://localhost:8080/api/battle/get-teams-battle", fetchOptions)
             .then(response => {
-            if (response.status >= 300 ) {
-                console.error('Errore durante la richiesta HTTP:', response.status, response.statusText);
-                window.location.href = "index.html";
-            }
+                if (response.status >= 300) {
+                    console.error('Error during the HTTP request:', response.status, response.statusText);
+                    window.location.href = "index.html";
+                }
+                return response.json(); // Parse response as JSON
             })
             .then(data => {
-            console.log(data);    
-            var table = document.getElementById('battle_ranking_table').querySelector('table'); 
-                for (var key in data) {
-                    if (data.hasOwnProperty(key)) {
-                        var row = table.insertRow();
-                        var keyCell = row.insertCell(0);
-                        var valueCell = row.insertCell(1);
-                        keyCell.innerHTML = key;
-                        valueCell.innerHTML = data[key];
-                    }
+                var table = document.getElementById('battle_ranking_table').querySelector('table');
+                for(var i = 0; i < data.listTeamsIdScore.length; i++){
+                    var row = table.insertRow();
+                    var keyCell = row.insertCell(0);
+                    var valueCell = row.insertCell(1);
+                    keyCell.innerHTML = data.listTeamsIdScore[i].left; // Access the team id
+                    valueCell.innerHTML = data.listTeamsIdScore[i].right; // Access the score
                 }
             })
             .catch(error => {
-                alert("An error occur while connecting to the server: "+ error);
+                alert("An error occurred while connecting to the server: " + error);
                 window.location.href = "index.html";
             });
             
