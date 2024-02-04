@@ -37,9 +37,11 @@ function createTournament() {
 
 function grantPermission(){
     var educatorRoleId = document.getElementById("educatorRole").value;
-    var tournamentId = document.getElementById("tournamentId").value;
-    var permissionValue = document.querySelector('input[name="permission"]:checked');
-    if (permissionValue && permissionValue.value === "yes" && educatorRoleId && tournamentId){
+    var tournamentId = document.getElementById("tournamentID").value;
+    var permissionValue = document.getElementById("yes").checked;
+    
+    console.log(educatorRoleId, " ", tournamentId, " ", permissionValue, " ", permissionValue.value);
+    if (permissionValue && educatorRoleId && tournamentId){
         var fetchOptions = {
             method: 'POST',
             headers: {

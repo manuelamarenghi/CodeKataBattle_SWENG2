@@ -64,33 +64,6 @@ public class ContainerHandler {
         }
     }
 
-    // The solution evaluation service is run by aws on its own, so it's not in the docker-compose file
-    public static void startSolutionEvaluationService() {
-        Process process;
-        try {
-            ProcessBuilder processBuilder = new ProcessBuilder(SCRIPTS_PATH + "start-sol-eval-service.sh").redirectErrorStream(true);
-            process = runProcessBuilder(processBuilder);
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-            ProcessBuilder processBuilder = new ProcessBuilder()
-                    .command("powershell", "-Command", "docker run -p 8081:8081 ckb-test/solution-evaluation-service") // TODO check if this actually works
-                    .redirectErrorStream(true)
-                    .directory(new File(SCRIPTS_PATH));
-            process = runProcessBuilder(processBuilder);
-        }
-
-        // Read the output of the process and check for services started
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                System.out.println(line);
-                if (line.contains("Started SolutionEvaluationServiceApplication")) break;
-            }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
     private static String getScriptsPath() {
         String path = ContainerHandler.class.getProtectionDomain().getCodeSource().getLocation().getPath();
         return path.substring(0, path.indexOf("/integration-tests")) + "/integration-tests/src/test/scripts/";

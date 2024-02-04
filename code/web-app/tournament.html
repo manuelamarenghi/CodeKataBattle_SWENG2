@@ -227,7 +227,7 @@
             </script>
         </div>
     </div>
-    <div id="CreateBattleModal" class="modal">
+    <div id="CreateBattleModal" class="modal" style="max-height: 500px; overflow-y: auto;">
         <div class="team-section">
             <label for="BattleName">Insert name for the battle:</label>
             <input type="text" id="BattleName" placeholder="Battle name">
@@ -242,13 +242,35 @@
                     document.getElementById("teamParticipantMax").setAttribute("min", this.value);
                 })
             </script>
+            <style>
+                .radio-group {
+                    display: flex;
+                    align-items: center;
+                }
+            
+                .radio-group label {
+                    margin-left: 40px;
+                    margin-right: 40px;  
+                }
+            </style>
+
             <label for="evaluation">Add person evaluation:</label>
-            <div>
+            <div class="radio-group">
                 <input type="radio" id="evaluationYes" name="evaluation" value="yes">
                 <label for="evaluationYes">Yes</label>
 
                 <input type="radio" id="evaluationNo" name="evaluation" value="no">
                 <label for="evaluationNo">No</label>
+            </div>
+
+            <label for="evaluation">Choose automatic evaluator:</label>
+            <div class="radio-group">
+                <input type="checkbox" id="security" name="evaluation" value="yes">
+                <label for="evaluationYes">Security</label>
+                <input type="checkbox" id="mantainability" name="evaluation" value="yes">
+                <label for="evaluationYes">Mantainability</label>
+                <input type="checkbox" id="reliability" name="evaluation" value="yes">
+                <label for="evaluationYes">Reliability</label>
             </div>
 
             <label for="registrationSubmission">Add registration deadline:</label>
@@ -281,11 +303,12 @@
             var teamParticipant_min = document.getElementById('teamParticipantMin').value;
             var teamParticipant_max = document.getElementById('teamParticipantMax').value;
             var battleName = document.getElementById('BattleName').value;
-            var evaluation = document.querySelector('input[name="evaluation"]:checked').value;
-            if(evaluation === "yes"){ evaluation = true; }
-            else evaluation = false;
-            var deadlineSubmission = document.getElementById('deadlineSubmission').value + "T23:59:59.999Z";
-            var registrationSubmission = document.getElementById('registrationSubmission').value + "T23:59:59.999Z";
+            var evaluation = document.getElementById("evaluationYes").checked;
+            var security = document.getElementById("security").checked;
+            var maintainability = document.getElementById("mantainability").checked;
+            var reliability = document.getElementById("reliability").checked;
+            var deadlineSubmission = document.getElementById('deadlineSubmission').value + "T19:54:59.999+01:00";
+            var registrationSubmission = document.getElementById('registrationSubmission').value + "T19:53:59.999+01:00";
             var codeKataUpload = document.getElementById('codeKataUpload').files[0];
             const queryString = window.location.search;
             const params = new URLSearchParams(queryString);
@@ -298,6 +321,7 @@
                 alert("Min participant can't be greater than max participant!");
                 return;
             }
+            console.log(evaluation);
             var formData = new FormData();
             formData.append("zipFile", codeKataUpload);
             formData.append("tournamentId", tournamentID);
@@ -308,6 +332,9 @@
             formData.append("subDeadline", deadlineSubmission);
             formData.append("battleToEval", evaluation);
             formData.append("name", battleName);
+            formData.append("security", security);
+            formData.append("reliability", reliability);
+            formData.append("maintainability", maintainability);
 
             var fetchOptions = {
                 method: "POST",

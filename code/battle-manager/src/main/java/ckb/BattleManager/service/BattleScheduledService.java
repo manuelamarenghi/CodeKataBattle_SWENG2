@@ -91,7 +91,7 @@ public class BattleScheduledService {
             battleRepository.save(battle);
             log.info("The battle {} has ended", battle.getName());
 
-            if (!battle.getBattleToEval()) {
+            if (battle.getBattleToEval().equals(false)) {
                 battle.setIsClosed(true);
                 log.info("The battle {} has been closed", battle.getName());
                 battleRepository.save(battle);
@@ -103,17 +103,22 @@ public class BattleScheduledService {
                     );
                 } catch (Exception e) {
                     log.error("Error sending emails to the participant of the battle {}. Error {}", battle.getName(), e.getMessage());
+                    return;
+                }
+
+                // Get the teams and the points of each battle
+                // send the class containing tournament_id, List<Pair<idTeam, points>>
+                // to the Tournament manager
+                try {
+                    sendTeamsPointsController.sendIdUsersPointsFinishedBattle(
+                            battle,
+                            teamService.getListPairIdUserPoints(battle)
+                    );
+                } catch (Exception e) {
+                    log.error("Error sending points of the battle {} to the tournament manager. Error {}", battle.getName(), e.getMessage());
+                    return;
                 }
             }
-
-            // Get the teams and the points of each battle
-            // send the class containing tournament_id, List<Pair<idTeam, points>>
-            // just kidding, we are better, so we use a Working Pair, a pair that actually fucking works
-            // to the Tournament manager
-            sendTeamsPointsController.sendIdUsersPointsFinishedBattle(
-                    battle,
-                    teamService.getListPairIdUserPoints(battle)
-            );
         }
     }
 }

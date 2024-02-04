@@ -25,7 +25,7 @@ public class MakePublicControllerTest {
     private MakePublicController makePublicController;
     @Autowired
     private CreateRepositoryController createRepositoryController;
-    GitHubService githubService = new GitHubService();
+    final GitHubService githubService = new GitHubService();
 
     @Test
     public void changeVisibilityTest() throws IOException {

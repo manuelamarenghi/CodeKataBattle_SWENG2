@@ -1,7 +1,9 @@
 package ckb.BattleManager.service;
 
 import ckb.BattleManager.controller.CreateGHRepositoryBattleController;
+import ckb.BattleManager.controller.SendTeamsPointsController;
 import ckb.BattleManager.dto.input.CreateBattleRequest;
+import ckb.BattleManager.dto.output.EvaluationParamsResponse;
 import ckb.BattleManager.model.Battle;
 import ckb.BattleManager.model.Participation;
 import ckb.BattleManager.model.Team;
@@ -21,14 +23,17 @@ public class BattleService {
     private final BattleRepository battleRepository;
     private final TeamService teamService;
     private final CreateGHRepositoryBattleController createGHRepositoryBattleController;
+    private final SendTeamsPointsController sendTeamsPointsController;
 
     @Autowired
 
     public BattleService(BattleRepository battleRepository, TeamService teamService,
-                         CreateGHRepositoryBattleController createGHRepositoryBattleController) {
+                         CreateGHRepositoryBattleController createGHRepositoryBattleController,
+                         SendTeamsPointsController sendTeamsPointsController) {
         this.battleRepository = battleRepository;
         this.teamService = teamService;
         this.createGHRepositoryBattleController = createGHRepositoryBattleController;
+        this.sendTeamsPointsController = sendTeamsPointsController;
     }
 
     public Battle getBattle(Long id) throws Exception {
@@ -51,6 +56,9 @@ public class BattleService {
                 .hasStarted(false)
                 .hasEnded(false)
                 .isClosed(false)
+                .security(battleRequest.getSecurity())
+                .reliability(battleRequest.getReliability())
+                .maintainability(battleRequest.getMaintainability())
                 .build();
         log.info("Battle built: {}", battle);
 
@@ -129,13 +137,16 @@ public class BattleService {
                 .toList();
     }
 
-    public String getOfficialRepo(Long teamId) throws Exception {
+    public EvaluationParamsResponse getBattleParams(Long teamId) throws Exception {
         Team team = teamService.getTeam(teamId);
-        if (!team.getBattle().getHasStarted()) {
-            log.error("The battle {} has not started yet", team.getBattle().getName());
-            throw new RuntimeException("The battle " + team.getBattle().getName() + " has not started");
-        }
-        return team.getBattle().getRepositoryLink();
+
+        Battle battle = team.getBattle();
+        return EvaluationParamsResponse.builder()
+                .repoLink(battle.getRepositoryLink())
+                .security(battle.getSecurity())
+                .reliability(battle.getReliability())
+                .maintainability(battle.getMaintainability())
+                .build();
     }
 
     public Team getListParticipation(Long battleId, Long studentId) throws Exception {

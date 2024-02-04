@@ -83,7 +83,7 @@ public class CloseTournamentTest {
                         .withContentType(MediaType.APPLICATION_JSON)
                         .withStatusCode(200)
                         .withBody(String.valueOf(b)));
-        Long tournamentID = null;
+        Long tournamentID;
         Date d = new Date((2024 - 1900), Calendar.FEBRUARY, 20);
         Tournament t = new Tournament();
         t.setRegdeadline(d);
@@ -140,7 +140,7 @@ public class CloseTournamentTest {
                         .withContentType(MediaType.APPLICATION_JSON)
                         .withStatusCode(200)
                         .withBody(String.valueOf(b)));
-        Long tournamentID = null;
+        Long tournamentID;
         Date d = new Date((2024 - 1900), Calendar.FEBRUARY, 20);
         Tournament t = new Tournament();
         t.setRegdeadline(d);
