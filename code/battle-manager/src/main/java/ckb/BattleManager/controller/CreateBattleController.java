@@ -61,7 +61,7 @@ public class CreateBattleController extends Controller {
     @PostMapping("/create-battle")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<Object> createBattle(
-            @RequestParam("zipFile") MultipartFile zipFile, // TODO check if it works with the web app ~ variable name
+            @RequestParam("zipFile") MultipartFile zipFile,
             @RequestParam("tournamentId") Long tournamentId,
             @RequestParam("authorId") Long authorId,
             @RequestParam("minStudents") Integer minStudents,
