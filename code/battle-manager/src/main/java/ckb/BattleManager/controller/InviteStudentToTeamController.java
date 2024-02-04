@@ -42,7 +42,7 @@ public class InviteStudentToTeamController extends Controller {
                             new DirectMailRequest(List.of(request.getIdStudent().toString()),
                                     "You have been invited to join the team: " + request.getIdTeam()
                                             + ". Please join the team by clicking on the link below:\n" +
-                                            "link: " + "http://localhost:3000/invite.html?idTeam=" + request.getIdTeam() +
+                                            "link: " + "http://localhost:8080/invite.html?idTeam=" + request.getIdTeam() +
                                             "&idUser=" + request.getIdStudent()
                             )
                     )
@@ -50,12 +50,11 @@ public class InviteStudentToTeamController extends Controller {
                     .toEntity(String.class)
                     .block();
             log.info("Successfully sent email: {}", response);
+            return ResponseEntity.ok().build();
         } catch (Exception e) {
             log.error("[EXCEPTION] {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
-
-        return ResponseEntity.ok().build();
     }
 
 }

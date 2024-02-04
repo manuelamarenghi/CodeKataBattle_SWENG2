@@ -12,24 +12,25 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 @RestController
 @RequestMapping("/api/battle")
 @Slf4j
 public class GetTeamController extends Controller {
-    private final WebClient.Builder webClientBuilder;
+    private final WebClient webClient = WebClient.create();
     private final BattleService battleService;
 
     @Autowired
     public GetTeamController(BattleService battleService) {
         this.battleService = battleService;
-        this.webClientBuilder = WebClient.builder();
     }
 
     /**
@@ -44,22 +45,6 @@ public class GetTeamController extends Controller {
         log.info("[API REQUEST] Get team request with id: {}", request.getBattleId());
         try {
             Team team = battleService.getListParticipation(request.getBattleId(), request.getStudentId());
-
-            List<String> participationNames = team.getParticipation()
-                    .stream()
-                    .map(
-                            participation -> {
-                                try {
-                                    return getNameOfStudent(participation);
-                                } catch (Exception e) {
-                                    log.error("[EXCEPTION] Error occurred while getting name of student {} : {}",
-                                            participation.getStudentId(), e.getMessage());
-                                    return null;
-                                }
-                            }
-                    )
-                    .filter(Objects::nonNull)
-                    .toList();
 
             List<String> participantNames = new ArrayList<>();
             int errors = 0;
@@ -79,7 +64,7 @@ public class GetTeamController extends Controller {
                 log.info("Successfully get all the components of the team {} : {}", team.getTeamId(), participantNames);
             }
 
-            return ResponseEntity.ok(new TeamInfoMessage(participationNames, team.getTeamId()));
+            return ResponseEntity.ok(new TeamInfoMessage(participantNames, team.getTeamId()));
         } catch (Exception e) {
             log.error("[EXCEPTION] {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
@@ -106,8 +91,7 @@ public class GetTeamController extends Controller {
     }
 
     private String getNameOfStudent(Participation participation) throws Exception {
-        ResponseEntity<User> user = webClientBuilder.build()
-                .post()
+        ResponseEntity<User> user = webClient.post()
                 .uri(accountManagerUri + "/api/account/user")
                 .bodyValue(
                         participation.getStudentId()

@@ -35,7 +35,10 @@ public class SignUpController extends Controller {
         log.info("Account created for email {}", request.getEmail());
 
         Long userID = userService.getUserIDByEmail(request.getEmail());
-        if (userID == null) return new ResponseEntity<>("Error creating account", getHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);
+        if (userID == null) {
+            log.error("The email provided is already used by another user");
+            return new ResponseEntity<>("The email provided is already used by another user", getHeaders(), HttpStatus.BAD_REQUEST);
+        }
 
         return new ResponseEntity<>(userID, getHeaders(), HttpStatus.CREATED);
     }

@@ -67,7 +67,7 @@ public class CloseTournamentTest {
         tournamentID = t.getTournamentID();
         Long creatorID = 7L;
         request = new CloseTournamentRequest(tournamentID,creatorID);
-        ResponseEntity<Object> response = closetController.CloseTournament(request);
+        ResponseEntity<Object> response = closetController.closeTournament(request);
         assertEquals("Tournament closed", response.getBody());
         tournamentRepo.deleteById(tournamentID);
     }
@@ -93,7 +93,7 @@ public class CloseTournamentTest {
         tournamentID = t.getTournamentID();
         Long creatorID = 7L;
         request = new CloseTournamentRequest(tournamentID,creatorID);
-        ResponseEntity<Object> response = closetController.CloseTournament(request);
+        ResponseEntity<Object> response = closetController.closeTournament(request);
 
         assertEquals("Not possible to close", response.getBody());
         tournamentRepo.deleteById(tournamentID);
@@ -110,7 +110,7 @@ public class CloseTournamentTest {
         Long tournamentID = null;
         Long creatorID = 7L;
         CloseTournamentRequest request = new CloseTournamentRequest(tournamentID,creatorID);
-        ResponseEntity<Object> response = closetController.CloseTournament(request);
+        ResponseEntity<Object> response = closetController.closeTournament(request);
         assertEquals("Invalid tournament id", response.getBody());
     }
 
@@ -125,7 +125,7 @@ public class CloseTournamentTest {
         Long tournamentID = 4L;
         Long creatorID = 7L;
         CloseTournamentRequest request = new CloseTournamentRequest(tournamentID,creatorID);
-        ResponseEntity<Object> response = closetController.CloseTournament(request);
+        ResponseEntity<Object> response = closetController.closeTournament(request);
         assertEquals("Invalid tournament id request", response.getBody());
     }
 
@@ -150,7 +150,7 @@ public class CloseTournamentTest {
         tournamentID = t.getTournamentID();
         Long creatorID = 7L;
         request = new CloseTournamentRequest(tournamentID,creatorID);
-        ResponseEntity<Object> response = closetController.CloseTournament(request);
+        ResponseEntity<Object> response = closetController.closeTournament(request);
         assertEquals("The creator ID sent is not the creator of the tournament", response.getBody());
         tournamentRepo.deleteById(tournamentID);
     }

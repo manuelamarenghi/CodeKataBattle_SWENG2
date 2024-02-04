@@ -46,7 +46,6 @@ public class TeamService {
     }
 
     public void createTeam(Long studentId, Battle battle) {
-        // TODO: how to set the repository link?
         Team team = Team.builder()
                 .battle(battle)
                 .eduEvaluated(false)

@@ -25,27 +25,33 @@ public class CloseTournamentController extends Controller {
 
     @PostMapping
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<Object> CloseTournament(@RequestBody CloseTournamentRequest request) {
+    public ResponseEntity<Object> closeTournament(@RequestBody CloseTournamentRequest request) {
         // check if the request has valid data
         ResponseEntity<Object> response = checkRequest(request);
         if (response.getStatusCode().is4xxClientError()) return response;
-        if (contactBattleManager(request)) {
-            if (tournamentService.closeTournament(request)) {
-                Long tournamentID = request.getTournamentID();
-                String tournamentName = tournamentService.getTournament(tournamentID).getName();
 
-                List<String> studentIDs = tournamentService.getStudentsSubscribed(tournamentID).stream().map(Object::toString).toList();
-                log.info("Tournament {} is now closed", tournamentName);
+        if (!contactBattleManager(request)) {
+            log.error("Could not close tournament because or the there was an error contacting the battle manager or the battles are not closed");
+            return new ResponseEntity<>("Not possible to close", getHeaders(), HttpStatus.BAD_REQUEST);
+        }
 
-                sendMailToAllStudents(studentIDs, tournamentName);
-                return new ResponseEntity<>("Tournament closed", getHeaders(), HttpStatus.OK);
-            } else return new ResponseEntity<>("Not allowed to close tournament", getHeaders(), HttpStatus.BAD_REQUEST);
-        } else {
-            return new ResponseEntity<>("Not possible to close", getHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);
+        try {
+            tournamentService.closeTournament(request);
+            Long tournamentID = request.getTournamentID();
+            String tournamentName = tournamentService.getTournament(tournamentID).getName();
+
+            List<String> studentIDs = tournamentService.getStudentsSubscribed(tournamentID).stream().map(Object::toString).toList();
+            log.info("Tournament {} is now closed", tournamentName);
+
+            sendMailToAllStudents(studentIDs, tournamentName);
+
+            return new ResponseEntity<>("Tournament closed", getHeaders(), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), getHeaders(), HttpStatus.BAD_REQUEST);
         }
     }
 
-    private void sendMailToAllStudents(List<String> studentIDs, String tournamentName) {
+    private void sendMailToAllStudents(List<String> studentIDs, String tournamentName) throws Exception {
         DirectMailRequest request = DirectMailRequest.builder()
                 .userIDs(studentIDs)
                 .content("Tournament " + tournamentName + "has ended")
@@ -62,6 +68,7 @@ public class CloseTournamentController extends Controller {
             log.info("Mail sent to all participants of {} to inform them of the tournament ending", tournamentName);
         } else {
             log.error("Failed to send email for ending tournament {}", tournamentName);
+            throw new Exception("Failed to send email for ending tournament");
         }
     }
 

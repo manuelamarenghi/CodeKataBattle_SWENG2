@@ -9,6 +9,7 @@ import ckb.TournamentManager.repo.PermissionRepo;
 import ckb.TournamentManager.repo.TournamentRankingRepo;
 import ckb.TournamentManager.repo.TournamentRepo;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 
@@ -18,7 +19,7 @@ import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
-
+@Slf4j
 public class TournamentService {
     private final TournamentRepo tournamentRepo;
     private final TournamentRankingRepo tournamentRankingRepo;
@@ -73,17 +74,23 @@ public class TournamentService {
         return tournamentRepo.findAll();
     }
 
-    public boolean closeTournament(CloseTournamentRequest request) {
-        Tournament tournament = tournamentRepo.findByTournamentID(request.getTournamentID()).orElse(null);
-        if (tournament.getCreatorID().equals(request.getCreatorID())) {
-            tournament.setStatus(false);
-            tournamentRepo.save(tournament);
-            List<Permission> p = permissionRepo.findAllByTournamentID(request.getTournamentID());
-            for (Permission permission : p) {
-                permissionRepo.delete(permission);
-            }
-            return true;
-        } else return false;
+    public void closeTournament(CloseTournamentRequest request) throws Exception {
+        Tournament tournament = tournamentRepo.findByTournamentID(request.getTournamentID()).orElseThrow(
+                () -> {
+                    log.error("Tournament not found");
+                    return new Exception("Tournament not found");
+                }
+        );
+
+        if (!tournament.getCreatorID().equals(request.getCreatorID())) {
+            log.error("Not allowed to close tournament");
+            throw new Exception("Not allowed to close tournament");
+        }
+
+        tournament.setStatus(false);
+        tournamentRepo.save(tournament);
+        List<Permission> p = permissionRepo.findAllByTournamentID(request.getTournamentID());
+        permissionRepo.deleteAll(p);
     }
 
     public boolean permissionExists(Long tournamentID, Long userID) {
@@ -92,7 +99,7 @@ public class TournamentService {
 
     public boolean updateScore(UpdateScoreRequest request) {
         List<TournamentRanking> records = tournamentRankingRepo.findAllByTournamentID(request.getTournamentID());
-        System.out.println("before: " + records);
+        log.info("Before: " + records);
         if (records == null) return false;
 
         Map<Long, Integer> scores = new HashMap<>();
@@ -108,8 +115,9 @@ public class TournamentService {
                 tournamentRankingRepo.save(student);
             }
         }
+
         records = tournamentRankingRepo.findAllByTournamentID(request.getTournamentID());
-        System.out.println("after : " + records);
+        log.info("After : " + records);
         return true;
     }
 

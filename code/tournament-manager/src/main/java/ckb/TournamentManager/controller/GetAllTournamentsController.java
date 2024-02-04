@@ -20,7 +20,6 @@ public class GetAllTournamentsController extends Controller {
     private final TournamentService tournamentService;
 
     @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<Object> getTournaments(@RequestBody GetAllTournamentsRequest request) {
         // check if the request has valid data
         System.out.println("sending information");
@@ -29,8 +28,7 @@ public class GetAllTournamentsController extends Controller {
         for (Tournament tournament : t) {
             answer.put(tournament.getTournamentID(), tournament.getName());
         }
-        System.out.println(answer);
-        return new ResponseEntity<>(answer, getHeaders(), HttpStatus.CREATED);
+        return new ResponseEntity<>(answer, getHeaders(), HttpStatus.OK);
     }
 
 }

@@ -82,7 +82,7 @@ public class CEvaluationController extends Controller {
         if (staticAnalysisDeduction < 0) {
             log.error("Error executing static analysis");
             evaluationService.cleanUp(path);
-            return new ResponseEntity<>("Error executing static analysis", getHeaders(), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Error executing static analysis", getHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);
         } else {
             log.info("Deduction: " + staticAnalysisDeduction);
         }

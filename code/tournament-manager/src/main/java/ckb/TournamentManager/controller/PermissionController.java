@@ -24,80 +24,83 @@ import java.util.Collections;
 @RequestMapping("/api/tournament/permission")
 @RequiredArgsConstructor
 
-public class PermissionController extends Controller{
+public class PermissionController extends Controller {
     private final TournamentService tournamentService;
     @Autowired
     private final WebClient webClient;
 
     @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<Object> permission(@RequestBody PermissionRequest request) {
+    public ResponseEntity<Object> createPermission(@RequestBody PermissionRequest request) {
         // check if the request has valid data
         ResponseEntity<Object> response = checkRequest(request);
         if (response.getStatusCode().is4xxClientError()) return response;
+        log.info("The permission request is correctly sent");
+
         User e = checkEducator(request);
-        if(e == null || e.getRole() != Role.EDUCATOR){
+        if (e == null || e.getRole() != Role.EDUCATOR) {
             log.error("Invalid Request");
             return new ResponseEntity<>("Invalid Request", getHeaders(), HttpStatus.BAD_REQUEST);
+        } else {
+            log.info("The permission request is valid, the person who granted the permission has the permission");
+            String x = tournamentService.addPermission(request);
+            if (x == null) {
+                log.error("Illegal request to give permission");
+                return new ResponseEntity<>("Illegal request to give permission", getHeaders(), HttpStatus.BAD_REQUEST);
+            }
+            String content = "You've gained permission to create battles in tournament: " + x;
+            log.info("Permission inserted");
+            try {
+                sendRequest(mailServiceUri + "/api/mail/direct", content, request.getUserID());
+            } catch (Exception exp) {
+                log.error("Error while retrieving send request to mail service\n");
+                return new ResponseEntity<>(getHeaders(), HttpStatus.BAD_REQUEST);
+            }
+            return new ResponseEntity<>("Permission inserted", getHeaders(), HttpStatus.CREATED);
         }
-        else{
-        String x = tournamentService.addPermission(request);
-        if(x == null ){
-            log.error("Illegal request to give permission");
-            return new ResponseEntity<>("Illegal request to give permission", getHeaders(), HttpStatus.BAD_REQUEST);
-        }
-        String content = "You've gained permission to create battles in tournament: "+x;
-        log.info("Permission inserted");
-        try {
-            sendRequest("http://localhost:8085/api/mail/direct", content, request.getUserID());
-        } catch (Exception exp) {
-            log.error("Error while retrieving send request to mail service\n");
-            return new ResponseEntity<>(getHeaders(), HttpStatus.BAD_REQUEST);
-        }
-        return new ResponseEntity<>("Permission inserted", getHeaders(), HttpStatus.CREATED);
-    }}
+    }
 
     private User checkEducator(PermissionRequest request) {
-        try{ String c =  webClient
-                .post()
-                .uri("http://localhost:8086/api/account/user")
-                .bodyValue(new UserRequest(request.getUserID()))
-                .retrieve()
-                .onStatus(HttpStatusCode::is4xxClientError, clientResponse -> Mono.error(new RuntimeException("Errore durante la chiamata HTTP")))
-                .bodyToMono(String.class).block();
+        try {
+            String c = webClient
+                    .post()
+                    .uri(accountManagerUri + "/api/account/user")
+                    .bodyValue(new UserRequest(request.getUserID()))
+                    .retrieve()
+                    .onStatus(HttpStatusCode::is4xxClientError, clientResponse -> Mono.error(new RuntimeException("Error during the HTTP call")))
+                    .bodyToMono(String.class)
+                    .block();
             if (c != null) {
                 ObjectMapper objectMapper = new ObjectMapper();
                 return objectMapper.readValue(c, User.class);
             }
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             return null;
         }
         return null;
     }
 
     private void sendRequest(String s, String content, Long userId) {
-            Mono<String> c = webClient
-                    .post()
-                    .uri(s)
-                    .bodyValue(new DirectMailRequest(Collections.singletonList(userId.toString()), content))
-                    .retrieve()
-                    .onStatus(HttpStatusCode::is4xxClientError, clientResponse -> Mono.error(new RuntimeException("Errore durante la chiamata HTTP")))
-                    .bodyToMono(String.class);
+        Mono<String> c = webClient
+                .post()
+                .uri(s)
+                .bodyValue(new DirectMailRequest(Collections.singletonList(userId.toString()), content))
+                .retrieve()
+                .onStatus(HttpStatusCode::is4xxClientError, clientResponse -> Mono.error(new RuntimeException("Error during the HTTP call")))
+                .bodyToMono(String.class);
     }
 
     private ResponseEntity<Object> checkRequest(PermissionRequest request) {
-        if(request.getUserID() == null || request.getTournamentID() == null  || request.getCreatorID() == null){
+        if (request.getUserID() == null || request.getTournamentID() == null || request.getCreatorID() == null) {
             log.error("Invalid user or tournament id request");
             return new ResponseEntity<>("Invalid user or tournament id request", getHeaders(), HttpStatus.BAD_REQUEST);
         }
 
-        if(tournamentService.getTournament(request.getTournamentID()) == null){
+        if (tournamentService.getTournament(request.getTournamentID()) == null) {
             log.error("Invalid tournament id request");
             return new ResponseEntity<>("Invalid tournament id request", getHeaders(), HttpStatus.BAD_REQUEST);
         }
 
-        if(tournamentService.getTournament(request.getTournamentID()).getStatus() == false){
+        if (tournamentService.getTournament(request.getTournamentID()).getStatus() == false) {
             log.error("Tournament already ended");
             return new ResponseEntity<>("Tournament already ended", getHeaders(), HttpStatus.BAD_REQUEST);
         }

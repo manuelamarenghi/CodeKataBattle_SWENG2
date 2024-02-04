@@ -24,7 +24,6 @@ public class GetTournamentPageController extends Controller {
     private final WebClient webClient;
 
     @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<ResponseWrapper> getTournamentPage(@RequestBody GetTournamentPageRequest request) {
         if (invalidRequest(request)) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -37,12 +36,11 @@ public class GetTournamentPageController extends Controller {
             log.info("Tournament page retrieved");
             List<Long> battles = getBattles(request.getTournamentID());
             responseWrapper = new ResponseWrapper(battles, t);
+            return new ResponseEntity<>(responseWrapper, getHeaders(), HttpStatus.OK);
         } catch (Exception e) {
             log.error("[EXCEPTION] An exception occurred while retrieving battles {}", e.toString());
             return ResponseEntity.badRequest().build();
         }
-
-        return new ResponseEntity<>(responseWrapper, getHeaders(), HttpStatus.CREATED);
     }
 
     private List<Long> getBattles(Long tournamentID) throws Exception {
@@ -59,18 +57,18 @@ public class GetTournamentPageController extends Controller {
                 .block();
 
         if (response == null) {
-            log.error("[ERROR] The response is null");
-            throw new Exception("The response is null");
+            log.error("The battle manager response is null");
+            throw new Exception("The battle manager response is null");
         }
 
         if (response.getStatusCode().is4xxClientError()) {
-            log.error("[ERROR] The response has an error {}", response.getBody());
-            throw new Exception("The response has an error");
+            log.error("The status code of the battle manager response is 4xx");
+            throw new Exception("The status code of the battle manager response is 4xx");
         }
 
         if (response.getBody() == null) {
-            log.error("[ERROR] The response body is null");
-            throw new Exception("The response body is null");
+            log.error("The battle manager response's body is null");
+            throw new Exception("The battle manager response's body is null");
         }
 
         log.info("Successfully retrieved the list of battles");
