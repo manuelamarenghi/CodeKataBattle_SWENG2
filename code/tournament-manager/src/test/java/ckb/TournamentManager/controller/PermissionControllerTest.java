@@ -66,7 +66,7 @@ public class PermissionControllerTest {
         Long tournamentID = t.getTournamentID();
         Long creatorID = 1L;
         PermissionRequest request = new PermissionRequest(tournamentID, userID,creatorID);
-        ResponseEntity<Object> response = permissionController.permission(request);
+        ResponseEntity<Object> response = permissionController.createPermission(request);
         assertEquals("Tournament already ended", response.getBody());
     }
 
@@ -76,7 +76,7 @@ public class PermissionControllerTest {
         Long tournamentID = 1L;
         Long creatorID = 1L;
         PermissionRequest request = new PermissionRequest(tournamentID, userID,creatorID);
-        ResponseEntity<Object> response = permissionController.permission(request);
+        ResponseEntity<Object> response = permissionController.createPermission(request);
         assertTrue(response.getStatusCode().is4xxClientError());
     }
 
@@ -96,7 +96,7 @@ public class PermissionControllerTest {
         permissionRepo.save(p);
 
         PermissionRequest request = new PermissionRequest(tournamentID, userID, creatorID);
-        ResponseEntity<Object> response = permissionController.permission(request);
+        ResponseEntity<Object> response = permissionController.createPermission(request);
 
         assertEquals("Permission already inserted", response.getBody());
     }
@@ -124,7 +124,7 @@ public class PermissionControllerTest {
         Long tournamentID = t.getTournamentID();
         Long creatorID = 3L;
         PermissionRequest request = new PermissionRequest(tournamentID, 1L, creatorID);
-        ResponseEntity<Object> response = permissionController.permission(request);
+        ResponseEntity<Object> response = permissionController.createPermission(request);
         assertEquals("Invalid Request", response.getBody());
     }
 
@@ -151,7 +151,7 @@ public class PermissionControllerTest {
         Long tournamentID = t.getTournamentID();
         Long creatorID = 5L;
         PermissionRequest request = new PermissionRequest(tournamentID, 1L,creatorID);
-        ResponseEntity<Object> response = permissionController.permission(request);
+        ResponseEntity<Object> response = permissionController.createPermission(request);
         assertEquals("Permission inserted", response.getBody());
     }
 
@@ -178,7 +178,7 @@ public class PermissionControllerTest {
         Long tournamentID = t.getTournamentID();
         Long creatorID = 5L;
         PermissionRequest request = new PermissionRequest(tournamentID, 1L,creatorID);
-        ResponseEntity<Object> response = permissionController.permission(request);
+        ResponseEntity<Object> response = permissionController.createPermission(request);
         assertEquals("Illegal request to give permission", response.getBody());
     }
 }
