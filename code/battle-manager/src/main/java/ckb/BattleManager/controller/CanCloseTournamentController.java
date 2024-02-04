@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/battle")
 @Slf4j
-@CrossOrigin(origins = "*")
 public class CanCloseTournamentController {
     private final BattleService battleService;
 

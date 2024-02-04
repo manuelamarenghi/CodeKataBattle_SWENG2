@@ -23,7 +23,6 @@ import java.util.Collections;
 @Slf4j
 @RequestMapping("/api/tournament/permission")
 @RequiredArgsConstructor
-@CrossOrigin(origins = "*")
 
 public class PermissionController extends Controller{
     private final TournamentService tournamentService;

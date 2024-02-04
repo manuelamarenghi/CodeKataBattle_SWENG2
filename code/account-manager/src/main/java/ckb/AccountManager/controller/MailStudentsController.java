@@ -15,7 +15,6 @@ import java.util.List;
 @RequestMapping("/api/account/mail-students")
 @Slf4j
 @RequiredArgsConstructor
-@CrossOrigin(origins = "*")
 public class MailStudentsController extends Controller {
     private final UserService userService;
 
