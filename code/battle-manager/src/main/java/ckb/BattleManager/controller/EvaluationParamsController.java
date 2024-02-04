@@ -12,11 +12,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @Slf4j
-public class GetOfficialRepoUrlController {
+public class EvaluationParamsController {
     private final BattleService battleService;
 
     @Autowired
-    public GetOfficialRepoUrlController(BattleService battleService) {
+    public EvaluationParamsController(BattleService battleService) {
         this.battleService = battleService;
     }
 

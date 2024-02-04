@@ -139,10 +139,6 @@ public class BattleService {
 
     public EvaluationParamsResponse getBattleParams(Long teamId) throws Exception {
         Team team = teamService.getTeam(teamId);
-        if (!team.getBattle().getHasStarted()) {
-            log.error("The battle {} has not started yet", team.getBattle().getName());
-            throw new RuntimeException("The battle " + team.getBattle().getName() + " has not started");
-        }
 
         Battle battle = team.getBattle();
         return EvaluationParamsResponse.builder()

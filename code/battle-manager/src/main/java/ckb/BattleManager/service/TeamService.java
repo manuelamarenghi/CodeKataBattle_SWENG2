@@ -105,14 +105,19 @@ public class TeamService {
         Team team = getTeam(idTeam);
         Battle battleOfTeam = team.getBattle();
 
-        if (team.getCanParticipateToBattle().equals(false)) {
-            log.error("Team score cannot be updated because the team cannot participate");
-            throw new Exception("Team score cannot be updated because the team cannot participate");
+        if (team.getBattle().getHasStarted().equals(false)) {
+            log.error("The battle {} has not started yet", team.getBattle().getName());
+            throw new RuntimeException("The battle " + team.getBattle().getName() + " has not started");
         }
 
         if (battleOfTeam.getSubDeadline().isBefore(LocalDateTime.now())) {
-            log.error("Team score cannot be updated because the tournament is closed");
-            throw new Exception("Team score cannot be updated because the tournament is closed");
+            log.error("Team score cannot be updated because the battle has finished");
+            throw new Exception("Team score cannot be updated because the battle has finished");
+        }
+
+        if (team.getCanParticipateToBattle().equals(false)) {
+            log.error("Team score cannot be updated because the team cannot participate");
+            throw new Exception("Team score cannot be updated because the team cannot participate");
         }
 
         int timeDeduction = computeTimeDeduction(battleOfTeam);

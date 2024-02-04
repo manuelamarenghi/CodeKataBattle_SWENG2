@@ -26,7 +26,7 @@ class AssignScoreControllerTest {
     private final AssignScoreController assignScoreController;
     private final TeamRepository teamRepository;
     private final BattleRepository battleRepository;
-    private Team team;
+    private Team team1, team2;
 
     @Autowired
     public AssignScoreControllerTest(AssignScoreController assignScoreController, TeamRepository teamRepository, BattleRepository battleRepository) {
@@ -39,33 +39,55 @@ class AssignScoreControllerTest {
     void setUp() {
         Battle battle = Battle.builder()
                 .tournamentId(1L)
-                .repositoryLink("link")
+                .repositoryLink("link1")
                 .authorId(1L)
                 .regDeadline(LocalDateTime.now().minusMinutes(10))
-                .subDeadline(LocalDateTime.now().plusMinutes(1))
+                .subDeadline(LocalDateTime.now().plusMinutes(20))
                 .battleToEval(true)
                 .hasStarted(true)
                 .hasEnded(false)
                 .isClosed(false)
                 .build();
 
-        team = new Team();
-        team.setBattle(battle);
-        team.setScore(0);
-        team.setEduEvaluated(false);
-        team.setCanParticipateToBattle(true);
+        team1 = new Team();
+        team1.setBattle(battle);
+        team1.setScore(0);
+        team1.setEduEvaluated(false);
+        team1.setCanParticipateToBattle(true);
 
-        battle.setTeamsRegistered(List.of(team));
+        battle.setTeamsRegistered(List.of(team1));
 
         battleRepository.save(battle);
+
+        Battle battle2 = Battle.builder()
+                .tournamentId(1L)
+                .repositoryLink("link2")
+                .authorId(1L)
+                .regDeadline(LocalDateTime.now().minusMinutes(10))
+                .subDeadline(LocalDateTime.now().plusMinutes(20))
+                .battleToEval(true)
+                .hasStarted(true)
+                .hasEnded(true)
+                .isClosed(false)
+                .build();
+
+        team2 = new Team();
+        team2.setBattle(battle2);
+        team2.setScore(0);
+        team2.setEduEvaluated(false);
+        team2.setCanParticipateToBattle(true);
+
+        battle2.setTeamsRegistered(List.of(team2));
+
+        battleRepository.save(battle2);
     }
 
     @Test
     public void assignScore() {
         ResponseEntity<Object> response = assignScoreController.assignScore(
-                new AssignScoreRequest(team.getTeamId(), 100));
+                new AssignScoreRequest(team1.getTeamId(), 100));
 
-        Optional<Team> teamRetrieved = teamRepository.findById(team.getTeamId());
+        Optional<Team> teamRetrieved = teamRepository.findById(team1.getTeamId());
         if (teamRetrieved.isPresent()) {
             assertNotNull(response);
             assertTrue(response.getStatusCode().is2xxSuccessful());
@@ -76,9 +98,9 @@ class AssignScoreControllerTest {
     @Test
     public void assignPersonalScore() {
         ResponseEntity<Object> response = assignScoreController.assignPersonalScore(
-                new AssignPersonalScoreRequest(team.getTeamId(), 10, 1L));
+                new AssignPersonalScoreRequest(team2.getTeamId(), 10, 1L));
 
-        Optional<Team> teamRetrieved = teamRepository.findById(team.getTeamId());
+        Optional<Team> teamRetrieved = teamRepository.findById(team2.getTeamId());
         assertNotNull(response);
         assertTrue(response.getStatusCode().is2xxSuccessful());
         assertNotNull(teamRetrieved);
@@ -91,13 +113,13 @@ class AssignScoreControllerTest {
     public void assignScoreAndPersonalScore() {
         int scoreSubmission = 60, scorePersonal = 5;
         ResponseEntity<Object> response1 = assignScoreController.assignScore(
-                new AssignScoreRequest(team.getTeamId(), scoreSubmission));
+                new AssignScoreRequest(team2.getTeamId(), scoreSubmission));
         ResponseEntity<Object> response2 = assignScoreController.assignPersonalScore(
-                new AssignPersonalScoreRequest(team.getTeamId(), scorePersonal, 1L));
+                new AssignPersonalScoreRequest(team2.getTeamId(), scorePersonal, 1L));
         ResponseEntity<Object> response3 = assignScoreController.assignPersonalScore(
-                new AssignPersonalScoreRequest(team.getTeamId(), scorePersonal, 1L));
+                new AssignPersonalScoreRequest(team2.getTeamId(), scorePersonal, 1L));
 
-        Optional<Team> teamRetrieved = teamRepository.findById(team.getTeamId());
+        Optional<Team> teamRetrieved = teamRepository.findById(team2.getTeamId());
 
         assertNotNull(response1);
         assertNotNull(response2);
@@ -114,7 +136,7 @@ class AssignScoreControllerTest {
     @Test
     public void assignScoreNegative() {
         ResponseEntity<Object> response = assignScoreController.assignScore(
-                new AssignScoreRequest(team.getTeamId(), -100));
+                new AssignScoreRequest(team1.getTeamId(), -100));
 
         assertNotNull(response);
         assertTrue(response.getStatusCode().is4xxClientError());
@@ -123,7 +145,7 @@ class AssignScoreControllerTest {
     @Test
     public void assignPersonalScoreNegative() {
         ResponseEntity<Object> response = assignScoreController.assignPersonalScore(
-                new AssignPersonalScoreRequest(team.getTeamId(), -100, 1L));
+                new AssignPersonalScoreRequest(team1.getTeamId(), -100, 1L));
 
         assertNotNull(response);
         assertTrue(response.getStatusCode().is4xxClientError());
@@ -132,7 +154,7 @@ class AssignScoreControllerTest {
     @Test
     public void assignScoreWrongEducatorId() {
         ResponseEntity<Object> response = assignScoreController.assignPersonalScore(
-                new AssignPersonalScoreRequest(team.getTeamId(), 100, 2L));
+                new AssignPersonalScoreRequest(team1.getTeamId(), 100, 2L));
 
         assertNotNull(response);
         assertTrue(response.getStatusCode().is4xxClientError());
