@@ -65,7 +65,7 @@ public class CEvaluationController extends Controller {
                 return new ResponseEntity<>("Official repository is private, battle not started yet", getHeaders(), HttpStatus.BAD_REQUEST);
             }
             log.error("Error executing tests: " + e.getMessage());
-            if (e.getMessage().contains("/api/battle/official-repo-url")) {
+            if (e.getMessage().contains("/api/battle/evaluation-params")) {
                 log.error("Error getting official repo url, maybe the battle hasn't started yet ?");
                 return new ResponseEntity<>("Cannot find official repository for testing, try again later", getHeaders(), HttpStatus.BAD_REQUEST);
             }

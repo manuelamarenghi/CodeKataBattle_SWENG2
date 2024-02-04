@@ -28,7 +28,7 @@ public abstract class Controller {
                 .build();
 
         ResponseEntity<EvaluationParamsResponse> response = webClient.post()
-                .uri(battleManagerUrl + "/api/battle/official-repo-url")
+                .uri(battleManagerUrl + "/api/battle/evaluation-params")
                 .bodyValue(officialRepoRequest)
                 .retrieve()
                 .toEntity(EvaluationParamsResponse.class)

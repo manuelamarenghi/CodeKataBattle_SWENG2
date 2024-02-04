@@ -48,7 +48,7 @@ public class EvaluationTest {
         evaluationParamResponse.put("reliability", true);
         evaluationParamResponse.put("maintainability", false);
 
-        battleMockServer.when(request().withMethod("POST").withPath("/api/battle/official-repo-url"))
+        battleMockServer.when(request().withMethod("POST").withPath("/api/battle/evaluation-params"))
                 .respond(response().withContentType(MediaType.APPLICATION_JSON).withStatusCode(200).withBody(evaluationParamResponse.toString()));
 
         EvaluationRequest request = EvaluationRequest.builder()
@@ -70,7 +70,7 @@ public class EvaluationTest {
         evaluationParamResponse.put("reliability", true);
         evaluationParamResponse.put("maintainability", true);
 
-        battleMockServer.when(request().withMethod("POST").withPath("/api/battle/official-repo-url"))
+        battleMockServer.when(request().withMethod("POST").withPath("/api/battle/evaluation-params"))
                 .respond(response().withContentType(MediaType.APPLICATION_JSON).withStatusCode(200).withBody(evaluationParamResponse.toString()));
 
         EvaluationRequest request = EvaluationRequest.builder()
@@ -94,7 +94,7 @@ public class EvaluationTest {
         evaluationParamResponse.put("reliability", true);
         evaluationParamResponse.put("maintainability", true);
 
-        battleMockServer.when(request().withMethod("POST").withPath("/api/battle/official-repo-url"))
+        battleMockServer.when(request().withMethod("POST").withPath("/api/battle/evaluation-params"))
                 .respond(response().withContentType(MediaType.APPLICATION_JSON).withStatusCode(200).withBody(evaluationParamResponse.toString()));
 
         EvaluationRequest request = EvaluationRequest.builder()
@@ -109,7 +109,7 @@ public class EvaluationTest {
         battleMockServer.when(request().withMethod("POST").withPath("/api/battle/assign-score"))
                 .respond(response().withStatusCode(200));
 
-        battleMockServer.when(request().withMethod("POST").withPath("/api/battle/official-repo-url"))
+        battleMockServer.when(request().withMethod("POST").withPath("/api/battle/evaluation-params"))
                 .respond(response().withStatusCode(500));
 
         EvaluationRequest request = EvaluationRequest.builder()
@@ -124,7 +124,7 @@ public class EvaluationTest {
         battleMockServer.when(request().withMethod("POST").withPath("/api/battle/assign-score"))
                 .respond(response().withStatusCode(200));
 
-        battleMockServer.when(request().withMethod("POST").withPath("/api/battle/official-repo-url"))
+        battleMockServer.when(request().withMethod("POST").withPath("/api/battle/evaluation-params"))
                 .respond(response().withStatusCode(500));
 
         EvaluationRequest request = EvaluationRequest.builder()
@@ -139,7 +139,7 @@ public class EvaluationTest {
         battleMockServer.when(request().withMethod("POST").withPath("/api/battle/assign-score"))
                 .respond(response().withStatusCode(200));
 
-        battleMockServer.when(request().withMethod("POST").withPath("/api/battle/official-repo-url"))
+        battleMockServer.when(request().withMethod("POST").withPath("/api/battle/evaluation-params"))
                 .respond(response().withStatusCode(200));
 
         EvaluationRequest request = EvaluationRequest.builder()
