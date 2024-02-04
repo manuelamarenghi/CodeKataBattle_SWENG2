@@ -83,7 +83,6 @@ public class BattleScheduledService {
 
     @Scheduled(fixedRate = 3000) // 3 Seconds
     public void closeBattles() {
-        log.info("Date of now: {}", LocalDateTime.now());
         List<Battle> battlesToEnd = battleRepository.
                 findBattlesByHasEndedIsFalseAndSubDeadlineIsBefore(LocalDateTime.now());
 

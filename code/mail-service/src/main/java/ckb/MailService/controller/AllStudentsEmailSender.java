@@ -16,7 +16,6 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("/api/mail/all-students")
 @Slf4j
-@CrossOrigin(origins = "*")
 public class AllStudentsEmailSender extends EmailSender {
 
     private final MailService mailService;

@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Users | CodeKataBattle</title>
+    <link rel="icon" href="public\images\iconCKB.png" type="image/x-icon">
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Jura', sans-serif;
+        }
+
+    </style>
+    <link rel="stylesheet" href="public\css\navbar.css" type="text/css">
+    <link rel="stylesheet" href="public\css\header.css" type="text/css">
+    <link rel="stylesheet" href="public\css\users.css" type="text/css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Jura&display=swap">
+</head>
+
+<body>
+
+    <div class="top-header">
+        <div class="left-content">
+            <img src="public\images\iconCKB.png" class="sw-image">
+            <div class="sw-title"> CodeKataBattle </div>
+        </div>
+        <div class="right-content">
+            <div class="user-buttons" id="session_button">
+                <script>
+                    var isUserLoggedIn = localStorage.getItem("logged_in");
+                    
+                    if (isUserLoggedIn && isUserLoggedIn.toLowerCase() === "true") {
+                        document.write('<button class="button-28" onclick="logout()">Logout</button>');
+                    } else {
+                        document.write('<button class="button-28" onclick="window.location.href=\'login.html\'">Enter</button>');
+                        document.write('<button class="button-28" onclick="window.location.href=\'signin.html\'">Register</button>');
+                    }
+                </script>
+            </div>
+        </div>
+    </div>
+
+    <div class="navbar-container">
+        <!-- Contenitore visibile per la navbar -->
+        <nav class="navbar">
+            <a onclick="window.location.href='index.html'">Home</a>
+            <a onclick="window.location.href='tournaments.html'">Tournaments</a>
+            <a onclick="window.location.href='users.html'" class="active">Users</a>
+            <a  onclick="redirectToAccount()" id="account_page" >Account</a>
+        </nav>
+    </div>
+    <div class="search-bar">
+        <input type="text" class="search-input" placeholder="Search...">
+        <button class="search-button" onclick="searchAccount()">Search</button>
+    </div>
+    <div class="account-container">
+        <div class="user-info">
+            <img src="public\images\user.png">
+            <div id="user-det" class="user-details">
+            </div>
+        </div>
+    </div>
+    <script>
+        var isUserLoggedIn = localStorage.getItem("logged_in");
+        
+        function redirectToAccount() {
+            if (isUserLoggedIn && isUserLoggedIn.toLowerCase() === "true") {
+                window.location.href = "account.html";
+            }
+            else{window.location.href = "login.html"; }
+        }
+        function logout() {
+            localStorage.removeItem("logged_in",localStorage.getItem("logged_in"));
+            localStorage.removeItem("user_id",localStorage.getItem("user_id"));
+            localStorage.removeItem("user_email",localStorage.getItem("user_email") );
+            localStorage.removeItem("user_role",localStorage.getItem("user_role") );
+        }
+
+        function searchAccount(){
+            var userID = document.querySelector(".search-input").value;
+            var fetchOptions = {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                userID: userID,
+            })
+            };
+            console.log(fetchOptions);
+            fetch("http://localhost:8080/api/account/user", fetchOptions)
+            .then(function(response) {
+                if(response.ok){
+                    response.json().then(function(data) {
+                        var userDetailsDiv = document.getElementById('user-det');
+                        userDetailsDiv.innerHTML = "";
+                        var userDetailsHTML = `
+                            <div>ID: ${data.id}</div>
+                            <div>Email: ${data.email}</div>
+                            <div>Role: ${data.role}</div>
+                        `;
+                        userDetailsDiv.innerHTML = userDetailsHTML;
+                    })
+                }
+                else{
+                    alert("User not found");
+                }
+            })
+        }
+    </script> 
+</body>
+
+</html>

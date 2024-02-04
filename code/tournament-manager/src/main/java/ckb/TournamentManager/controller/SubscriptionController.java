@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 @RequestMapping("/api/tournament/subscription")
 @RequiredArgsConstructor
-@CrossOrigin(origins = "*")
 
 public class SubscriptionController extends Controller{
     private final TournamentService tournamentService;
