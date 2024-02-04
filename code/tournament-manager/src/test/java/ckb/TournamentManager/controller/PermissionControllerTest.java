@@ -84,7 +84,7 @@ public class PermissionControllerTest {
     @Test
     public void UserAlreadyHasPermissionTest() {
         Tournament t = new Tournament();
-        t.setRegdeadline(new Date((2024 - 1900), Calendar.FEBRUARY, 20));
+        t.setRegdeadline(new Date((2345 - 1900), Calendar.FEBRUARY, 20));
         t.setStatus(true);
         t.setCreatorID(2L);
         tournamentRepo.save(t);
@@ -145,7 +145,7 @@ public class PermissionControllerTest {
                 .respond(response().withStatusCode(200));
 
         Tournament t = new Tournament();
-        t.setRegdeadline(new Date((2024 - 1900), Calendar.AUGUST, 20));
+        t.setRegdeadline(new Date((2345 - 1900), Calendar.AUGUST, 20));
         t.setStatus(true);
         t.setCreatorID(5L);
         tournamentRepo.save(t);

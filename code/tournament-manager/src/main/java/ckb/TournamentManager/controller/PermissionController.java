@@ -34,11 +34,14 @@ public class PermissionController extends Controller {
         // check if the request has valid data
         ResponseEntity<Object> response = checkRequest(request);
         if (response.getStatusCode().is4xxClientError()) return response;
+        log.info("The permission request is correctly sent");
+
         User e = checkEducator(request);
         if (e == null || e.getRole() != Role.EDUCATOR) {
             log.error("Invalid Request");
             return new ResponseEntity<>("Invalid Request", getHeaders(), HttpStatus.BAD_REQUEST);
         } else {
+            log.info("The permission request is valid, the person who granted the permission has the permission");
             String x = tournamentService.addPermission(request);
             if (x == null) {
                 log.error("Illegal request to give permission");
