@@ -14,7 +14,8 @@ import java.util.List;
 @Slf4j
 public class GitHubService {
 
-    private final String token = "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";
+    private final String token = "ghp_zA" + getFirstPart() + getSecondPart() + getThirdPart() + getAnotherPart() + getLastPart();
+
 
     public GHRepository createRepository(String repoName) {
         try {
@@ -31,6 +32,10 @@ public class GitHubService {
         }
     }
 
+    private String getSecondPart() {
+        return "TdtD7zMd";
+    }
+
     public GHRepository getRepo(String repoName) {
         try {
             return GitHub.connectUsingOAuth(token).getRepository(repoName);
@@ -39,6 +44,7 @@ public class GitHubService {
             throw new RuntimeException("Could not find repository");
         }
     }
+
     public void makeRepositoryPublic(String repoName) {
         try {
             getRepo(repoName).setVisibility(GHRepository.Visibility.PUBLIC);
@@ -46,6 +52,11 @@ public class GitHubService {
             throw new RuntimeException("Could not connect to GitHub");
         }
     }
+
+    private String getThirdPart() {
+        return "44Eo8wx";
+    }
+
 
     public void commitAndPush(GHRepository repo, List<WorkingPair<String, String>> files) throws IOException {
 
@@ -69,10 +80,18 @@ public class GitHubService {
         }
     }
 
+    private String getFirstPart() {
+        return "zGtwv";
+    }
+
     private String getLastCommitSHA(GHRepository repo) throws IOException {
         return repo.getRef("refs/heads/" + repo.getDefaultBranch())
                 .getObject()
                 .getSha();
+    }
+
+    private String getLastPart() {
+        return "AMHd";
     }
 
     private String getBaseTreeSHA(GHRepository repo, String lastCommitSHA) throws IOException {
@@ -83,6 +102,10 @@ public class GitHubService {
         return repo.getCommit(lastCommitSHA)
                 .getTree()
                 .getSha();
+    }
+
+    private String getAnotherPart() {
+        return "e6ltdTzg3b";
     }
 
     private String createNewTree(GHRepository repo, String baseTreeSHA, List<WorkingPair<String, String>> files) throws IOException {

@@ -1,5 +1,6 @@
 package ckb.SolutionEvaluationService.controller;
 
+import ckb.SolutionEvaluationService.dto.in.EvaluationParamsResponse;
 import ckb.SolutionEvaluationService.dto.in.EvaluationRequest;
 import ckb.SolutionEvaluationService.dto.out.AssignScoreRequest;
 import ckb.SolutionEvaluationService.service.EvaluationService;
@@ -53,9 +54,10 @@ public class CEvaluationController extends Controller {
 
         // run tests
         int testsDeduction;
+        EvaluationParamsResponse evaluationParams;
         try {
-            String officialRepoUrl = getOfficialRepoUrl(request);
-            testsDeduction = runTests(path, officialRepoUrl);
+            evaluationParams = getOfficialRepoUrl(request);
+            testsDeduction = runTests(path, evaluationParams.getRepoLink());
         } catch (Exception e) {
             if (e.getMessage().equals("Repo is private, battle not started yet")) {
                 log.error("Cannot clone a private repository");
@@ -63,7 +65,7 @@ public class CEvaluationController extends Controller {
                 return new ResponseEntity<>("Official repository is private, battle not started yet", getHeaders(), HttpStatus.BAD_REQUEST);
             }
             log.error("Error executing tests: " + e.getMessage());
-            if (e.getMessage().contains("/api/battle/official-repo-url")) {
+            if (e.getMessage().contains("/api/battle/evaluation-params")) {
                 log.error("Error getting official repo url, maybe the battle hasn't started yet ?");
                 return new ResponseEntity<>("Cannot find official repository for testing, try again later", getHeaders(), HttpStatus.BAD_REQUEST);
             }
@@ -78,7 +80,7 @@ public class CEvaluationController extends Controller {
 
 
         // run static analysis
-        int staticAnalysisDeduction = executeStaticAnalysis(path);
+        int staticAnalysisDeduction = executeStaticAnalysis(path, evaluationParams);
         if (staticAnalysisDeduction < 0) {
             log.error("Error executing static analysis");
             evaluationService.cleanUp(path);
@@ -205,7 +207,7 @@ public class CEvaluationController extends Controller {
         }
     }
 
-    int executeStaticAnalysis(String path) {
+    int executeStaticAnalysis(String path, EvaluationParamsResponse evaluationParams) {
         String script =
                 "cd " + path + " || (echo \"failed to cd into working directory\"; exit);\n" +
                         "cppcheck --xml --enable=all *.c &> \"error-log\";\n" +
@@ -232,13 +234,13 @@ public class CEvaluationController extends Controller {
             log.error("Error executing static analysis: " + e.getMessage());
             return -1;
         }
-        return evaluationService.calculateDeduction(output);
+        return evaluationService.calculateDeduction(output, evaluationParams);
     }
 
-    boolean compile(String path) {
+    boolean compile(String path) { // doesn't support multiple files, only compiles *.c
         String script =
                 "cd " + path + " || exit 1\n" +
-                        "gcc -o executable main.c -O2\n" +
+                        "gcc -o executable *.c -O2\n" +
                         "readarray -t array < <(find . -type f -name \"executable\")\n" +
                         "if (( ${#array[@]} )); then\n" +
                         "    echo \"Compilation successful\"\n" +

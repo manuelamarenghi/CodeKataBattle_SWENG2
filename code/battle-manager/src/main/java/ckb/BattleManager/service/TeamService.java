@@ -84,10 +84,6 @@ public class TeamService {
             Participation participation = studentTeam.getParticipation().getFirst();
             studentTeam.getParticipation().remove(participation);
 
-            //participationRepository.deleteAll(studentTeam.getParticipation());
-            //participationService.deleteParticipationById(idStudent, studentTeam);
-            //participationService.deleteParticipationById(participation.getId());
-            //teamRepository.deleteById(studentTeam.getTeamId());
             studentTeam.setCanParticipateToBattle(false);
             log.info("Team deleted with id: {}", studentTeam.getTeamId());
         } else {
@@ -109,14 +105,19 @@ public class TeamService {
         Team team = getTeam(idTeam);
         Battle battleOfTeam = team.getBattle();
 
-        if (team.getCanParticipateToBattle().equals(false)) {
-            log.error("Team score cannot be updated because the team cannot participate");
-            throw new Exception("Team score cannot be updated because the team cannot participate");
+        if (team.getBattle().getHasStarted().equals(false)) {
+            log.error("The battle {} has not started yet", team.getBattle().getName());
+            throw new RuntimeException("The battle " + team.getBattle().getName() + " has not started");
         }
 
         if (battleOfTeam.getSubDeadline().isBefore(LocalDateTime.now())) {
-            log.error("Team score cannot be updated because the tournament is closed");
-            throw new Exception("Team score cannot be updated because the tournament is closed");
+            log.error("Team score cannot be updated because the battle has finished");
+            throw new Exception("Team score cannot be updated because the battle has finished");
+        }
+
+        if (team.getCanParticipateToBattle().equals(false)) {
+            log.error("Team score cannot be updated because the team cannot participate");
+            throw new Exception("Team score cannot be updated because the team cannot participate");
         }
 
         int timeDeduction = computeTimeDeduction(battleOfTeam);
@@ -154,12 +155,17 @@ public class TeamService {
         Team team = getTeam(idTeam);
         Battle battleOfTeam = team.getBattle();
 
+        if (battleOfTeam.getHasEnded().equals(false)) {
+            log.error("Team score cannot be updated because the battle is not ended");
+            throw new Exception("Team score cannot be updated because the battle is not ended");
+        }
+
         if (battleOfTeam.getIsClosed()) {
             log.error("Team score cannot be updated because the battle is closed");
             throw new Exception("Team score cannot be updated because the battle is closed");
         }
 
-        if (!battleOfTeam.getBattleToEval()) {
+        if (battleOfTeam.getBattleToEval().equals(false)) {
             log.error("Team personal score cannot be updated because the battle can not be evaluated by an educator");
             throw new Exception("Team personal score cannot be updated because the battle can not be evaluated by an educator");
         }
@@ -188,17 +194,19 @@ public class TeamService {
 
         // Check if the student is registered to the battle
         if (teamRepository.findTeamByStudentIdAndBattle(idStudent, battleRegistered).isEmpty()) {
-            log.error("Student {} is not registered to the battle {}", idStudent, battleRegistered.getName());
-            throw new Exception("Student " + idStudent + " is not registered to the battle " + battleRegistered.getName());
+            // create a new participation
+            participationService.createParticipation(
+                    idStudent,
+                    teamToSubscribe
+            );
+        } else{
+            deleteParticipation(idStudent, battleRegistered);
+            // create a new participation
+            participationService.createParticipation(
+                    idStudent,
+                    teamToSubscribe
+            );
         }
-
-        deleteParticipation(idStudent, battleRegistered);
-
-        // create a new participation
-        participationService.createParticipation(
-                idStudent,
-                teamToSubscribe
-        );
 
         log.info("Student {} registered to team {}", idStudent, idNewTeam);
     }

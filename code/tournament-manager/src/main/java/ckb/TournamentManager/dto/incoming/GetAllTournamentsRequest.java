@@ -1,6 +1,5 @@
 package ckb.TournamentManager.dto.incoming;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

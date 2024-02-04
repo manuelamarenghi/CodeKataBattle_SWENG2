@@ -17,18 +17,24 @@ Solution Evaluation Service->Github: 3: cloneSolution(repository_url)
 
 Github-->Solution Evaluation Service: 4: cloneSolution(repository_url)
 
-Solution Evaluation Service->Solution Evaluation Service: 5: checkSubmission(submission)
+Solution Evaluation Service->Battle Manager: 5: evaluationParams(id_team)
+activate Battle Manager
+
+Battle Manager-->Solution Evaluation Service: 6: result
+deactivate Battle Manager
+
+Solution Evaluation Service->Solution Evaluation Service: 7: checkSubmission(submission)
 
 alt team_registered == true && date < submission_deadline && battle_started == true
-Solution Evaluation Service->Battle Manager: 6: assignScore(id_team, score)
+Solution Evaluation Service->Battle Manager: 8: assignScore(id_team, score)
 activate Battle Manager
 // Update Query
-Battle Manager->Battle DB: 7: executeQuery(id_team, score)
+Battle Manager->Battle DB: 9: executeQuery(id_team, score)
 activate Battle DB
-Battle DB-->Battle Manager: 8: success
+Battle DB-->Battle Manager: 10: success
 deactivate Battle DB
 
-Battle Manager-->Solution Evaluation Service: 9: result
+Battle Manager-->Solution Evaluation Service: 11: result
 deactivate Battle Manager
 deactivate Solution Evaluation Service
 

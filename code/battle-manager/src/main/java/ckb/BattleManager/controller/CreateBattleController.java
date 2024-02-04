@@ -61,7 +61,7 @@ public class CreateBattleController extends Controller {
     @PostMapping("/create-battle")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<Object> createBattle(
-            @RequestParam("zipFile") MultipartFile zipFile, // TODO check if it works with the web app ~ variable name
+            @RequestParam("zipFile") MultipartFile zipFile,
             @RequestParam("tournamentId") Long tournamentId,
             @RequestParam("authorId") Long authorId,
             @RequestParam("minStudents") Integer minStudents,
@@ -69,14 +69,17 @@ public class CreateBattleController extends Controller {
             @RequestParam("regDeadline") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime regDeadline,
             @RequestParam("subDeadline") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime subDeadline,
             @RequestParam("battleToEval") Boolean battleToEval,
-            @RequestParam("name") String name) {
+            @RequestParam("name") String name,
+            @RequestParam("security") Boolean security,
+            @RequestParam("reliability") Boolean reliability,
+            @RequestParam("maintainability") Boolean maintainability) {
         try {
             // convert the zip file into a List<WorkingPair<String, String>>
             if (zipFile == null || zipFile.isEmpty() || zipFile.getOriginalFilename() == null){
                 log.error("Zip file is null");
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Zip file is null");
             }
-            String fileName = zipFile.getOriginalFilename().replace(" ", "-");
+            String fileName = zipFile.getOriginalFilename().replaceAll("[^a-zA-Z]", "-");
             String home = System.getProperty("user.home");
             String filePath = home + fileName; // zip file will be put in the home directory
 
@@ -106,6 +109,10 @@ public class CreateBattleController extends Controller {
                     .maxStudents(maxStudents)
                     .regDeadline(regDeadline)
                     .subDeadline(subDeadline)
+                    .battleToEval(battleToEval)
+                    .security(security)
+                    .reliability(reliability)
+                    .maintainability(maintainability)
                     .build();
             return createBattle(battle);
         } catch (Exception e) {
