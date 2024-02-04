@@ -26,7 +26,7 @@
                 console.log(response.json);
                 return response.json();
            } else {
-                    alert("Errore durante la richiesta.");
+                    alert("Invalid request for this page.");
                     window.location.href = "index.html";      
             }})
         .then( function(data){
@@ -55,7 +55,7 @@
         }})
         .catch(function(error) {
                 console.log(error);
-                alert("Errore durante la richiesta.");
+                alert("An error occur while connecting to the server: "+ error);
                 window.location.href = "index.html";
         });
     </script>
@@ -164,13 +164,12 @@
                 .then(function(response){
                     if(response.ok){
                         alert("You have been registered to the tournament!");
-                        window.location.href = "tournaments.html";
                     } else {
                         alert("Tournament already closed.");
                     }
             })
             .catch(function(response) {
-                    alert("Errore durante la richiesta.");
+                alert("An error occur while connecting to the server: "+ error);
                 });
         }
         function closeTournament(){
@@ -188,15 +187,12 @@
                 .then(function(response){
                     if(response.ok){
                         alert("Tournament closed!");
-                        window.location.href = "tournaments.html";
                     } else {
-                        alert("Errore durante la richiesta.");
-                        window.location.href = "index.html";
+                        alert("Impossible to close the tournament.");
                     }
                 })
                 .catch(function(response) {
-                    alert("Errore durante la richiesta.");
-                  //  window.location.href = "index.html";
+                    alert("An error occur while connecting to the server: "+ error);
                 }); }
     </script> 
     <div class="page-container">
@@ -294,7 +290,7 @@
             const queryString = window.location.search;
             const params = new URLSearchParams(queryString);
             const tournamentID = params.get('id');
-            if(!battleName || !teamParticipant_min || !teamParticipant_max || !evaluation || !deadlineSubmission || !registrationSubmission || !codeKataUpload){
+            if(!battleName || !teamParticipant_min || !teamParticipant_max || !deadlineSubmission || !registrationSubmission || !codeKataUpload || !tournamentID){
                 alert("All fields are required!");
                 return;
             }
@@ -323,10 +319,11 @@
                     if(response.ok){
                         alert("Battle created!");
                     } else {
-                        alert("Errore durante la richiesta.");
-                        window.location.href = "index.html";
-                    }
-            })
+                        alert("Impossible creting battle.Please retry.");
+                    }})
+                .catch(function(error){
+                    alert("An error occur while connecting to the server: "+ error);
+                });
             closeModal('CreateBattleModal');
         }
     </script>   
