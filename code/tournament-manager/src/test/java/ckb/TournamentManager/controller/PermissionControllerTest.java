@@ -142,7 +142,7 @@ public class PermissionControllerTest {
                 .respond(response().withStatusCode(200).withBody(userJson));
         mockServermail
                 .when(request().withMethod("POST").withPath("/api/mail/direct"))
-                .respond(response().withStatusCode(200).withBody("OK"));
+                .respond(response().withStatusCode(200));
 
         Tournament t = new Tournament();
         t.setRegdeadline(new Date((2024 - 1900), Calendar.AUGUST, 20));

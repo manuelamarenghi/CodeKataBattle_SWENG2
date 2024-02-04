@@ -44,17 +44,14 @@ public class PermissionController extends Controller {
                 log.error("Illegal request to give permission");
                 return new ResponseEntity<>("Illegal request to give permission", getHeaders(), HttpStatus.BAD_REQUEST);
             }
-
             String content = "You've gained permission to create battles in tournament: " + x;
             log.info("Permission inserted");
-
             try {
                 sendRequest(mailServiceUri + "/api/mail/direct", content, request.getUserID());
             } catch (Exception exp) {
                 log.error("Error while retrieving send request to mail service\n");
                 return new ResponseEntity<>(getHeaders(), HttpStatus.BAD_REQUEST);
             }
-
             return new ResponseEntity<>("Permission inserted", getHeaders(), HttpStatus.CREATED);
         }
     }
@@ -99,7 +96,7 @@ public class PermissionController extends Controller {
             return new ResponseEntity<>("Invalid tournament id request", getHeaders(), HttpStatus.BAD_REQUEST);
         }
 
-        if (!tournamentService.getTournament(request.getTournamentID()).getStatus()) {
+        if (tournamentService.getTournament(request.getTournamentID()).getStatus() == false) {
             log.error("Tournament already ended");
             return new ResponseEntity<>("Tournament already ended", getHeaders(), HttpStatus.BAD_REQUEST);
         }
