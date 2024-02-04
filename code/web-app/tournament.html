@@ -284,8 +284,8 @@
             var evaluation = document.querySelector('input[name="evaluation"]:checked').value;
             if(evaluation === "yes"){ evaluation = true; }
             else evaluation = false;
-            var deadlineSubmission = document.getElementById('deadlineSubmission').value + "T23:59:59.999Z";
-            var registrationSubmission = document.getElementById('registrationSubmission').value + "T23:59:59.999Z";
+            var deadlineSubmission = document.getElementById('deadlineSubmission').value + "T16:59:59.999+01:00";
+            var registrationSubmission = document.getElementById('registrationSubmission').value + "T23:59:59.999+01:00";
             var codeKataUpload = document.getElementById('codeKataUpload').files[0];
             const queryString = window.location.search;
             const params = new URLSearchParams(queryString);
