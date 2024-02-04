@@ -7,11 +7,11 @@
         const params = new URLSearchParams(queryString);
         const tournamentID = params.get('idT');
         const battleID = params.get('idB');
-        if(!tournamentID || !battleID){ 
+        if(!tournamentID || !battleID){
             alert('Invalid access!');
-            window.location.href='index.html' 
+            window.location.href='index.html'
         }
-        
+
         var fetchOptions = {
             method: "POST",
             headers: {
@@ -21,15 +21,15 @@
                 battleId : battleID
             })
         };
-        fetch("http://localhost:8080/api/battle/get-teams-battle", fetchOptions)
+        fetch("http://localhost:8080/api/battle/get-teams-battle",fetchOptions)
             .then(response => {
-                if (response.status >= 300) {
-                    console.error('Error during the HTTP request:', response.status, response.statusText);
+                if (response.status >= 300 ) {
+                    console.error('Error during HTTP request:', response.status, response.statusText);
                     window.location.href = "index.html";
                 }
-                return response.json(); // Parse response as JSON
             })
             .then(data => {
+                console.log(data);
                 var table = document.getElementById('battle_ranking_table').querySelector('table');
                 for(var i = 0; i < data.listTeamsIdScore.length; i++){
                     var row = table.insertRow();
@@ -40,10 +40,10 @@
                 }
             })
             .catch(error => {
-                alert("An error occurred while connecting to the server: " + error);
+                alert("An error occur while connecting to the server: "+ error);
                 window.location.href = "index.html";
             });
-            
+
     </script>
     <title>Battle | CodeKataBattle</title>
     <link rel="icon" href="public\images\iconCKB.png" type="image/x-icon">
@@ -52,7 +52,7 @@
             margin: 0;
             font-family: 'Jura', sans-serif;
         }
-        
+
     </style>
     <link rel="stylesheet" href="public\css\navbar.css" type="text/css">
     <link rel="stylesheet" href="public\css\header.css" type="text/css">
@@ -67,146 +67,146 @@
 
 <body>
 
-    <div class="top-header">
-        <div class="left-content">
-            <img src="public\images\iconCKB.png" class="sw-image">
-            <div class="sw-title"> CodeKataBattle </div>
-        </div>
-        <div class="right-content">
-            <div class="user-buttons">
-                <script>
-                    var isUserLoggedIn = localStorage.getItem("logged_in");
-                    
-                    if (isUserLoggedIn && isUserLoggedIn.toLowerCase() === "true") {
-                        document.write('<button class="button-28" onclick="logout()">Logout</button>');
-                    } else {
-                        document.write('<button class="button-28" onclick="window.location.href=\'login.html\'">Enter</button>');
-                        document.write('<button class="button-28" onclick="window.location.href=\'signin.html\'">Register</button>');
-                    }
-                </script>
-            </div>
-        </div>
+<div class="top-header">
+    <div class="left-content">
+        <img src="public\images\iconCKB.png" class="sw-image">
+        <div class="sw-title"> CodeKataBattle </div>
     </div>
-    <div class="navbar-container">
-        <nav class="navbar">
-            <a onclick="window.location.href='index.html'" >Home</a>
-            <a onclick="window.location.href='tournaments.html'" class="active">Tournaments</a>
-            <a onclick="window.location.href='users.html'">Users</a>
-            <a  onclick="redirectToAccount()" id="account_page" >Account</a>
-        </nav>
-    </div>
-    <script>
-        var isUserLoggedIn = localStorage.getItem("logged_in");
-        
-        function redirectToAccount() {
-            if (isUserLoggedIn && isUserLoggedIn.toLowerCase() === "true") {
-                window.location.href = "account.html";
-            }
-            else{window.location.href = "login.html"; }
-        }
-        function logout() {
-            localStorage.removeItem("logged_in",localStorage.getItem("logged_in"));
-            localStorage.removeItem("user_id",localStorage.getItem("user_id"));
-            localStorage.removeItem("user_email",localStorage.getItem("user_email"));
-            localStorage.removeItem("user_role",localStorage.getItem("user_role"));
-            window.location.href = "index.html";
-        }
-
-    </script> 
-    <div class="page-container">
-        <div class="table-container" id="battle_ranking_table">
-            <div class="tb-title">Battle Ranking</div>
-            <table>
-                <tr>
-                    <th>UserID</th>
-                    <th>Score</th>
-                </tr>
-            </table>
-        </div>
-    </div>
-    <div class="battle-container2">
-        <div class="user-buttons" id="session_button">
+    <div class="right-content">
+        <div class="user-buttons">
             <script>
-                if(localStorage.getItem("logged_in") == "true"){
+                var isUserLoggedIn = localStorage.getItem("logged_in");
+
+                if (isUserLoggedIn && isUserLoggedIn.toLowerCase() === "true") {
+                    document.write('<button class="button-28" onclick="logout()">Logout</button>');
+                } else {
+                    document.write('<button class="button-28" onclick="window.location.href=\'login.html\'">Enter</button>');
+                    document.write('<button class="button-28" onclick="window.location.href=\'signin.html\'">Register</button>');
+                }
+            </script>
+        </div>
+    </div>
+</div>
+<div class="navbar-container">
+    <nav class="navbar">
+        <a onclick="window.location.href='index.html'" >Home</a>
+        <a onclick="window.location.href='tournaments.html'" class="active">Tournaments</a>
+        <a onclick="window.location.href='users.html'">Users</a>
+        <a  onclick="redirectToAccount()" id="account_page" >Account</a>
+    </nav>
+</div>
+<script>
+    var isUserLoggedIn = localStorage.getItem("logged_in");
+
+    function redirectToAccount() {
+        if (isUserLoggedIn && isUserLoggedIn.toLowerCase() === "true") {
+            window.location.href = "account.html";
+        }
+        else{window.location.href = "login.html"; }
+    }
+    function logout() {
+        localStorage.removeItem("logged_in",localStorage.getItem("logged_in"));
+        localStorage.removeItem("user_id",localStorage.getItem("user_id"));
+        localStorage.removeItem("user_email",localStorage.getItem("user_email"));
+        localStorage.removeItem("user_role",localStorage.getItem("user_role"));
+        window.location.href = "index.html";
+    }
+
+</script>
+<div class="page-container">
+    <div class="table-container" id="battle_ranking_table">
+        <div class="tb-title">Battle Ranking</div>
+        <table>
+            <tr>
+                <th>UserID</th>
+                <th>Score</th>
+            </tr>
+        </table>
+    </div>
+</div>
+<div class="battle-container2">
+    <div class="user-buttons" id="session_button">
+        <script>
+            if(localStorage.getItem("logged_in") == "true"){
                 if(localStorage.getItem("user_role") == "STUDENT" ){
-                    document.write('<button class="button-28" onclick="registerBattle()" >Join Battle</button>');  
-                    document.write('<button class="button-28" onclick="GetTeam()" >My team</button>');  
+                    document.write('<button class="button-28" onclick="registerBattle()" >Join Battle</button>');
+                    document.write('<button class="button-28" onclick="GetTeam()" >My team</button>');
                     document.write('<button class="button-28" onclick="openModal(\'InvitesModal\')" >Invites</button>');}
                 if(localStorage.getItem("user_role") == "EDUCATOR" ){
                     document.write('<button class="button-28" onclick="openModal(\'AddEvalModal\')" >Add Evaluation</button>');
                     document.write('<button class="button-28" onclick="closeBattle()" >Close Battle</button>');}
-                }
-            </script>   
-        </div>
-    </div>   
-    
-    <div id="AddEvalModal" class="modal">
-        <label for="Team_ID">Insert ID of the team:</label>
-        <input type="text" id="Team_ID" placeholder="Team id">
-            
-        <label for="Score">Insert score:</label>
-        <input type="text" id="Score" placeholder="Score" >
-
-        <button onclick="SendEval()">Submit</button>
+            }
+        </script>
     </div>
-    <div class="overlay" onclick="closeModal('TeamModal')"></div> 
-    <div class="overlay" onclick="closeModal('AddEvalModal')"></div> 
-    <div class="overlay" onclick="closeModal('InvitesModal')"></div> 
+</div>
+
+<div id="AddEvalModal" class="modal">
+    <label for="Team_ID">Insert ID of the team:</label>
+    <input type="text" id="Team_ID" placeholder="Team id">
+
+    <label for="Score">Insert score:</label>
+    <input type="text" id="Score" placeholder="Score" >
+
+    <button onclick="SendEval()">Submit</button>
+</div>
+<div class="overlay" onclick="closeModal('TeamModal')"></div>
+<div class="overlay" onclick="closeModal('AddEvalModal')"></div>
+<div class="overlay" onclick="closeModal('InvitesModal')"></div>
 
 
-    <div id="InvitesModal" class="modal">
-        <label for="TeamID">Insert ID of the team:</label>
-        <input type="text" id="TeamID" placeholder="Team id">
-            
-        <label for="UserID">Insert ID of the user to invite:</label>
-        <input type="text" id="UserID" placeholder="user id" >
+<div id="InvitesModal" class="modal">
+    <label for="TeamID">Insert ID of the team:</label>
+    <input type="text" id="TeamID" placeholder="Team id">
 
-        <button onclick="InvitesStudent()">Submit</button>
+    <label for="UserID">Insert ID of the user to invite:</label>
+    <input type="text" id="UserID" placeholder="user id" >
+
+    <button onclick="InvitesStudent()">Submit</button>
+</div>
+
+<div id="TeamModal" class="modal">
+    <div id="team-sec" class="team-section" onclick="closeModal('TeamModal')">
     </div>
+</div>
+<script>
+    function openModal(modalId) {
+        var modal = document.getElementById(modalId);
+        var overlay = document.querySelector('.overlay');
+        modal.style.display = 'block';
+        overlay.style.display = 'block';
+    }
 
-    <div id="TeamModal" class="modal">
-        <div id="team-sec" class="team-section" onclick="closeModal('TeamModal')">   
-        </div>  
-    </div> 
-    <script>
-        function openModal(modalId) {
-            var modal = document.getElementById(modalId);
-            var overlay = document.querySelector('.overlay');
-            modal.style.display = 'block';
-            overlay.style.display = 'block';
-        }
-    
-        function closeModal(modalId) {
-            var modal = document.getElementById(modalId);
-            var overlay = document.querySelector('.overlay');
-            modal.style.display = 'none';
-            overlay.style.display = 'none';
-        }
-        
-        function closeBattle(){
-            var fetchOptions = {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    battleId : params.get('idB'),
-                    educatorId : localStorage.getItem("user_id")
-                })
-            };
-            fetch("http://localhost:8080/api/battle/close-battle",fetchOptions)
-                .then(response => {
+    function closeModal(modalId) {
+        var modal = document.getElementById(modalId);
+        var overlay = document.querySelector('.overlay');
+        modal.style.display = 'none';
+        overlay.style.display = 'none';
+    }
+
+    function closeBattle(){
+        var fetchOptions = {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                battleId : params.get('idB'),
+                educatorId : localStorage.getItem("user_id")
+            })
+        };
+        fetch("http://localhost:8080/api/battle/close-battle",fetchOptions)
+            .then(response => {
                 if (response.status >= 300 ) {
                     console.error('Errore durante la richiesta HTTP:', response.status, response.statusText);
                 }else{
                     alert("Battle closed");}
-                })
-                .catch(error => {
-                    console.error('Errore durante la richiesta HTTP:', error);
-                });
-        }
-    </script>   
-        
+            })
+            .catch(error => {
+                console.error('Errore durante la richiesta HTTP:', error);
+            });
+    }
+</script>
+
 </body>
 
 </html>

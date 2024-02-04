@@ -10,28 +10,28 @@ async function setRole(){
         })
     };
     fetch("http://localhost:8080/api/account/user",fetchOptions)
-    .then(function (response) {
-        if (response.ok) {
-            return response.json(); 
-        } else {
+        .then(function (response) {
+            if (response.ok) {
+                return response.json();
+            } else {
+                localStorage.removeItem("logged_in", localStorage.getItem("logged_in"));
+                localStorage.removeItem("user_id", localStorage.getItem("user_id"));
+                localStorage.removeItem("user_email", localStorage.getItem("user_email"));
+                throw new Error("Errore during the request.Please retry.");
+            }
+        })
+        .then(function (data) {
+            console.log(data);
+            localStorage.setItem("user_role", data.role);
+            window.location.href = "index.html";
+        })
+        .catch(function (err) {
+            alert("Error during the request to the server.");
             localStorage.removeItem("logged_in", localStorage.getItem("logged_in"));
             localStorage.removeItem("user_id", localStorage.getItem("user_id"));
             localStorage.removeItem("user_email", localStorage.getItem("user_email"));
-            throw new Error("Errore durante la richiesta.");
-        }
-    })
-    .then(function (data) {
-        console.log(data);
-        localStorage.setItem("user_role", data.role);
-        window.location.href = "index.html";
-    })
-    .catch(function (err) {
-        alert("Errore durante la richiesta.");
-        localStorage.removeItem("logged_in", localStorage.getItem("logged_in"));
-        localStorage.removeItem("user_id", localStorage.getItem("user_id"));
-        localStorage.removeItem("user_email", localStorage.getItem("user_email"));
-        window.location.href = "index.html";  
-    })
+            window.location.href = "index.html";
+        })
 }
 
 function sendLoginReq() {
@@ -52,32 +52,32 @@ function sendLoginReq() {
         })
     };
     fetch("http://localhost:8080/api/account/sign-in", fetchOptions)
-    .then(function (response) {
-        console.log("Step 1");
-        if (response.ok) {
-            return response.text();
-        } else {
-            throw new Error("Credenziali errate. Riprova.");
-        }
-    })
-    .then(function (data) {
-        console.log("Step 2");
-        console.log(data);
-        localStorage.setItem("logged_in", "true");
-        localStorage.setItem("user_id", data); 
-        localStorage.setItem("user_email", email);
-        setRole();
-        return data;
-    })
-    .catch(function (err) {
-        console.error(err);
-        alert("Errore durante la richiesta.");
-        localStorage.removeItem("logged_in", localStorage.getItem("logged_in"));
-        localStorage.removeItem("user_id", localStorage.getItem("user_id"));
-        localStorage.removeItem("user_email", localStorage.getItem("user_email"));
-        window.location.href = "index.html";
-        throw err;
-    })
+        .then(function (response) {
+            console.log("Step 1");
+            if (response.ok) {
+                return response.text();
+            } else {
+                throw new Error("Credential error. Please retry.");
+            }
+        })
+        .then(function (data) {
+            console.log("Step 2");
+            console.log(data);
+            localStorage.setItem("logged_in", "true");
+            localStorage.setItem("user_id", data);
+            localStorage.setItem("user_email", email);
+            setRole();
+            return data;
+        })
+        .catch(function (err) {
+            console.error(err);
+            alert("Error while doing the request to the server." +err);
+            localStorage.removeItem("logged_in", localStorage.getItem("logged_in"));
+            localStorage.removeItem("user_id", localStorage.getItem("user_id"));
+            localStorage.removeItem("user_email", localStorage.getItem("user_email"));
+            window.location.href = "index.html";
+            throw err;
+        })
 };
 
 function sendSignUpReq() {
@@ -93,7 +93,7 @@ function sendSignUpReq() {
         alert("Please fill in all fields");
         return;
     }
-    
+
     var fetchOptions = {
         method: "POST",
         headers: {
@@ -112,7 +112,7 @@ function sendSignUpReq() {
             if (response.ok) {
                 return response.json();
             } else {
-                alert("Errore durante la richiesta.");
+                alert("Error in data inserted. Please retry");
             }
         })
         .then(function (data) {
@@ -130,7 +130,7 @@ function sendSignUpReq() {
             localStorage.removeItem("user_id",localStorage.getItem("user_id"));
             localStorage.removeItem("user_email",localStorage.getItem("user_email") );
             localStorage.removeItem("user_role",localStorage.getItem("user_role") );
-            alert("Errore durante la richiesta.");
-                window.location.href = "index.html";
+            alert("Error while doing the request to the server." +err);
+            window.location.href = "index.html";
         })
 };

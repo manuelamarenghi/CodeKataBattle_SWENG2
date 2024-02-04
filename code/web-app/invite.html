@@ -2,7 +2,7 @@
 <html>
 
 <head>
-   <script>
+    <script>
         const queryString = window.location.search;
         const params = new URLSearchParams(queryString);
         const param_team = params.get('idTeam');
@@ -10,7 +10,7 @@
         if(!param_team || !param_user){
             alert("Error while retreiving resources");
         }
-   </script>
+    </script>
 
     <title>Invite | CodeKataBattle</title>
     <link rel="icon" href="public\images\iconCKB.png" type="image/x-icon">
@@ -34,63 +34,63 @@
 </head>
 
 <body>
-    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
-    <div class="top-header">
-        <div class="left-content">
-            <img src="public\images\iconCKB.png" class="sw-image">
-            <div class="sw-title"> CodeKataBattle </div>
-        </div>
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+<div class="top-header">
+    <div class="left-content">
+        <img src="public\images\iconCKB.png" class="sw-image">
+        <div class="sw-title"> CodeKataBattle </div>
+    </div>
+</div>
+
+<!-- Aggiunto il form di login -->
+<div class="login-form" >
+    <label for="evaluation">Are you sure you want to enter the TEAM:</label>
+    <div>
+        <input type="radio" id="evaluationYes" name="enterteam" value="yes">
+        <label for="evaluationYes">Yes</label>
+
+        <input type="radio" id="evaluationNo" name="enterteam" value="no">
+        <label for="evaluationNo">No</label>
     </div>
 
-    <!-- Aggiunto il form di login -->
-    <div class="login-form" >
-        <label for="evaluation">Are you sure you want to enter the TEAM:</label>
-            <div>
-                <input type="radio" id="evaluationYes" name="enterteam" value="yes">
-                <label for="evaluationYes">Yes</label>
-    
-                <input type="radio" id="evaluationNo" name="enterteam" value="no">
-                <label for="evaluationNo">No</label>
-            </div>
+    <button type="submit" onclick="sendAcceptedInviteReq()">Submit</button>
+</div>
 
-        <button type="submit" onclick="sendAcceptedInviteReq()">Submit</button>
-    </div>
-    
-    <script>
-        function sendAcceptedInviteReq(){
-            const queryString = window.location.search;
-            const params = new URLSearchParams(queryString);
-            const param_team = params.get('idTeam');
-            const param_user = params.get('idUser');
-            var enterteam = document.querySelector('input[name="enterteam"]:checked');
-            if(enterteam == "yes"){
+<script>
+    function sendAcceptedInviteReq(){
+        const queryString = window.location.search;
+        const params = new URLSearchParams(queryString);
+        const param_team = params.get('idTeam');
+        const param_user = params.get('idUser');
+        var enterteam = document.querySelector('input[name="enterteam"]:checked');
+        if(enterteam == "yes"){
             var fetchOptions = {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-                idStudent : param_user,
-                idTeam : param_team
-            })};
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    idStudent : param_user,
+                    idTeam : param_team
+                })};
             fetch("http://localhost:8080/api/battle/register-student-team", fetchOptions)
-            .then(function (response) {
-                if (response.ok) {
-                    alert("You have been added to the team");
-                    window.location.href = "index.html";
-                } else {
-                    alert("Error while adding student to the team");
-                    window.location.href = "index.html";
+                .then(function (response) {
+                    if (response.ok) {
+                        alert("You have been added to the team");
+                        window.location.href = "index.html";
+                    } else {
+                        alert("Error while adding student to the team");
+                        window.location.href = "index.html";
 
-                }
-            })
-            .catch(function (error) {
-                alert("Error while connecting to the server"+ error);
-                window.location.href = "index.html";
-            });
+                    }
+                })
+                .catch(function (error) {
+                    alert("Error while connecting to the server"+ error);
+                    window.location.href = "index.html";
+                });
         }}
-    </script>
+</script>
 </body>
 
 </html>

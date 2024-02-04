@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <script> if(!localStorage.getItem('logged_in')){ 
+    <script> if(!localStorage.getItem('logged_in')){
         alert('You are not logged in!');
         window.location.href='index.html' }</script>
     <title>Account | CodeKataBattle</title>
@@ -11,7 +11,7 @@
         body {
             margin: 0;
             font-family: 'Jura', sans-serif;
-            
+
         }
 
     </style>
@@ -23,53 +23,53 @@
 
 <body>
 
-    <div class="top-header">
-        <div class="left-content">
-            <img src="public\images\iconCKB.png" class="sw-image">
-            <div class="sw-title"> CodeKataBattle </div>
+<div class="top-header">
+    <div class="left-content">
+        <img src="public\images\iconCKB.png" class="sw-image">
+        <div class="sw-title"> CodeKataBattle </div>
+    </div>
+</div>
+
+<div class="navbar-container">
+    <nav class="navbar">
+        <a onclick="window.location.href='index.html'">Home</a>
+        <a onclick="window.location.href='tournaments.html'">Tournaments</a>
+        <a onclick="window.location.href='users.html'">Users</a>
+        <a  onclick="redirectToAccount()" id="account_page"class="active" >Account</a>
+    </nav>
+</div>
+<script>
+    var isUserLoggedIn = localStorage.getItem("logged_in");
+
+    function redirectToAccount() {
+        if (isUserLoggedIn && isUserLoggedIn.toLowerCase() === "true") {
+            window.location.href = "account.html";
+        }
+        else{window.location.href = "login.html"; }
+    }
+</script>
+<div class="account-container">
+    <div class="user-info">
+        <img src="public\images\user.png">
+        <div class="user-details" id="userDetails">
+
         </div>
     </div>
-
-    <div class="navbar-container">
-        <nav class="navbar">
-            <a onclick="window.location.href='index.html'">Home</a>
-            <a onclick="window.location.href='tournaments.html'">Tournaments</a>
-            <a onclick="window.location.href='users.html'">Users</a>
-            <a  onclick="redirectToAccount()" id="account_page"class="active" >Account</a>
-        </nav>
+    <div >
     </div>
     <script>
-        var isUserLoggedIn = localStorage.getItem("logged_in");
-        
-        function redirectToAccount() {
-            if (isUserLoggedIn && isUserLoggedIn.toLowerCase() === "true") {
-                window.location.href = "account.html";
-            }
-            else{window.location.href = "login.html"; }
-        }
-    </script> 
-    <div class="account-container">
-        <div class="user-info">
-            <img src="public\images\user.png">
-         <div class="user-details" id="userDetails">
-                 
-       </div>
-        </div>
-        <div >
-        </div>
-        <script>
-            var storedUserId = localStorage.getItem('user_id');
-            var storedUserEmail = localStorage.getItem('user_email');
-            var storedUserRole = localStorage.getItem('user_role');
-            var userDetailsDiv = document.getElementById('userDetails');
-            var userDetailsHTML = `
+        var storedUserId = localStorage.getItem('user_id');
+        var storedUserEmail = localStorage.getItem('user_email');
+        var storedUserRole = localStorage.getItem('user_role');
+        var userDetailsDiv = document.getElementById('userDetails');
+        var userDetailsHTML = `
                 <div>ID: ${storedUserId}</div>
                 <div>Email: ${storedUserEmail}</div>
                 <div>Role: ${storedUserRole}</div>
             `;
-            userDetailsDiv.innerHTML = userDetailsHTML;
-        </script>
-        
+        userDetailsDiv.innerHTML = userDetailsHTML;
+    </script>
+
     <div class="edit-section" >
         <h2>Edit Profile</h2>
         <label for="fullName">Full Name:</label>
@@ -83,8 +83,8 @@
         <br>
         <button class="button-28" id="submit-button" onclick="updateUserInfo()">Update Profile</button>
     </div>
-    </div>
-    <script src="utility/app.js"></script>
+</div>
+<script src="utility/app.js"></script>
 </body>
 
 </html>

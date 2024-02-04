@@ -1,5 +1,4 @@
 function GetTeam(){
-    //ancora non presente lato server
     const params = new URLSearchParams(queryString);
     const tournamentID = params.get('idT');
     const battleID = params.get('idB');
@@ -15,38 +14,36 @@ function GetTeam(){
     };
     fetch("http://localhost:8080/api/battle/get-team",fetchOptions)
         .then(response => {
-        if (response.status >= 300 ) {
-            console.error('Errore durante la richiesta HTTP:', response.status, response.statusText);
-            console.log(response.json());
-           // window.location.href = "index.html";
-        }
-        else{ return response.json();}
+            if (response.status >= 300 ) {
+                console.error('Errore durante la richiesta HTTP:', response.status, response.statusText);
+                console.log(response.json());
+            }
+            else{ return response.json();}
         })
         .then(data => {
-        console.log(data);
-        var members = data.participantsName;
-        openModal('TeamModal');
-        var teamSection = document.getElementById('team-sec');  
-        teamSection.innerHTML = '';
-        var teamMemberDiv = document.createElement('div');
-        teamMemberDiv.className = 'team-member';
-        
-        teamMemberDiv.innerHTML = `
+            console.log(data);
+            var members = data.participantsName;
+            openModal('TeamModal');
+            var teamSection = document.getElementById('team-sec');
+            teamSection.innerHTML = '';
+            var teamMemberDiv = document.createElement('div');
+            teamMemberDiv.className = 'team-member';
+
+            teamMemberDiv.innerHTML = `
             <div>ID Team: ${data.teamId}</div>
         `;
-        for (var i=0;i<members.length;i++) {
-            var teamNameDiv = document.createElement('div');
-            teamNameDiv.className = 'member-name';
-            teamNameDiv.textContent = `Name: ${members[i]}`;
-            teamMemberDiv.appendChild(teamNameDiv);                    
-        }  
-        teamSection.appendChild(teamMemberDiv);
+            for (var i=0;i<members.length;i++) {
+                var teamNameDiv = document.createElement('div');
+                teamNameDiv.className = 'member-name';
+                teamNameDiv.textContent = `Name: ${members[i]}`;
+                teamMemberDiv.appendChild(teamNameDiv);
+            }
+            teamSection.appendChild(teamMemberDiv);
         })
         .catch(error => {
-            console.error('Errore durante la richiesta HTTP:', error);
-           // window.location.href = "index.html";
+            console.error('Errore during HTTP request:', error);
         });
-       }
+}
 
 function SendEval(){
     var fetchOptions = {
@@ -61,13 +58,13 @@ function SendEval(){
         })
     };
     fetch("http://localhost:8080/api/battle/assign-personal-score",fetchOptions)
-          .then(function(response){
+        .then(function(response){
             if (response.status >= 300 ) {
-                console.error('Errore durante la richiesta HTTP:', response.status, response.statusText);
+                console.error('Errore during HTTP request:', response.status, response.statusText);
                 window.location.href = "index.html";
             }else{ alert('Score assigned');}
             closeModal('EvalModal');
-          })
+        })
 }
 
 function registerBattle(){
@@ -85,12 +82,12 @@ function registerBattle(){
         })
     };
     fetch("http://localhost:8080/api/battle/join-battle",fetchOptions)
-          .then(function(response){
+        .then(function(response){
             if (response.status >= 300 ) {
                 console.error('Errore durante la richiesta HTTP:', response.status, response.statusText);
                 alert('Errore nella richiesta al server');            }
-            else{ alert('You have been registered to the battle');}    
-          })
+            else{ alert('You have been registered to the battle');}
+        })
 }
 
 
@@ -102,16 +99,15 @@ function InvitesStudent(){
         },
         body: JSON.stringify({
             idStudent : document.getElementById("userID").value,
-            idTeam  : document.getElementById("teamID").value, 
+            idTeam  : document.getElementById("teamID").value,
         })
     };
     fetch("http://localhost:8080/api/battle/invite-student-to-team",fetchOptions)
-          .then(function(response){
+        .then(function(response){
             if (response.status >= 300 ) {
-                console.error('Errore durante la richiesta HTTP:', response.status, response.statusText);
-                alert('Errore nella richiesta al server');            
-                window.location.href = "index.html";
+                console.error('Error during HTTP request:', response.status, response.statusText);
+                alert('Error during the request to the server');
             }else{ alert('Invitation sent');}
-          })
+        })
     closeModal('InvitesModal');
 }

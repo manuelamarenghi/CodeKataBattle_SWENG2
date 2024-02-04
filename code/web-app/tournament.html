@@ -2,15 +2,15 @@
 <html>
 
 <head>
-    <script> 
-    const queryString = window.location.search;
-    const params = new URLSearchParams(queryString);
-    const paramValue = params.get('id');
-    if(!paramValue ){ 
-        alert('Invalid access!');
-        window.location.href='index.html' 
-    }
-    var fetchOptions = {
+    <script>
+        const queryString = window.location.search;
+        const params = new URLSearchParams(queryString);
+        const paramValue = params.get('id');
+        if(!paramValue ){
+            alert('Invalid access!');
+            window.location.href='index.html'
+        }
+        var fetchOptions = {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -19,45 +19,45 @@
                 tournamentID : paramValue,
             })
         };
-    console.log(fetchOptions);
-    fetch("http://localhost:8080/api/tournament/get-tournament-page",fetchOptions)
-        .then(function(response){
-            if(response.ok){
-                console.log(response.json);
-                return response.json();
-           } else {
+        console.log(fetchOptions);
+        fetch("http://localhost:8080/api/tournament/get-tournament-page",fetchOptions)
+            .then(function(response){
+                if(response.ok){
+                    console.log(response.json);
+                    return response.json();
+                } else {
                     alert("Invalid request for this page.");
-                    window.location.href = "index.html";      
-            }})
-        .then( function(data){
-            console.log(data);
-            var Rtable = document.getElementById('battle_table').querySelector('table');
-            var battles = data.battles;
-            console.log(data.battles[0]);
-            for(var i = 0; i < battles.length; i++){
-                var row = Rtable.insertRow();
-                var keyCell = row.insertCell(0);
-                var link = document.createElement('a');
-                link.href = "battle.html?idB="+ data.battles[i] +"&idT="+paramValue;
-                link.textContent = data.battles[i];
-                keyCell.appendChild(link);
-            }
-            var Ttable = document.getElementById('tournament_ranking').querySelector('table');
-            var tournamentRankings = data.tournamentRankings;
-            for(var i = 0; i < tournamentRankings.length; i++){
-                var row = Ttable.insertRow();
-                var place = row.insertCell(0);
-                var userid  = row.insertCell(1);
-                var score = row.insertCell(2);
-                place.innerHTML = i+1;
-                userid.innerHTML = tournamentRankings[i].userID;
-                score.innerHTML = tournamentRankings[i].score;
-        }})
-        .catch(function(error) {
+                    window.location.href = "index.html";
+                }})
+            .then( function(data){
+                console.log(data);
+                var Rtable = document.getElementById('battle_table').querySelector('table');
+                var battles = data.battles;
+                console.log(data.battles[0]);
+                for(var i = 0; i < battles.length; i++){
+                    var row = Rtable.insertRow();
+                    var keyCell = row.insertCell(0);
+                    var link = document.createElement('a');
+                    link.href = "battle.html?idB="+ data.battles[i] +"&idT="+paramValue;
+                    link.textContent = data.battles[i];
+                    keyCell.appendChild(link);
+                }
+                var Ttable = document.getElementById('tournament_ranking').querySelector('table');
+                var tournamentRankings = data.tournamentRankings;
+                for(var i = 0; i < tournamentRankings.length; i++){
+                    var row = Ttable.insertRow();
+                    var place = row.insertCell(0);
+                    var userid  = row.insertCell(1);
+                    var score = row.insertCell(2);
+                    place.innerHTML = i+1;
+                    userid.innerHTML = tournamentRankings[i].userID;
+                    score.innerHTML = tournamentRankings[i].score;
+                }})
+            .catch(function(error) {
                 console.log(error);
                 alert("An error occur while connecting to the server: "+ error);
                 window.location.href = "index.html";
-        });
+            });
     </script>
     <title>Tournament | CodeKataBattle</title>
     <link rel="icon" href="public\images\iconCKB.png" type="image/x-icon">
@@ -72,7 +72,7 @@
             float: right;
             margin-right: 50px;
             margin-top: 120px;
-        } 
+        }
         .button-container{
             margin-bottom: 20px;
         }
@@ -87,134 +87,134 @@
 
 <body>
 
-    <div class="top-header">
-        <div class="left-content">
-            <img src="public\images\iconCKB.png" class="sw-image">
-            <div class="sw-title"> CodeKataBattle </div>
-        </div>
-        <div class="right-content">
-            <div class="user-buttons">
-                <script>
-                    var isUserLoggedIn = localStorage.getItem("logged_in");
-                    
-                    if (isUserLoggedIn && isUserLoggedIn.toLowerCase() === "true") {
-                        document.write('<button class="button-28" onclick="logout()">Logout</button>');
-                        if(localStorage.getItem("user_role") === "EDUCATOR"){
-                            document.write('<button class="button-28" onclick="closeTournament()">Close Tournament</button>'); 
-                        }
-                    } else {
-                        document.write('<button class="button-28" onclick="window.location.href=\'login.html\'">Enter</button>');
-                        document.write('<button class="button-28" onclick="window.location.href=\'signin.html\'">Register</button>');
-                    }
-                </script>
-            </div>
-        </div>
+<div class="top-header">
+    <div class="left-content">
+        <img src="public\images\iconCKB.png" class="sw-image">
+        <div class="sw-title"> CodeKataBattle </div>
     </div>
-    <div class="navbar-container">
-        <nav class="navbar">
-            <a onclick="window.location.href='index.html'" >Home</a>
-            <a onclick="window.location.href='tournaments.html'" class="active">Tournaments</a>
-            <a onclick="window.location.href='users.html'">Users</a>
-            <a  onclick="redirectToAccount()" id="account_page" >Account</a>
-        </nav>
-    </div>
-    <script>
-        var isUserLoggedIn = localStorage.getItem("logged_in");
-        
-        function redirectToAccount() {
-            if (isUserLoggedIn && isUserLoggedIn.toLowerCase() === "true") {
-                window.location.href = "account.html";
-            }
-            else{window.location.href = "login.html"; }
-        }
-        function logout() {
-            localStorage.removeItem("logged_in",localStorage.getItem("logged_in"));
-            localStorage.removeItem("user_id",localStorage.getItem("user_id"));
-            localStorage.removeItem("user_email",localStorage.getItem("user_email"));
-            localStorage.removeItem("user_role",localStorage.getItem("user_role"));
-            window.location.href = "index.html";
-        }
-        function openModal(modalId) {
-                var modal = document.getElementById(modalId);
-                var overlay = document.querySelector('.overlay');
-                modal.style.display = 'block';
-                overlay.style.display = 'block';
-            }
-        
-        function closeModal(modalId) {
-                var modal = document.getElementById(modalId);
-                var overlay = document.querySelector('.overlay');
-                modal.style.display = 'none';
-                overlay.style.display = 'none';
-            }
+    <div class="right-content">
+        <div class="user-buttons">
+            <script>
+                var isUserLoggedIn = localStorage.getItem("logged_in");
 
-        function registertournament(){
-            var fetchOptions = {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    tournamentID : params.get('id'),
-                    userID : localStorage.getItem("user_id")
-                })
-            };
-            console.log(fetchOptions);
-            fetch("http://localhost:8080/api/tournament/subscription",fetchOptions)
-                .then(function(response){
-                    if(response.ok){
-                        alert("You have been registered to the tournament!");
-                    } else {
-                        alert("Tournament already closed.");
+                if (isUserLoggedIn && isUserLoggedIn.toLowerCase() === "true") {
+                    document.write('<button class="button-28" onclick="logout()">Logout</button>');
+                    if(localStorage.getItem("user_role") === "EDUCATOR"){
+                        document.write('<button class="button-28" onclick="closeTournament()">Close Tournament</button>');
                     }
+                } else {
+                    document.write('<button class="button-28" onclick="window.location.href=\'login.html\'">Enter</button>');
+                    document.write('<button class="button-28" onclick="window.location.href=\'signin.html\'">Register</button>');
+                }
+            </script>
+        </div>
+    </div>
+</div>
+<div class="navbar-container">
+    <nav class="navbar">
+        <a onclick="window.location.href='index.html'" >Home</a>
+        <a onclick="window.location.href='tournaments.html'" class="active">Tournaments</a>
+        <a onclick="window.location.href='users.html'">Users</a>
+        <a  onclick="redirectToAccount()" id="account_page" >Account</a>
+    </nav>
+</div>
+<script>
+    var isUserLoggedIn = localStorage.getItem("logged_in");
+
+    function redirectToAccount() {
+        if (isUserLoggedIn && isUserLoggedIn.toLowerCase() === "true") {
+            window.location.href = "account.html";
+        }
+        else{window.location.href = "login.html"; }
+    }
+    function logout() {
+        localStorage.removeItem("logged_in",localStorage.getItem("logged_in"));
+        localStorage.removeItem("user_id",localStorage.getItem("user_id"));
+        localStorage.removeItem("user_email",localStorage.getItem("user_email"));
+        localStorage.removeItem("user_role",localStorage.getItem("user_role"));
+        window.location.href = "index.html";
+    }
+    function openModal(modalId) {
+        var modal = document.getElementById(modalId);
+        var overlay = document.querySelector('.overlay');
+        modal.style.display = 'block';
+        overlay.style.display = 'block';
+    }
+
+    function closeModal(modalId) {
+        var modal = document.getElementById(modalId);
+        var overlay = document.querySelector('.overlay');
+        modal.style.display = 'none';
+        overlay.style.display = 'none';
+    }
+
+    function registertournament(){
+        var fetchOptions = {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                tournamentID : params.get('id'),
+                userID : localStorage.getItem("user_id")
+            })
+        };
+        console.log(fetchOptions);
+        fetch("http://localhost:8080/api/tournament/subscription",fetchOptions)
+            .then(function(response){
+                if(response.ok){
+                    alert("You have been registered to the tournament!");
+                } else {
+                    alert("Tournament already closed.");
+                }
             })
             .catch(function(response) {
                 alert("An error occur while connecting to the server: "+ error);
-                });
-        }
-        function closeTournament(){
-                var fetchOptions = {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    tournamentID : params.get('id'),
-                    creatorID : localStorage.getItem("user_id")
-                })
-            };
-            fetch("http://localhost:8080/api/tournament/close-tournament",fetchOptions)
-                .then(function(response){
-                    if(response.ok){
-                        alert("Tournament closed!");
-                    } else {
-                        alert("Impossible to close the tournament.");
-                    }
-                })
-                .catch(function(response) {
-                    alert("An error occur while connecting to the server: "+ error);
-                }); }
-    </script> 
-    <div class="page-container">
-        <div class="table-container" id="tournament_ranking">
-            <div class="tb-title">Tournament Ranking</div>
-            <table>
-                <tr>
-                    <th>Position</th>
-                    <th class="large-column">UserID</th>
-                    <th>Rating</th>
-                </tr>
-                
-            </table>
-        </div>
-    </div>
-
-    <div class="battle-container" id="battle_table">
-        <div class="tb-title">Battles</div>
+            });
+    }
+    function closeTournament(){
+        var fetchOptions = {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                tournamentID : params.get('id'),
+                creatorID : localStorage.getItem("user_id")
+            })
+        };
+        fetch("http://localhost:8080/api/tournament/close-tournament",fetchOptions)
+            .then(function(response){
+                if(response.ok){
+                    alert("Tournament closed!");
+                } else {
+                    alert("Impossible to close the tournament.");
+                }
+            })
+            .catch(function(response) {
+                alert("An error occur while connecting to the server: "+ error);
+            }); }
+</script>
+<div class="page-container">
+    <div class="table-container" id="tournament_ranking">
+        <div class="tb-title">Tournament Ranking</div>
         <table>
+            <tr>
+                <th>Position</th>
+                <th class="large-column">UserID</th>
+                <th>Rating</th>
+            </tr>
+
         </table>
     </div>
-    <div class="right">
+</div>
+
+<div class="battle-container" id="battle_table">
+    <div class="tb-title">Battles</div>
+    <table>
+    </table>
+</div>
+<div class="right">
     <div class="button-container">
         <div class="user-buttons" id="session_button">
             <script>
@@ -222,11 +222,11 @@
                     document.write('<button onclick="registertournament()" class="button-28" >GET IN</button>');
                 }
                 if(localStorage.getItem("user_role") === "EDUCATOR"){
-                    document.write('<button onclick="openModal(\'CreateBattleModal\')" class="button-28">Create Battle</button>'); 
+                    document.write('<button onclick="openModal(\'CreateBattleModal\')" class="button-28">Create Battle</button>');
                 }
             </script>
         </div>
-    </div> 
+    </div>
     <div id="CreateBattleModal" class="modal">
         <div class="team-section">
             <label for="BattleName">Insert name for the battle:</label>
@@ -234,48 +234,48 @@
 
             <label for="teamParticipantMin">Insert min participant for team:</label>
             <input type="text" id="teamParticipantMin" placeholder="Team participant min">
-            
+
             <label for="teamParticipantMax">Insert max participant for team:</label>
             <input type="text" id="teamParticipantMax" placeholder="Team participant max" disable>
-             <script>
+            <script>
                 document.getElementById("teamParticipantMin").addEventListener("change", function() {
-                document.getElementById("teamParticipantMax").setAttribute("min", this.value);
-            })
-             </script>
+                    document.getElementById("teamParticipantMax").setAttribute("min", this.value);
+                })
+            </script>
             <label for="evaluation">Add person evaluation:</label>
             <div>
                 <input type="radio" id="evaluationYes" name="evaluation" value="yes">
                 <label for="evaluationYes">Yes</label>
-    
+
                 <input type="radio" id="evaluationNo" name="evaluation" value="no">
                 <label for="evaluationNo">No</label>
             </div>
-    
+
             <label for="registrationSubmission">Add registration deadline:</label>
             <input type="date" id="registrationSubmission">
 
             <label for="deadlineSubmission">Add submission deadline:</label>
             <input type="date" id="deadlineSubmission"disabled>
-    
+
             <script>
                 var currentDate = new Intl.DateTimeFormat('en-CA').format(new Date());
                 document.getElementById("registrationSubmission").setAttribute("min", currentDate);
                 document.getElementById("registrationSubmission").addEventListener("change", function() {
-                document.getElementById("deadlineSubmission").removeAttribute("disabled");
-                var start = this.value;
-                document.getElementById("deadlineSubmission").setAttribute("min", start);
-            })
+                    document.getElementById("deadlineSubmission").removeAttribute("disabled");
+                    var start = this.value;
+                    document.getElementById("deadlineSubmission").setAttribute("min", start);
+                })
             </script>
-    
+
             <label for="codeKataUpload">Upload CodeKata (ZIP file):</label>
             <input type="file" id="codeKataUpload" accept=".zip">
-    
+
             <button onclick="submitCreateBattle()">Create Battle</button>
             <button onclick="closeModal('CreateBattleModal')">Cancel</button>
         </div>
     </div>
     <div id="modalOverlay" class="overlay" onclick="closeModal('CreateBattleModal')"></div>
-    
+
     <script>
         function submitCreateBattle() {
             var teamParticipant_min = document.getElementById('teamParticipantMin').value;
@@ -326,7 +326,7 @@
                 });
             closeModal('CreateBattleModal');
         }
-    </script>   
+    </script>
 </body>
 
 </html>
