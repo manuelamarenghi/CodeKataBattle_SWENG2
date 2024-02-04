@@ -84,10 +84,6 @@ public class TeamService {
             Participation participation = studentTeam.getParticipation().getFirst();
             studentTeam.getParticipation().remove(participation);
 
-            //participationRepository.deleteAll(studentTeam.getParticipation());
-            //participationService.deleteParticipationById(idStudent, studentTeam);
-            //participationService.deleteParticipationById(participation.getId());
-            //teamRepository.deleteById(studentTeam.getTeamId());
             studentTeam.setCanParticipateToBattle(false);
             log.info("Team deleted with id: {}", studentTeam.getTeamId());
         } else {

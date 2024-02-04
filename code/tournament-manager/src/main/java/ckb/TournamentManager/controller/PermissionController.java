@@ -103,7 +103,7 @@ public class PermissionController extends Controller {
             return new ResponseEntity<>("Invalid tournament id request", getHeaders(), HttpStatus.BAD_REQUEST);
         }
 
-        if (tournamentService.getTournament(request.getTournamentID()).getStatus() == false) {
+        if (!tournamentService.getTournament(request.getTournamentID()).getStatus()) {
             log.error("Tournament already ended");
             return new ResponseEntity<>("Tournament already ended", getHeaders(), HttpStatus.BAD_REQUEST);
         }

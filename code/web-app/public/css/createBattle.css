@@ -32,7 +32,6 @@ button {
 button:hover {
     background-color: #2980b9;
 }
-* Add some spacing between modal fields */
 #CreateBattleModal .team-section label,
 #CreateBattleModal .team-section input,
 #CreateBattleModal .team-section div {
