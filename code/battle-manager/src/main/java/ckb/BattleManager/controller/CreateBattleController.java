@@ -76,7 +76,7 @@ public class CreateBattleController extends Controller {
                 log.error("Zip file is null");
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Zip file is null");
             }
-            String fileName = zipFile.getOriginalFilename().replace(" ", "-");
+            String fileName = zipFile.getOriginalFilename().replaceAll("[^a-zA-Z]", "-");
             String home = System.getProperty("user.home");
             String filePath = home + fileName; // zip file will be put in the home directory
 
