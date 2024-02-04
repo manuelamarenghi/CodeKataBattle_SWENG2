@@ -4,6 +4,19 @@ version: "3.8"
 # use 'ID=your_id docker compose up' to run with local images aka when testing (obviously must build local images first...)
 
 services:
+  discovery-server:
+    container_name: discovery-server
+    image: ${ID:-codekatabattle}/discovery-server
+    ports:
+      - "8761:8761"
+
+  api-gateway:
+    container_name: api-gateway
+    image: ${ID:-codekatabattle}/api-gateway
+    ports:
+      - "8080:8080"
+    restart: always
+
   mysql-account-manager:
     container_name: mysql-account-manager
     image: mysql
@@ -45,6 +58,7 @@ services:
     image: ${ID:-codekatabattle}/solution-evaluation-service
     ports:
       - "8081:8081"
+    restart: always
 
   battle-manager:
     container_name: battle-manager
@@ -63,12 +77,14 @@ services:
     image: ${ID:-codekatabattle}/github-manager
     ports:
       - "8083:8083"
+    restart: always
 
   mail-service:
     container_name: mail-service
     image: ${ID:-codekatabattle}/mail-service
     ports:
       - "8085:8085"
+    restart: always
 
   account-manager:
     container_name: account-manager

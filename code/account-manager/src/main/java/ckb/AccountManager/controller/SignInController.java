@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/account/sign-in")
 @Slf4j
 @RequiredArgsConstructor
-@CrossOrigin(origins = "*")
 public class SignInController extends Controller {
     private final UserService userService;
 

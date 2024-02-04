@@ -119,6 +119,10 @@ public class BattleService {
 
     public String getOfficialRepo(Long teamId) throws Exception {
         Team team = teamService.getTeam(teamId);
+        if (!team.getBattle().getHasStarted()) {
+            log.error("The battle {} has not started yet", team.getBattle().getName());
+            throw new RuntimeException("The battle " + team.getBattle().getName() + " has not started");
+        }
         return team.getBattle().getRepositoryLink();
     }
 
