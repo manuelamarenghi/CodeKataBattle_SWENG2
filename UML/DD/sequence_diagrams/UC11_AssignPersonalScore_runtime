@@ -8,9 +8,9 @@ database Battle DB
 participantspacing 5
 
 activate WebApp
-WebApp->API Gateway: 1: getTeams(id_battle)
+WebApp->API Gateway: 1: getTeamsOfBattle(id_battle)
 activate API Gateway
-API Gateway->Battle Manager: 2: getTeams(id_battle)
+API Gateway->Battle Manager: 2: getTeamsOfBattle(id_battle)
 activate Battle Manager
 Battle Manager->Battle DB: 3: executeQuery(id_battle)
 alt id_battle == valid
@@ -18,8 +18,8 @@ Battle DB-->Battle Manager: 4: success
 Battle Manager-->API Gateway: 5: result
 API Gateway-->WebApp: 6: result
 
-WebApp->API Gateway: 7: assignPersonalScore(id_team, score)
-API Gateway->Battle Manager: 8: assignPersonalScore(id_team, score)
+WebApp->API Gateway: 7: assignPersonalScore(id_team, score, id_user)
+API Gateway->Battle Manager: 8: assignPersonalScore(id_team, score, id_user)
 
 alt edu_cond==true && score_cond==true && battle_cond==true
 // Query to update the score of students

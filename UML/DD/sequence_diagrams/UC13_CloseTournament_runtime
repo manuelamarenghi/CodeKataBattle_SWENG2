@@ -12,16 +12,18 @@ participant Mail Manager
 participantspacing 5
 
 activate WebApp
-WebApp->API Gateway: 1: closeTournament(id_tournament)
+WebApp->API Gateway: 1: closeTournament(id_tournament, id_user)
 activate API Gateway
-API Gateway->Tournament Manager: 2: closeTournament(id_tournament)
+API Gateway->Tournament Manager: 2: closeTournament(id_tournament, id_user)
 activate Tournament Manager
 
-alt is_creator == true && all_battles_finished == true
-Tournament Manager->Battle Manager: 3: getAllUsersPoints(id_tournament)
+alt is_creator == id_user && all_battles_finished == true
+
+Tournament Manager->Battle Manager: 3: canCloseTournament(id_tournament)
 activate Battle Manager
-// Get points of all the teams
+
 Battle Manager->Battle DB: 4: executeQuery(id_tournament)
+
 activate Battle DB
 Battle DB-->Battle Manager: 5: success
 deactivate Battle DB
@@ -29,20 +31,24 @@ deactivate Battle DB
 Battle Manager-->Tournament Manager: 6: result
 deactivate Battle Manager
 
-// Update tournament
-Tournament Manager->Tournament DB: 7: executeQuery(id_tournament, user, score)
+Tournament Manager->Tournament DB: 7: executeQuery(id_tournament)
 activate Tournament DB
 Tournament DB-->Tournament Manager: 8: success
 deactivate Tournament DB
 
-Tournament Manager->Mail Manager: 9: sendMassMail(tournament_users, content)
+Tournament Manager->Mail Manager: 9: sendEmail(tournament_users, content)
+
+activate Mail Manager
+Mail Manager-->Tournament Manager: 10: result
+deactivate Mail Manager
+
 else 
 Tournament Manager->Tournament Manager: error()
 end
-Tournament Manager-->API Gateway: 10: result
+Tournament Manager-->API Gateway: 11: result
 deactivate Tournament Manager
 
-API Gateway-->WebApp: 11: result
+API Gateway-->WebApp: 12: result
 deactivate WebApp
 deactivate API Gateway
 

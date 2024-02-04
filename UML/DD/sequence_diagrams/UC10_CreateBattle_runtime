@@ -1,4 +1,3 @@
-// Suppose that the battle information are coherent and the educator has the permission of create a battle in that tournament
 frame Create Battle
 
 fontawesome6solid f390 WebApp
@@ -6,8 +5,8 @@ participant API Gateway
 participant Battle Manager
 database Battle DB
 participant Mail manager
-
-participantspacing 5
+participant Github Manager
+fontawesome f09b Github
 
 activate WebApp
 
@@ -26,10 +25,24 @@ activate Battle DB
 Battle DB-->Battle Manager: 5: success
 deactivate Battle DB
 
-Battle Manager->Mail manager: 6: sendMassMail(users_tournament)
+Battle Manager->Github Manager: 6: createBattleRepository(request)
+
+activate Github Manager
+
+Github Manager->Github: 7: createRepository(name, files)
+Github-->Github Manager: 8: success
+Github Manager-->Battle Manager: 9: result
+deactivate Github Manager
+
+Battle Manager->Mail manager: 10: sendEmail(users_tournament, content)
+
+activate Mail manager
+Mail manager-->Battle Manager: 11: result
+deactivate Mail manager
+
 else 
 Battle Manager->Battle Manager: error()
 end
-Battle Manager-->API Gateway: 7: result
-API Gateway-->WebApp: 8: result
+Battle Manager-->API Gateway: 11: result
+API Gateway-->WebApp: 12: result
 deactivate API Gateway

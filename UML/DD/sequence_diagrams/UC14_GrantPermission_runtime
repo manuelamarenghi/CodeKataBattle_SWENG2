@@ -8,12 +8,12 @@ participant Mail Manager
 participantspacing 5
 
 activate WebApp
-WebApp->API Gateway: 1: grantPermission(id_tournament, id_educator)
+WebApp->API Gateway: 1: createPermission(id_tournament, id_user, id_educator)
 activate API Gateway
-API Gateway->Tournament Manager: 2: grantPermission(id_tournament, id_educator)
+API Gateway->Tournament Manager: 2: grantPermission(id_tournament, id_user, id_educator)
 activate Tournament Manager
 
-alt sender_has_permission == true
+alt id_educator == id_tournament_creator
 Tournament Manager->Mail Manager: 3: sendEmail(id_educator, content)
 activate Mail Manager
 Mail Manager-->Tournament Manager: 4: result
