@@ -26,7 +26,7 @@
                 if (response.status >= 300 ) {
                     console.error('Error during HTTP request:', response.status, response.statusText);
                     window.location.href = "index.html";
-                }
+                }else{ return response.json(); }
             })
             .then(data => {
                 console.log(data);
