@@ -52,8 +52,8 @@ function SendEval(){
             "Content-Type": "application/json",
         },
         body: JSON.stringify({
-            idTeam : document.getElementById("team_ID").value,
-            score : document.getElementById("score").value,
+            idTeam : document.getElementById("Team_ID").value,
+            score : document.getElementById("Score").value,
             idEducator : localStorage.getItem("user_id"),
         })
     };

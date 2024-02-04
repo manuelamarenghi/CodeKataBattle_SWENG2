@@ -281,9 +281,7 @@
             var teamParticipant_min = document.getElementById('teamParticipantMin').value;
             var teamParticipant_max = document.getElementById('teamParticipantMax').value;
             var battleName = document.getElementById('BattleName').value;
-            var evaluation = document.querySelector('input[name="evaluation"]:checked').value;
-            if(evaluation === "yes"){ evaluation = true; }
-            else evaluation = false;
+            var evaluation = document.getElementById("evaluationYes").checked;
             var deadlineSubmission = document.getElementById('deadlineSubmission').value + "T23:59:59.999+01:00";
             var registrationSubmission = document.getElementById('registrationSubmission').value + "T23:59:59.999+01:00";
             var codeKataUpload = document.getElementById('codeKataUpload').files[0];
@@ -298,6 +296,7 @@
                 alert("Min participant can't be greater than max participant!");
                 return;
             }
+            console.log(evaluation);
             var formData = new FormData();
             formData.append("zipFile", codeKataUpload);
             formData.append("tournamentId", tournamentID);

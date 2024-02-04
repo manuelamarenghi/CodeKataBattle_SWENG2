@@ -1,6 +1,7 @@
 package ckb.BattleManager.service;
 
 import ckb.BattleManager.controller.CreateGHRepositoryBattleController;
+import ckb.BattleManager.controller.SendTeamsPointsController;
 import ckb.BattleManager.dto.input.CreateBattleRequest;
 import ckb.BattleManager.model.Battle;
 import ckb.BattleManager.model.Participation;
@@ -21,14 +22,17 @@ public class BattleService {
     private final BattleRepository battleRepository;
     private final TeamService teamService;
     private final CreateGHRepositoryBattleController createGHRepositoryBattleController;
+    private final SendTeamsPointsController sendTeamsPointsController;
 
     @Autowired
 
     public BattleService(BattleRepository battleRepository, TeamService teamService,
-                         CreateGHRepositoryBattleController createGHRepositoryBattleController) {
+                         CreateGHRepositoryBattleController createGHRepositoryBattleController,
+                         SendTeamsPointsController sendTeamsPointsController) {
         this.battleRepository = battleRepository;
         this.teamService = teamService;
         this.createGHRepositoryBattleController = createGHRepositoryBattleController;
+        this.sendTeamsPointsController = sendTeamsPointsController;
     }
 
     public Battle getBattle(Long id) throws Exception {
@@ -168,6 +172,10 @@ public class BattleService {
             battle.setIsClosed(true);
             battleRepository.save(battle);
             log.info("Battle {} is closed", battle.getName());
+            sendTeamsPointsController.sendIdUsersPointsFinishedBattle(
+                    battle,
+                    teamService.getListPairIdUserPoints(battle)
+            );
         } else {
             log.error("The educator {} is not the author of the battle {}", educatorId, battle.getName());
             throw new Exception("The educator " + educatorId + " is not the author of the battle " + battle.getName());

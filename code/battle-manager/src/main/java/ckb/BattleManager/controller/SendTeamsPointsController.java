@@ -15,7 +15,7 @@ import java.util.List;
 public class SendTeamsPointsController extends Controller {
     private final WebClient webClient = WebClient.create();
 
-    public void sendIdUsersPointsFinishedBattle(Battle battle, List<WorkingPair<Long, Integer>> pairsIdUserPoints) {
+    public void sendIdUsersPointsFinishedBattle(Battle battle, List<WorkingPair<Long, Integer>> pairsIdUserPoints) throws Exception {
         ResponseEntity<String> response = webClient.post()
                 .uri(tournamentManagerUri + "/api/tournament/update-score")
                 .bodyValue(
@@ -30,12 +30,12 @@ public class SendTeamsPointsController extends Controller {
 
         if (response == null) {
             log.error("Error sending idUsers and points of the finished battle with id: {}. The response is null", battle.getBattleId());
-            return;
+            throw new Exception("Error sending idUsers and points of the finished battle with id: " + battle.getBattleId());
         }
 
         if (!response.getStatusCode().is2xxSuccessful()) {
             log.error("Error sending idUsers and points of the finished battle with id: {}. Error {}", battle.getBattleId(), response.getStatusCode());
-            return;
+            throw new Exception("Error sending idUsers and points of the finished battle with id: " + battle.getBattleId());
         }
 
         log.info("Successfully sent IdUsers and points of the finished battle with id: {}", battle.getBattleId());
