@@ -7,7 +7,7 @@ import java.io.InputStreamReader;
 
 public class ContainerHandler {
     private static final String SCRIPTS_PATH = getScriptsPath();
-    private static final int NUM_OF_CONTAINERS = 5;
+    private static final int NUM_OF_CONTAINERS = 6;
 
 
     public static void start() {
@@ -18,7 +18,7 @@ public class ContainerHandler {
             process = runProcessBuilder(processBuilder);
         } catch (Exception e) {
             ProcessBuilder processBuilder = new ProcessBuilder()
-                    .command("powershell", "-Command", "$env:ID='ckb-test'; docker compose up")
+                    .command("powershell", "-Command", "docker compose up")
                     .redirectErrorStream(true)
                     .directory(new File(SCRIPTS_PATH));
             process = runProcessBuilder(processBuilder);
@@ -35,6 +35,7 @@ public class ContainerHandler {
                 if (line.contains("Started GitHubManagerApplication")) startedContainers++;
                 if (line.contains("Started TournamentManagerApplication")) startedContainers++;
                 if (line.contains("Started BattleManagerApplication")) startedContainers++;
+                if (line.contains("Started SolutionEvaluationServiceApplication")) startedContainers++;
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -50,7 +51,7 @@ public class ContainerHandler {
             ).start();
         } catch (Exception e) {
             new ProcessBuilder()
-                    .command("powershell", "-Command", "docker compose stop")
+                    .command("powershell", "-Command", "docker compose down")
                     .start();
         }
         System.out.println("Containers stopped");

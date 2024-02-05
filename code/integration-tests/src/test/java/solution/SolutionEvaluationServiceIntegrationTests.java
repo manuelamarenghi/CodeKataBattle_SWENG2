@@ -29,6 +29,8 @@ import java.util.Random;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+// run mvn clean install -DskipTests in the code directory
+// and build all images with ./docker-build.sh ckb-test BEFORE RUNNING THE TESTS
 public class SolutionEvaluationServiceIntegrationTests {
     private final WebClient webClient = WebClient.create();
     private final String solutionEvaluationServiceUrl = "http://localhost:8081/";

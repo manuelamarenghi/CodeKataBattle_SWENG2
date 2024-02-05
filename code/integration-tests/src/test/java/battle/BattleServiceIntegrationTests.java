@@ -28,6 +28,8 @@ import java.util.Random;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+// run mvn clean install -DskipTests in the code directory
+// and build all images with ./docker-build.sh ckb-test BEFORE RUNNING THE TESTS
 public class BattleServiceIntegrationTests {
     private final String battleManagerUri = "http://localhost:8082";
     private static final String accountManagerUri = "http://localhost:8086";
@@ -219,7 +221,7 @@ public class BattleServiceIntegrationTests {
                         educatorID,
                         1, 2, false,
                         LocalDateTime.now().plusSeconds(25).atZone(ZoneId.of("Europe/Rome")).toLocalDateTime(),
-                        LocalDateTime.now().plusSeconds(50).atZone(ZoneId.of("Europe/Rome")).toLocalDateTime(),
+                        LocalDateTime.now().plusSeconds(60).atZone(ZoneId.of("Europe/Rome")).toLocalDateTime(),
                         List.of(
                                 new WorkingPair<>("tests/input_1.txt", "1"),
                                 new WorkingPair<>("tests/output_1.txt", "2")
@@ -315,7 +317,7 @@ public class BattleServiceIntegrationTests {
                         educatorID,
                         1, 2, true,
                         LocalDateTime.now().plusSeconds(10),
-                        LocalDateTime.now().plusSeconds(15),
+                        LocalDateTime.now().plusSeconds(30),
                         List.of(
                                 new WorkingPair<>("tests/input_1.txt", "1"),
                                 new WorkingPair<>("tests/output_1.txt", "2")
