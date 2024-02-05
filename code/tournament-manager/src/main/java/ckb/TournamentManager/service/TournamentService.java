@@ -1,6 +1,6 @@
 package ckb.TournamentManager.service;
 
-import ckb.TournamentManager.dto.incoming.*;
+import ckb.TournamentManager.dto.in.*;
 import ckb.TournamentManager.model.Permission;
 import ckb.TournamentManager.model.Tournament;
 import ckb.TournamentManager.model.TournamentRanking;

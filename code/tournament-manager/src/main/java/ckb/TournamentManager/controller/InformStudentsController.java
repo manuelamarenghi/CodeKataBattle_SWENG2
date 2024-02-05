@@ -1,7 +1,7 @@
 package ckb.TournamentManager.controller;
 
-import ckb.TournamentManager.dto.incoming.InformStudentsRequest;
-import ckb.TournamentManager.dto.outcoming.DirectMailRequest;
+import ckb.TournamentManager.dto.in.InformStudentsRequest;
+import ckb.TournamentManager.dto.out.DirectMailRequest;
 import ckb.TournamentManager.model.Tournament;
 import ckb.TournamentManager.service.TournamentService;
 import lombok.extern.slf4j.Slf4j;

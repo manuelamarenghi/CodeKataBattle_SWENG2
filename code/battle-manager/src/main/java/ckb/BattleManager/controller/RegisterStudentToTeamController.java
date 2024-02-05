@@ -1,6 +1,6 @@
 package ckb.BattleManager.controller;
 
-import ckb.BattleManager.dto.input.AcceptStudentTeamRequest;
+import ckb.BattleManager.dto.in.AcceptStudentTeamRequest;
 import ckb.BattleManager.service.TeamService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

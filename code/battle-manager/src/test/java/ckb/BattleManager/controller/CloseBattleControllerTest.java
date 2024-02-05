@@ -1,6 +1,6 @@
 package ckb.BattleManager.controller;
 
-import ckb.BattleManager.dto.input.CloseBattleRequest;
+import ckb.BattleManager.dto.in.CloseBattleRequest;
 import ckb.BattleManager.model.Battle;
 import ckb.BattleManager.repository.BattleRepository;
 import org.junit.jupiter.api.*;

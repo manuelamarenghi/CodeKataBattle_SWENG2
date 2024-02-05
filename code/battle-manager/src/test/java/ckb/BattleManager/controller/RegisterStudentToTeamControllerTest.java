@@ -1,6 +1,6 @@
 package ckb.BattleManager.controller;
 
-import ckb.BattleManager.dto.input.AcceptStudentTeamRequest;
+import ckb.BattleManager.dto.in.AcceptStudentTeamRequest;
 import ckb.BattleManager.model.Battle;
 import ckb.BattleManager.model.Participation;
 import ckb.BattleManager.model.Team;

@@ -1,7 +1,7 @@
 package ckb.BattleManager.controller;
 
-import ckb.BattleManager.dto.input.OfficialRepoRequest;
-import ckb.BattleManager.dto.output.EvaluationParamsResponse;
+import ckb.BattleManager.dto.in.OfficialRepoRequest;
+import ckb.BattleManager.dto.out.EvaluationParamsResponse;
 import ckb.BattleManager.service.BattleService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

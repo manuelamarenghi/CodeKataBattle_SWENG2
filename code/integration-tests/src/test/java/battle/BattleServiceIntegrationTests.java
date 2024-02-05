@@ -114,7 +114,10 @@ public class BattleServiceIntegrationTests {
                         List.of(
                                 new WorkingPair<>("tests/input_1.txt", "1"),
                                 new WorkingPair<>("tests/output_1.txt", "2")
-                        )
+                        ),
+                        true,
+                        true,
+                        true
                 ))
                 .accept(MediaType.APPLICATION_JSON)
                 .exchange()
@@ -158,7 +161,10 @@ public class BattleServiceIntegrationTests {
                         List.of(
                                 new WorkingPair<>("tests/input_1.txt", "1"),
                                 new WorkingPair<>("tests/output_1.txt", "2")
-                        )
+                        ),
+                        true,
+                        true,
+                        true
                 ))
                 .accept(MediaType.APPLICATION_JSON)
                 .exchange()
@@ -217,7 +223,10 @@ public class BattleServiceIntegrationTests {
                         List.of(
                                 new WorkingPair<>("tests/input_1.txt", "1"),
                                 new WorkingPair<>("tests/output_1.txt", "2")
-                        )
+                        ),
+                        true,
+                        true,
+                        true
                 ))
                 .retrieve()
                 .toEntity(Battle.class)
@@ -310,7 +319,10 @@ public class BattleServiceIntegrationTests {
                         List.of(
                                 new WorkingPair<>("tests/input_1.txt", "1"),
                                 new WorkingPair<>("tests/output_1.txt", "2")
-                        )
+                        ),
+                        true,
+                        true,
+                        true
                 ))
                 .retrieve()
                 .toEntity(Battle.class)
@@ -429,7 +441,10 @@ public class BattleServiceIntegrationTests {
                         List.of(
                                 new WorkingPair<>("tests/input_1.txt", "1"),
                                 new WorkingPair<>("tests/output_1.txt", "2")
-                        )
+                        ),
+                        true,
+                        true,
+                        true
                 ))
                 .retrieve()
                 .toEntity(Battle.class)

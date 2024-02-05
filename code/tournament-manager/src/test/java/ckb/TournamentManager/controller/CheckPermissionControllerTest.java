@@ -1,7 +1,7 @@
 package ckb.TournamentManager.controller;
 
-import ckb.TournamentManager.dto.incoming.CheckPermissionRequest;
-import ckb.TournamentManager.dto.incoming.NewTournamentRequest;
+import ckb.TournamentManager.dto.in.CheckPermissionRequest;
+import ckb.TournamentManager.dto.in.NewTournamentRequest;
 import ckb.TournamentManager.model.Tournament;
 import ckb.TournamentManager.repo.PermissionRepo;
 import ckb.TournamentManager.repo.TournamentRepo;

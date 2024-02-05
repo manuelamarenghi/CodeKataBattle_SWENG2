@@ -1,7 +1,7 @@
 package ckb.BattleManager.controller;
 
-import ckb.BattleManager.dto.input.GetBattlesRequest;
-import ckb.BattleManager.dto.output.ListBattlesResponse;
+import ckb.BattleManager.dto.in.GetBattlesRequest;
+import ckb.BattleManager.dto.out.ListBattlesResponse;
 import ckb.BattleManager.model.Battle;
 import ckb.BattleManager.model.Team;
 import ckb.BattleManager.repository.BattleRepository;

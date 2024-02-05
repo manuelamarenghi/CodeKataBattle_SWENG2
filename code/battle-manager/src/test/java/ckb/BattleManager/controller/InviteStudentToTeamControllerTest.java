@@ -1,6 +1,6 @@
 package ckb.BattleManager.controller;
 
-import ckb.BattleManager.dto.input.InviteStudentTeamRequest;
+import ckb.BattleManager.dto.in.InviteStudentTeamRequest;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;

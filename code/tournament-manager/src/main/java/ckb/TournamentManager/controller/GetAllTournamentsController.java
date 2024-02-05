@@ -1,6 +1,6 @@
 package ckb.TournamentManager.controller;
 
-import ckb.TournamentManager.dto.incoming.GetAllTournamentsRequest;
+import ckb.TournamentManager.dto.in.GetAllTournamentsRequest;
 import ckb.TournamentManager.model.Tournament;
 import ckb.TournamentManager.service.TournamentService;
 import lombok.RequiredArgsConstructor;

@@ -1,7 +1,7 @@
 package ckb.BattleManager.controller;
 
-import ckb.BattleManager.dto.input.JoinRequest;
-import ckb.BattleManager.dto.input.LeaveRequest;
+import ckb.BattleManager.dto.in.JoinRequest;
+import ckb.BattleManager.dto.in.LeaveRequest;
 import ckb.BattleManager.service.BattleService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

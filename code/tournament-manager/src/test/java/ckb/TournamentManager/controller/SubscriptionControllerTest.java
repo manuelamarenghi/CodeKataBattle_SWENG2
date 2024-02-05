@@ -1,6 +1,6 @@
 package ckb.TournamentManager.controller;
 
-import ckb.TournamentManager.dto.incoming.SubscriptionRequest;
+import ckb.TournamentManager.dto.in.SubscriptionRequest;
 import ckb.TournamentManager.model.Tournament;
 import ckb.TournamentManager.repo.TournamentRepo;
 import org.junit.jupiter.api.Test;

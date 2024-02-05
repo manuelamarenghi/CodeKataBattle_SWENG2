@@ -1,6 +1,6 @@
 package ckb.TournamentManager.controller;
 
-import ckb.TournamentManager.dto.incoming.SubscriptionRequest;
+import ckb.TournamentManager.dto.in.SubscriptionRequest;
 import ckb.TournamentManager.service.TournamentService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

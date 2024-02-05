@@ -1,6 +1,6 @@
 package ckb.TournamentManager.controller;
 
-import ckb.TournamentManager.dto.incoming.PermissionRequest;
+import ckb.TournamentManager.dto.in.PermissionRequest;
 import ckb.TournamentManager.model.Permission;
 import ckb.TournamentManager.model.Role;
 import ckb.TournamentManager.model.Tournament;
