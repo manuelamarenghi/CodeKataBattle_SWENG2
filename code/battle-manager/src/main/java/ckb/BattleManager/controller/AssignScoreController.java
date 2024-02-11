@@ -1,7 +1,7 @@
 package ckb.BattleManager.controller;
 
-import ckb.BattleManager.dto.input.AssignPersonalScoreRequest;
-import ckb.BattleManager.dto.input.AssignScoreRequest;
+import ckb.BattleManager.dto.in.AssignPersonalScoreRequest;
+import ckb.BattleManager.dto.in.AssignScoreRequest;
 import ckb.BattleManager.service.TeamService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

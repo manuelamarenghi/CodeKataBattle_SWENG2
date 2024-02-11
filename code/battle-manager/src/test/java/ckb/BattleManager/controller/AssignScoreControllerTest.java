@@ -1,7 +1,7 @@
 package ckb.BattleManager.controller;
 
-import ckb.BattleManager.dto.input.AssignPersonalScoreRequest;
-import ckb.BattleManager.dto.input.AssignScoreRequest;
+import ckb.BattleManager.dto.in.AssignPersonalScoreRequest;
+import ckb.BattleManager.dto.in.AssignScoreRequest;
 import ckb.BattleManager.model.Battle;
 import ckb.BattleManager.model.Team;
 import ckb.BattleManager.repository.BattleRepository;

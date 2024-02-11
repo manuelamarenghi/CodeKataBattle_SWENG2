@@ -1,6 +1,6 @@
 package ckb.TournamentManager.controller;
 
-import ckb.TournamentManager.dto.incoming.GetTournamentPageRequest;
+import ckb.TournamentManager.dto.in.GetTournamentPageRequest;
 import ckb.TournamentManager.model.Tournament;
 import ckb.TournamentManager.model.TournamentRanking;
 import ckb.TournamentManager.repo.TournamentRankingRepo;

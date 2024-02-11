@@ -1,9 +1,9 @@
 package ckb.BattleManager.controller;
 
-import ckb.BattleManager.dto.input.GetTeamStudentRequest;
-import ckb.BattleManager.dto.input.GetTeamsRequest;
-import ckb.BattleManager.dto.output.TeamInfoMessage;
-import ckb.BattleManager.dto.output.TeamsRankingMessage;
+import ckb.BattleManager.dto.in.GetTeamStudentRequest;
+import ckb.BattleManager.dto.in.GetTeamsRequest;
+import ckb.BattleManager.dto.out.TeamInfoMessage;
+import ckb.BattleManager.dto.out.TeamsRankingMessage;
 import ckb.BattleManager.model.Participation;
 import ckb.BattleManager.model.Team;
 import ckb.BattleManager.model.User;

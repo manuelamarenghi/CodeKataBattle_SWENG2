@@ -1,9 +1,9 @@
 package ckb.TournamentManager.controller;
 
-import ckb.TournamentManager.dto.incoming.CloseTournamentRequest;
-import ckb.TournamentManager.dto.outcoming.AbleToCloseRequest;
-import ckb.TournamentManager.dto.outcoming.BattleFinishedResponse;
-import ckb.TournamentManager.dto.outcoming.DirectMailRequest;
+import ckb.TournamentManager.dto.in.CloseTournamentRequest;
+import ckb.TournamentManager.dto.out.AbleToCloseRequest;
+import ckb.TournamentManager.dto.out.BattleFinishedResponse;
+import ckb.TournamentManager.dto.out.DirectMailRequest;
 import ckb.TournamentManager.model.Tournament;
 import ckb.TournamentManager.service.TournamentService;
 import lombok.RequiredArgsConstructor;

@@ -1,6 +1,6 @@
 package ckb.TournamentManager.controller;
 
-import ckb.TournamentManager.dto.incoming.CloseTournamentRequest;
+import ckb.TournamentManager.dto.in.CloseTournamentRequest;
 import ckb.TournamentManager.model.Tournament;
 import ckb.TournamentManager.repo.TournamentRepo;
 import org.json.JSONException;

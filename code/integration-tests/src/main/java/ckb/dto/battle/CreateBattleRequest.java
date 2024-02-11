@@ -31,4 +31,7 @@ public class CreateBattleRequest {
         ]
     }
      */
+    private Boolean security;
+    private Boolean reliability;
+    private Boolean maintainability;
 }

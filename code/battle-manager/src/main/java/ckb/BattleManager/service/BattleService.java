@@ -2,8 +2,8 @@ package ckb.BattleManager.service;
 
 import ckb.BattleManager.controller.CreateGHRepositoryBattleController;
 import ckb.BattleManager.controller.SendTeamsPointsController;
-import ckb.BattleManager.dto.input.CreateBattleRequest;
-import ckb.BattleManager.dto.output.EvaluationParamsResponse;
+import ckb.BattleManager.dto.in.CreateBattleRequest;
+import ckb.BattleManager.dto.out.EvaluationParamsResponse;
 import ckb.BattleManager.model.Battle;
 import ckb.BattleManager.model.Participation;
 import ckb.BattleManager.model.Team;

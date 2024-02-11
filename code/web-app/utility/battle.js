@@ -98,8 +98,8 @@ function InvitesStudent(){
             "Content-Type": "application/json",
         },
         body: JSON.stringify({
-            idStudent : document.getElementById("userID").value,
-            idTeam  : document.getElementById("teamID").value,
+            idStudent : document.getElementById("UserID").value,
+            idTeam  : document.getElementById("TeamID").value,
         })
     };
     fetch("http://localhost:8080/api/battle/invite-student-to-team",fetchOptions)

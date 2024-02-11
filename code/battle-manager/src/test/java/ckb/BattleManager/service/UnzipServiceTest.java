@@ -1,6 +1,6 @@
 package ckb.BattleManager.service;
 
-import ckb.BattleManager.dto.output.CreateRepositoryRequest;
+import ckb.BattleManager.dto.out.CreateRepositoryRequest;
 import ckb.BattleManager.model.WorkingPair;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;

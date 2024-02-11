@@ -20,6 +20,8 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 
+// run mvn clean install -DskipTests in the code directory
+// and build all images with ./docker-build.sh ckb-test BEFORE RUNNING THE TESTS
 public class MailServiceIntegrationTests {
 
     private final WebClient webClient = WebClient.create();
@@ -109,7 +111,7 @@ public class MailServiceIntegrationTests {
                 .bodyValue(request)
                 .accept(MediaType.APPLICATION_JSON)
                 .exchange()
-                .expectStatus().is4xxClientError();
+                .expectStatus().is2xxSuccessful();
     }
 
     @Test

@@ -1,7 +1,7 @@
 package ckb.BattleManager.controller;
 
-import ckb.BattleManager.dto.input.InviteStudentTeamRequest;
-import ckb.BattleManager.dto.output.DirectMailRequest;
+import ckb.BattleManager.dto.in.InviteStudentTeamRequest;
+import ckb.BattleManager.dto.out.DirectMailRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

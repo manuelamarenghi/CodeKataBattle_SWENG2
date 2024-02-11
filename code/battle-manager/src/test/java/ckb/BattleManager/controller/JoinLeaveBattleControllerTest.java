@@ -1,7 +1,7 @@
 package ckb.BattleManager.controller;
 
-import ckb.BattleManager.dto.input.JoinRequest;
-import ckb.BattleManager.dto.input.LeaveRequest;
+import ckb.BattleManager.dto.in.JoinRequest;
+import ckb.BattleManager.dto.in.LeaveRequest;
 import ckb.BattleManager.model.Battle;
 import ckb.BattleManager.model.Team;
 import ckb.BattleManager.repository.BattleRepository;

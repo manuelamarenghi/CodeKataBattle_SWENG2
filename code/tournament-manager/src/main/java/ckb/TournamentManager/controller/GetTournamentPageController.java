@@ -1,8 +1,8 @@
 package ckb.TournamentManager.controller;
 
-import ckb.TournamentManager.dto.incoming.GetTournamentPageRequest;
-import ckb.TournamentManager.dto.outcoming.GetBattlesRequest;
-import ckb.TournamentManager.dto.outcoming.ListBattlesResponse;
+import ckb.TournamentManager.dto.in.GetTournamentPageRequest;
+import ckb.TournamentManager.dto.out.GetBattlesRequest;
+import ckb.TournamentManager.dto.out.ListBattlesResponse;
 import ckb.TournamentManager.model.TournamentRanking;
 import ckb.TournamentManager.service.TournamentService;
 import lombok.RequiredArgsConstructor;

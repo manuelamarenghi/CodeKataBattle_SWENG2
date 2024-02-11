@@ -19,6 +19,8 @@ import java.util.Random;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+// run mvn clean install -DskipTests in the code directory
+// and build all images with ./docker-build.sh ckb-test BEFORE RUNNING THE TESTS
 public class TournamentServiceIntegrationTests {
     private static final String accountManagerUri = "http://localhost:8086";
     private static final WebClient webClient = WebClient.create();

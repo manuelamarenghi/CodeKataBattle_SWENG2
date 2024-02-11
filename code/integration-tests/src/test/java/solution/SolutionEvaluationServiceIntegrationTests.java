@@ -29,6 +29,8 @@ import java.util.Random;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+// run mvn clean install -DskipTests in the code directory
+// and build all images with ./docker-build.sh ckb-test BEFORE RUNNING THE TESTS
 public class SolutionEvaluationServiceIntegrationTests {
     private final WebClient webClient = WebClient.create();
     private final String solutionEvaluationServiceUrl = "http://localhost:8081/";
@@ -111,7 +113,10 @@ public class SolutionEvaluationServiceIntegrationTests {
                         List.of(
                                 new WorkingPair<>("tests/input_1.txt", "5\n" + "8dafs\n" + "5sjaH\n" + "KS06l\n" + "si83H\n" + "laj74\n" + "-s9k0\n" + "sm_ks\n" + "okauE\n" + "+nuova_partita\n" + "5sjaH\n" + "1\n" + "+stampa_filtrate\n" + "+inserisci_inizio\n" + "AAAAA\n" + "BBBBB\n" + "CCCCC\n" + "+inserisci_fine\n" + "+stampa_filtrate\n" + "5sjaH\n" + "+inserisci_inizio\n" + "DDDDD\n" + "EEEEE\n" + "FFFFF\n" + "+inserisci_fine\n" + "+nuova_partita\n" + "EEEEE\n" + "1\n" + "+stampa_filtrate\n" + "EEEEE"),
                                 new WorkingPair<>("tests/output_1.txt", "-s9k0\n" + "5sjaH\n" + "8dafs\n" + "KS06l\n" + "laj74\n" + "okauE\n" + "si83H\n" + "sm_ks\n" + "-s9k0\n" + "5sjaH\n" + "8dafs\n" + "AAAAA\n" + "BBBBB\n" + "CCCCC\n" + "KS06l\n" + "laj74\n" + "okauE\n" + "si83H\n" + "sm_ks\n" + "ok\n" + "-s9k0\n" + "5sjaH\n" + "8dafs\n" + "AAAAA\n" + "BBBBB\n" + "CCCCC\n" + "DDDDD\n" + "EEEEE\n" + "FFFFF\n" + "KS06l\n" + "laj74\n" + "okauE\n" + "si83H\n" + "sm_ks\n" + "ok\n")
-                        )
+                        ),
+                        true,
+                        true,
+                        true
                 ))
                 .accept(MediaType.APPLICATION_JSON)
                 .retrieve()

@@ -1,6 +1,6 @@
 package ckb.BattleManager.controller;
 
-import ckb.BattleManager.dto.output.CreateRepositoryRequest;
+import ckb.BattleManager.dto.out.CreateRepositoryRequest;
 import ckb.BattleManager.model.Battle;
 import ckb.BattleManager.model.WorkingPair;
 import lombok.extern.slf4j.Slf4j;

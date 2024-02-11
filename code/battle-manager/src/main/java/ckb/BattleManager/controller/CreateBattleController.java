@@ -1,9 +1,9 @@
 package ckb.BattleManager.controller;
 
-import ckb.BattleManager.dto.input.CreateBattleRequest;
-import ckb.BattleManager.dto.output.CheckPermissionRequest;
-import ckb.BattleManager.dto.output.InformStudentsRequest;
-import ckb.BattleManager.dto.output.UserRequest;
+import ckb.BattleManager.dto.in.CreateBattleRequest;
+import ckb.BattleManager.dto.out.CheckPermissionRequest;
+import ckb.BattleManager.dto.out.InformStudentsRequest;
+import ckb.BattleManager.dto.out.UserRequest;
 import ckb.BattleManager.model.Battle;
 import ckb.BattleManager.model.Role;
 import ckb.BattleManager.model.User;

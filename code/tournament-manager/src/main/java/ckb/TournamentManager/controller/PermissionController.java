@@ -1,8 +1,8 @@
 package ckb.TournamentManager.controller;
 
-import ckb.TournamentManager.dto.incoming.PermissionRequest;
-import ckb.TournamentManager.dto.outcoming.DirectMailRequest;
-import ckb.TournamentManager.dto.outcoming.UserRequest;
+import ckb.TournamentManager.dto.in.PermissionRequest;
+import ckb.TournamentManager.dto.out.DirectMailRequest;
+import ckb.TournamentManager.dto.out.UserRequest;
 import ckb.TournamentManager.model.Role;
 import ckb.TournamentManager.model.User;
 import ckb.TournamentManager.service.TournamentService;
