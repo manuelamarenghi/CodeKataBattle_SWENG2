@@ -1,4 +1,8 @@
 # CodeKataBattle
+<p align="center">
+  <img src="code/web-app/public/images/iconCKB.png" alt="drawing" width="400" text-align="center"/>
+</p>
+
 ## Warning
 We've provided this project with a an access token to a github account created exclusively for the purpose of this porject, you may be encountering some problems with creatinig github repositories. If you encounter any problems, modify the [GitHubService.java](./code/github-manager/src/main/java/ckb/GitHubManager/service/GitHubService.java) class and provide it with your own access token (you then need to rebuild the project as eplained below), the same problem can be experienced with the SMTP token used to send emails to users, save the mail-service [applicatoin.properties](./code/mail-service/src/main/resources/application.properties) <br>
 Since GitHub actions cannot be used for lack of a static address, the following command can be used to simulate the behavior:
